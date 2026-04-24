@@ -1,0 +1,453 @@
+/* PHASES */
+.phase-section {
+  margin-bottom: 64px;
+}
+.phase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.phase-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+.phase-title {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--text);
+}
+.phase-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-style: italic;
+  font-family: var(--serif);
+}
+.phase-count {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--accent-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+/* GRILLE DE CARTES */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 20px;
+}
+
+/* CARTE */
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 22px 18px;
+  cursor: pointer;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-card);
+}
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+.card[draggable] {
+  cursor: grab;
+}
+.card[draggable]:active {
+  cursor: grabbing;
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.card-id {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-deep);
+  letter-spacing: 0.02em;
+}
+.card-phase {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 3px 8px;
+  background: var(--bg-soft);
+  border-radius: 3px;
+}
+.card-title {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.card-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin-bottom: 16px;
+  flex: 1;
+}
+.card-meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.meta-item { min-width: 0; }
+.meta-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+  margin-bottom: 3px;
+  font-weight: 500;
+}
+.meta-value {
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.card-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.tag {
+  font-size: 10px;
+  padding: 3px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+}
+.tag-public {
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+.tag-theme {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+}
+.tag-contexte {
+  background: var(--bg-soft);
+  color: var(--text-muted);
+}
+.tag-large {
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+/* CARTE ÉPINGLÉE */
+.card-epingle {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.card-epingle-badge {
+  font-size: 12px;
+  margin-left: auto;
+}
+
+/* BADGES CARTES */
+.card-custom-badge {
+  font-size: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+.card-modifiee-badge {
+  font-size: 10px;
+  background: #f0f4ff;
+  color: #3a5bd9;
+  border: 1px solid #9ab0f5;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* FICHE IMPRIMABLE — invisible à l'écran */
+.print-view {
+  display: none;
+}
+
+/* @media print */
+@media print {
+  .header,
+  .layout,
+  .modal-backdrop,
+  .app-footer {
+    display: none !important;
+  }
+
+  .print-view {
+    display: block;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: #111;
+    background: #fff;
+  }
+
+  @page {
+    margin: 18mm 20mm 18mm 20mm;
+    size: A4;
+  }
+
+  .print-doc-header {
+    text-align: center;
+    border-bottom: 2px solid #1a1a1a;
+    padding-bottom: 14pt;
+    margin-bottom: 20pt;
+  }
+  .print-doc-eyebrow {
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #666;
+    margin-bottom: 6pt;
+  }
+  .print-doc-title {
+    font-family: Georgia, serif;
+    font-size: 26pt;
+    font-weight: normal;
+    font-style: italic;
+    letter-spacing: -0.01em;
+    margin-bottom: 8pt;
+  }
+  .print-doc-meta {
+    font-size: 8.5pt;
+    color: #555;
+    display: flex;
+    justify-content: center;
+    gap: 8pt;
+    align-items: center;
+  }
+  .print-doc-meta-sep {
+    color: #bbb;
+  }
+
+  .print-toc {
+    background: #f7f5f0;
+    border: 1pt solid #ddd;
+    border-radius: 4pt;
+    padding: 12pt 16pt;
+    margin-bottom: 24pt;
+    page-break-inside: avoid;
+  }
+  .print-toc-title {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #888;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8pt;
+    font-weight: bold;
+  }
+  .print-toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .print-toc-item {
+    display: flex;
+    align-items: baseline;
+    gap: 6pt;
+    padding: 2.5pt 0;
+    border-bottom: 0.5pt dotted #ccc;
+    font-size: 9.5pt;
+  }
+  .print-toc-item:last-child { border-bottom: none; }
+  .print-toc-num {
+    color: #999;
+    min-width: 14pt;
+    font-size: 8.5pt;
+  }
+  .print-toc-name {
+    flex: 1;
+    font-weight: normal;
+  }
+  .print-toc-id {
+    font-size: 7.5pt;
+    color: #888;
+    font-family: 'Courier New', monospace;
+    background: #ede9e0;
+    padding: 0.5pt 3pt;
+    border-radius: 2pt;
+  }
+  .print-toc-phase {
+    font-size: 7.5pt;
+    color: #666;
+    font-style: italic;
+    min-width: 50pt;
+    text-align: right;
+  }
+
+  .print-fiche {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1pt solid #ccc;
+    border-radius: 4pt;
+    padding: 14pt 16pt;
+    margin-bottom: 16pt;
+  }
+  .print-fiche-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10pt;
+    margin-bottom: 10pt;
+    padding-bottom: 10pt;
+    border-bottom: 1pt solid #e0ddd6;
+  }
+  .print-fiche-header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 10pt;
+    flex: 1;
+  }
+  .print-fiche-num {
+    font-family: Georgia, serif;
+    font-size: 22pt;
+    font-weight: normal;
+    color: #bbb;
+    line-height: 1;
+    min-width: 22pt;
+    text-align: center;
+  }
+  .print-fiche-titre {
+    font-family: Georgia, serif;
+    font-size: 14pt;
+    font-weight: normal;
+    line-height: 1.3;
+    margin: 0 0 3pt 0;
+  }
+  .print-fiche-id-phase {
+    display: flex;
+    gap: 6pt;
+    align-items: center;
+  }
+  .print-fiche-id {
+    font-family: 'Courier New', monospace;
+    font-size: 7.5pt;
+    color: #888;
+    background: #f0ede6;
+    padding: 0.5pt 3pt;
+    border-radius: 2pt;
+  }
+  .print-fiche-phase {
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #666;
+    font-family: Arial, sans-serif;
+  }
+  .print-fiche-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6pt 12pt;
+    margin-bottom: 10pt;
+    background: #faf8f4;
+    padding: 8pt 10pt;
+    border-radius: 3pt;
+  }
+  .print-fiche-meta-label {
+    font-size: 6.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #999;
+    font-family: Arial, sans-serif;
+    margin-bottom: 1.5pt;
+  }
+  .print-fiche-meta-value {
+    font-size: 9pt;
+    font-weight: bold;
+    color: #222;
+  }
+  .print-fiche-section {
+    margin-bottom: 8pt;
+  }
+  .print-fiche-section-label {
+    font-size: 6.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #999;
+    font-family: Arial, sans-serif;
+    margin-bottom: 3pt;
+  }
+  .print-fiche-body {
+    font-size: 9.5pt;
+    line-height: 1.55;
+    color: #222;
+    margin: 0;
+  }
+  .print-fiche-apprentissage {
+    background: #f0ede6;
+    border-left: 3pt solid #a87a3f;
+    padding: 7pt 10pt;
+    border-radius: 0 3pt 3pt 0;
+    margin-top: 8pt;
+  }
+  .print-fiche-apprentissage-text {
+    font-size: 9.5pt;
+    font-style: italic;
+    color: #333;
+    margin: 0;
+    line-height: 1.5;
+  }
+  /* Encart texte libre */
+  .print-texte-libre {
+    border-left: 3pt solid #d4a574;
+    padding: 8pt 12pt;
+    margin-bottom: 14pt;
+    background: #faf8f4;
+    border-radius: 0 3pt 3pt 0;
+    font-style: italic;
+    font-size: 10.5pt;
+    color: #444;
+    line-height: 1.6;
+    page-break-inside: avoid;
+  }
+  .print-texte-libre p { margin: 0; }
+
+  .print-doc-footer {
+    margin-top: 20pt;
+    padding-top: 8pt;
+    border-top: 1pt solid #ddd;
+    text-align: center;
+    font-size: 7.5pt;
+    color: #aaa;
+    font-family: Arial, sans-serif;
+  }
+}

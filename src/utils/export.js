@@ -1,0 +1,84 @@
+function telecharger(contenu, nomFichier, typeMime) {
+  const blob = new Blob([contenu], { type: typeMime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nomFichier;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function exportJSON(activites) {
+  const data = {
+    export: "Catalogue IA — Panier de séance",
+    date: new Date().toLocaleDateString("fr-FR"),
+    nombre: activites.length,
+    activites: activites,
+  };
+  telecharger(JSON.stringify(data, null, 2), "seance-ia.json", "application/json");
+}
+
+export function exportMarkdown(activites) {
+  const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const lignes = [
+    `# Fiche de séance — IA générative`,
+    ``,
+    `*Exporté le ${date} · ${activites.length} activité${activites.length > 1 ? "s" : ""}*`,
+    ``,
+    `---`,
+    ``,
+  ];
+
+  activites.forEach((a, i) => {
+    lignes.push(`## ${i + 1}. ${a.titre} \`${a.id}\``);
+    lignes.push(``);
+    lignes.push(`**Phase :** ${a.phase}  `);
+    lignes.push(`**Public :** ${a.public.join(", ")}  `);
+    lignes.push(`**Durée :** ${a.duree_detail || a.duree}  `);
+    lignes.push(`**Groupe :** ${a.groupe.join(", ")}  `);
+    lignes.push(`**Préparation :** ${a.preparation}  `);
+    lignes.push(`**Thèmes :** ${a.themes.join(", ")}  `);
+    lignes.push(`**Contexte :** ${a.contexte.join(", ")}`);
+    lignes.push(``);
+    lignes.push(`### Description`);
+    lignes.push(``);
+    lignes.push(a.description);
+    lignes.push(``);
+    lignes.push(`### Apprentissage clé`);
+    lignes.push(``);
+    lignes.push(`> ${a.apprentissage_cle}`);
+    lignes.push(``);
+    lignes.push(`---`);
+    lignes.push(``);
+  });
+
+  telecharger(lignes.join("\n"), "seance-ia.md", "text/markdown;charset=utf-8");
+}
+
+export function exportCSV(activites) {
+  const entetes = ["id", "titre", "phase", "public", "duree", "groupe", "preparation", "themes", "contexte", "description_courte", "apprentissage_cle"];
+  const echapper = (v) => `"${String(v).replace(/"/g, '""')}"`;
+
+  const lignes = [
+    entetes.join(";"),
+    ...activites.map((a) =>
+      [
+        a.id,
+        a.titre,
+        a.phase,
+        a.public.join(" | "),
+        a.duree_detail || a.duree,
+        a.groupe.join(" | "),
+        a.preparation,
+        a.themes.join(" | "),
+        a.contexte.join(" | "),
+        a.description_courte,
+        a.apprentissage_cle,
+      ]
+        .map(echapper)
+        .join(";")
+    ),
+  ];
+
+  telecharger("﻿" + lignes.join("\n"), "seance-ia.csv", "text/csv;charset=utf-8");
+}
