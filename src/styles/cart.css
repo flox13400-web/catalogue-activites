@@ -228,6 +228,7 @@
   user-select: none;
   flex-shrink: 0;
   line-height: 1;
+  touch-action: none;
 }
 .cart-drag-handle:active {
   cursor: var(--cursor-hand);

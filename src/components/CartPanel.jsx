@@ -19,12 +19,115 @@ function formatMinutes(m) {
   return `${h}h${String(min).padStart(2, "0")}`;
 }
 
+function esc(str) {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function generatePrintHTML(panierItems) {
+  const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const activites = panierItems.filter(i => i.type === "activite");
+  if (activites.length === 0) return null;
+
+  let actNum = 0;
+  const itemsNumerotes = panierItems.map(item =>
+    item.type === "activite" ? { ...item, num: ++actNum } : item
+  );
+
+  const tocRows = activites.length > 1
+    ? activites.map((item, i) =>
+        `<li class="print-toc-item"><span class="print-toc-num">${i + 1}.</span><span class="print-toc-name">${esc(item.activite.titre)}</span><span class="print-toc-id">${esc(item.activite.id)}</span></li>`
+      ).join("")
+    : "";
+
+  const toc = activites.length > 1
+    ? `<div class="print-toc"><div class="print-toc-title">Sommaire</div><ol class="print-toc-list">${tocRows}</ol></div>`
+    : "";
+
+  const items = itemsNumerotes.map(item => {
+    if (item.type === "texte") {
+      if (!item.contenu.trim()) return "";
+      return `<div class="print-texte-libre"><p>${esc(item.contenu)}</p></div>`;
+    }
+    const a = item.activite;
+    return `<div class="print-fiche">
+<div class="print-fiche-header"><div class="print-fiche-header-left"><span class="print-fiche-num">${item.num}</span><div><h2 class="print-fiche-titre">${esc(a.titre)}</h2><span class="print-fiche-id">${esc(a.id)}</span></div></div></div>
+<div class="print-fiche-meta-grid">
+<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Durée</div><div class="print-fiche-meta-value">${esc(a.duree_detail || a.duree)}</div></div>
+<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Public</div><div class="print-fiche-meta-value">${esc(a.public.join(", "))}</div></div>
+<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Taille groupe</div><div class="print-fiche-meta-value">${esc(a.groupe.join(", "))}</div></div>
+<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Préparation</div><div class="print-fiche-meta-value">${esc(a.preparation)}</div></div>
+<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Thèmes</div><div class="print-fiche-meta-value">${esc(a.themes.join(", "))}</div></div>
+<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Contexte</div><div class="print-fiche-meta-value">${esc(a.contexte.join(", "))}</div></div>
+</div>
+<div class="print-fiche-section"><div class="print-fiche-section-label">Description</div><p class="print-fiche-body">${esc(a.description)}</p></div>
+<div class="print-fiche-apprentissage"><div class="print-fiche-section-label">Apprentissage clé</div><p class="print-fiche-apprentissage-text">« ${esc(a.apprentissage_cle)} »</p></div>
+</div>`;
+  }).join("");
+
+  const nbAct = activites.length;
+  const plural = nbAct > 1 ? "s" : "";
+
+  return `<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fiche de séance</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;line-height:1.6;color:#111;background:#fff;padding:18mm 20mm}
+@media print{@page{margin:18mm 20mm;size:A4}}
+.print-doc-header{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:14pt;margin-bottom:20pt}
+.print-doc-eyebrow{font-size:7.5pt;text-transform:uppercase;letter-spacing:.2em;color:#666;margin-bottom:6pt}
+.print-doc-title{font-family:Georgia,serif;font-size:26pt;font-weight:normal;font-style:italic;letter-spacing:-.01em;margin-bottom:8pt}
+.print-doc-meta{font-size:8.5pt;color:#555;display:flex;justify-content:center;gap:8pt;align-items:center}
+.print-doc-meta-sep{color:#bbb}
+.print-toc{background:#f7f5f0;border:1pt solid #ddd;border-radius:4pt;padding:12pt 16pt;margin-bottom:24pt;page-break-inside:avoid}
+.print-toc-title{font-size:8pt;text-transform:uppercase;letter-spacing:.16em;color:#888;font-family:Arial,sans-serif;margin-bottom:8pt;font-weight:bold}
+.print-toc-list{list-style:none;padding:0;margin:0}
+.print-toc-item{display:flex;align-items:baseline;gap:6pt;padding:2.5pt 0;border-bottom:.5pt dotted #ccc;font-size:9.5pt}
+.print-toc-item:last-child{border-bottom:none}
+.print-toc-num{color:#999;min-width:14pt;font-size:8.5pt}
+.print-toc-name{flex:1;font-weight:normal}
+.print-toc-id{font-size:7.5pt;color:#888;font-family:'Courier New',monospace;background:#ede9e0;padding:.5pt 3pt;border-radius:2pt}
+.print-fiche{break-inside:avoid;page-break-inside:avoid;border:1pt solid #ccc;border-radius:4pt;padding:14pt 16pt;margin-bottom:16pt}
+.print-fiche-header{display:flex;align-items:flex-start;gap:10pt;margin-bottom:10pt;padding-bottom:10pt;border-bottom:1pt solid #e0ddd6}
+.print-fiche-header-left{display:flex;align-items:flex-start;gap:10pt;flex:1}
+.print-fiche-num{font-family:Georgia,serif;font-size:22pt;font-weight:normal;color:#bbb;line-height:1;min-width:22pt;text-align:center}
+.print-fiche-titre{font-family:Georgia,serif;font-size:14pt;font-weight:normal;line-height:1.3;margin:0 0 3pt 0}
+.print-fiche-id{font-family:'Courier New',monospace;font-size:7.5pt;color:#888;background:#f0ede6;padding:.5pt 3pt;border-radius:2pt}
+.print-fiche-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6pt 12pt;margin-bottom:10pt;background:#faf8f4;padding:8pt 10pt;border-radius:3pt}
+.print-fiche-meta-item{}
+.print-fiche-meta-label{font-size:6.5pt;text-transform:uppercase;letter-spacing:.14em;color:#999;font-family:Arial,sans-serif;margin-bottom:1.5pt}
+.print-fiche-meta-value{font-size:9pt;font-weight:bold;color:#222}
+.print-fiche-section{margin-bottom:8pt}
+.print-fiche-section-label{font-size:6.5pt;text-transform:uppercase;letter-spacing:.14em;color:#999;font-family:Arial,sans-serif;margin-bottom:3pt}
+.print-fiche-body{font-size:9.5pt;line-height:1.55;color:#222;margin:0}
+.print-fiche-apprentissage{background:#f0ede6;border-left:3pt solid #a87a3f;padding:7pt 10pt;border-radius:0 3pt 3pt 0;margin-top:8pt}
+.print-fiche-apprentissage-text{font-size:9.5pt;font-style:italic;color:#333;margin:0;line-height:1.5}
+.print-texte-libre{border-left:3pt solid #d4a574;padding:8pt 12pt;margin-bottom:14pt;background:#faf8f4;border-radius:0 3pt 3pt 0;font-style:italic;font-size:10.5pt;color:#444;line-height:1.6;page-break-inside:avoid}
+.print-texte-libre p{margin:0}
+.print-doc-footer{margin-top:20pt;padding-top:8pt;border-top:1pt solid #ddd;text-align:center;font-size:7.5pt;color:#aaa;font-family:Arial,sans-serif}
+</style></head><body>
+<div class="print-doc-header">
+  <div class="print-doc-eyebrow">Ressources pédagogiques · IA générative</div>
+  <h1 class="print-doc-title">Fiche de séance</h1>
+  <div class="print-doc-meta"><span>Exporté le ${esc(date)}</span><span class="print-doc-meta-sep">·</span><span>${nbAct} activité${plural}</span></div>
+</div>
+${toc}${items}
+<div class="print-doc-footer">Catalogue d'activités pédagogiques · IA générative — ${nbAct} activité${plural}</div>
+<script>window.addEventListener('load',function(){window.print();})</script>
+</body></html>`;
+}
+
 export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites, mobileOpen, onMobileClose }) {
   const [exportOuvert, setExportOuvert] = React.useState(false);
   const [dragCartIndex, setDragCartIndex] = React.useState(null);
   const [dragOverCartIndex, setDragOverCartIndex] = React.useState(null);
   const [cartDropActive, setCartDropActive] = React.useState(false);
   const panelRef = React.useRef(null);
+  const cartListRef = React.useRef(null);
+  const touchDragRef = React.useRef({ fromIndex: null });
 
   const panierItems = panierOrdre
     .map(item => {
@@ -40,7 +143,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
   const totalActivites = panierItems.filter(i => i.type === "activite").length;
   const activitesPourExport = panierItems.filter(i => i.type === "activite").map(i => i.activite);
 
-  // ── Calcul de la durée totale ──────────────────────────────────
+  // ── Durée totale ──────────────────────────────────────────────
   const dureeTotal = (() => {
     let min = 0, max = 0, hasProjet = false;
     for (const item of panierItems) {
@@ -57,6 +160,28 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
   })();
 
   const afficherDuree = dureeTotal.min > 0 || dureeTotal.max > 0 || dureeTotal.hasProjet;
+
+  // ── Listener touchmove non-passif (pour preventDefault pendant drag) ──
+  React.useEffect(() => {
+    const list = cartListRef.current;
+    if (!list) return;
+    const handleTouchMove = (e) => {
+      if (touchDragRef.current.fromIndex === null) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const itemEls = list.querySelectorAll("[data-cart-idx]");
+      for (const el of itemEls) {
+        const rect = el.getBoundingClientRect();
+        if (touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+          const idx = parseInt(el.dataset.cartIdx, 10);
+          setDragOverCartIndex(idx);
+          break;
+        }
+      }
+    };
+    list.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => list.removeEventListener("touchmove", handleTouchMove);
+  }, [panierOrdre.length]);
 
   // ── Actions panier ─────────────────────────────────────────────
 
@@ -108,6 +233,27 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     setPanierOrdre(prev => prev.filter(item => !(item.type === "texte" && item.id === id)));
   }
 
+  // ── Impression ─────────────────────────────────────────────────
+
+  function handlePrint() {
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      const html = generatePrintHTML(panierItems);
+      if (!html) return;
+      const blob = new Blob([html], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const win = window.open(url, "_blank");
+      if (win) {
+        setTimeout(() => URL.revokeObjectURL(url), 15000);
+      } else {
+        URL.revokeObjectURL(url);
+        window.print();
+      }
+    } else {
+      window.print();
+    }
+  }
+
   // ── Drag depuis le catalogue ───────────────────────────────────
 
   function handlePanelDragOver(e) {
@@ -132,7 +278,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     setCartDropActive(false);
   }
 
-  // ── Drag interne (réordonnancement) ───────────────────────────
+  // ── Drag interne souris (réordonnancement) ────────────────────
 
   function handleItemDragStart(e, i) {
     setDragCartIndex(i);
@@ -180,6 +326,45 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     setDragOverCartIndex(null);
   }
 
+  // ── Drag interne tactile (réordonnancement) ───────────────────
+
+  function handleDragHandleTouchStart(e, i) {
+    touchDragRef.current.fromIndex = i;
+    setDragCartIndex(i);
+  }
+
+  function handleCartListTouchEnd(e) {
+    const fromIndex = touchDragRef.current.fromIndex;
+    touchDragRef.current.fromIndex = null;
+    if (fromIndex === null) return;
+
+    const touch = e.changedTouches[0];
+    let toIndex = fromIndex;
+
+    if (cartListRef.current) {
+      const itemEls = cartListRef.current.querySelectorAll("[data-cart-idx]");
+      for (const el of itemEls) {
+        const rect = el.getBoundingClientRect();
+        if (touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+          toIndex = parseInt(el.dataset.cartIdx, 10);
+          break;
+        }
+      }
+    }
+
+    if (fromIndex !== toIndex) {
+      setPanierOrdre(prev => {
+        const next = [...prev];
+        const [removed] = next.splice(fromIndex, 1);
+        next.splice(toIndex, 0, removed);
+        return next;
+      });
+    }
+
+    setDragCartIndex(null);
+    setDragOverCartIndex(null);
+  }
+
   return (
     <aside
       ref={panelRef}
@@ -203,7 +388,11 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
             <p className="empty-state-hint">Cliquez sur une carte puis "Épingler" — ou glissez-la ici</p>
           </div>
         ) : (
-          <div className="cart-list">
+          <div
+            className="cart-list"
+            ref={cartListRef}
+            onTouchEnd={handleCartListTouchEnd}
+          >
             {panierItems.map((item, i) => {
               const isDragging = dragCartIndex === i;
               const isDragOver = dragOverCartIndex === i && dragCartIndex !== i;
@@ -213,6 +402,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                 return (
                   <div
                     key={item.id}
+                    data-cart-idx={i}
                     className={`cart-texte${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
                     draggable
                     onDragStart={(e) => handleItemDragStart(e, i)}
@@ -221,7 +411,11 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                     onDragEnd={handleItemDragEnd}
                   >
                     <div className="cart-texte-controls">
-                      <span className="cart-drag-handle" title="Déplacer">⠿</span>
+                      <span
+                        className="cart-drag-handle"
+                        title="Déplacer"
+                        onTouchStart={(e) => handleDragHandleTouchStart(e, i)}
+                      >⠿</span>
                       <div className="cart-item-order">
                         <button className="cart-order-btn" onClick={() => monter(i)} disabled={i === 0} title="Monter">↑</button>
                         <button className="cart-order-btn" onClick={() => descendre(i)} disabled={i === totalItems - 1} title="Descendre">↓</button>
@@ -261,6 +455,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
               return (
                 <div
                   key={a.id}
+                  data-cart-idx={i}
                   className={`cart-item${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
                   draggable
                   onDragStart={(e) => handleItemDragStart(e, i)}
@@ -269,7 +464,11 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                   onDragEnd={handleItemDragEnd}
                 >
                   <div className="cart-item-top">
-                    <span className="cart-drag-handle" title="Déplacer">⠿</span>
+                    <span
+                      className="cart-drag-handle"
+                      title="Déplacer"
+                      onTouchStart={(e) => handleDragHandleTouchStart(e, i)}
+                    >⠿</span>
                     <div className="cart-item-order">
                       <button className="cart-order-btn" onClick={() => monter(i)} disabled={i === 0} title="Monter">↑</button>
                       <span className="cart-item-num">{i + 1}</span>
@@ -345,7 +544,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                 </div>
               )}
             </div>
-            <button className="btn btn-print" onClick={() => window.print()}>
+            <button className="btn btn-print" onClick={handlePrint}>
               &#128438; Imprimer / PDF
             </button>
           </div>
