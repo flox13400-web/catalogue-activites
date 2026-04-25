@@ -12,9 +12,9 @@
   "backgroundColor": "#faf9f6",
   "enableNotifications": false,
   "startUrl": "/catalogue-activites/",
-  "iconUrl": "https://flox13400-web.github.io/catalogue-activites/icon.svg",
-  "maskableIconUrl": "https://flox13400-web.github.io/catalogue-activites/icon.svg",
-  "monochromeIconUrl": "https://flox13400-web.github.io/catalogue-activites/icon.svg",
+  "iconUrl": "https://raw.githubusercontent.com/flox13400-web/catalogue-activites/master/public/icon.svg",
+  "maskableIconUrl": "https://raw.githubusercontent.com/flox13400-web/catalogue-activites/master/public/icon.svg",
+  "monochromeIconUrl": "https://raw.githubusercontent.com/flox13400-web/catalogue-activites/master/public/icon.svg",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "android.keystore",
