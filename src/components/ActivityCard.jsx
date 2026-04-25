@@ -32,7 +32,6 @@ export function ActivityCard({ activite, onClick, estEpingle }) {
       <div className="card-meta">
         <MetaItem label="Durée" value={activite.duree_detail || activite.duree} />
         <MetaItem label="Groupe" value={activite.groupe.join(" · ")} />
-        <MetaItem label="Préparation" value={activite.preparation} />
       </div>
       <div className="card-tags">
         <div className="card-tags-row">

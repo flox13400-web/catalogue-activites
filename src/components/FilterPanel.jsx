@@ -128,13 +128,6 @@ export default function FilterPanel({ filtres, setFiltres, filteredCount, totalA
           active={filtres.groupe}
           onToggle={(v) => toggle("groupe", v)}
         />
-        <FilterGroup
-          label="Préparation"
-          values={["Légère", "Moyenne", "Importante"]}
-          active={filtres.preparation}
-          onToggle={(v) => toggle("preparation", v)}
-        />
-
         <ThemeFilterGroup
           active={filtres.themes}
           tousThemes={tousThemes}

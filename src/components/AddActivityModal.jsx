@@ -6,7 +6,6 @@ import "../styles/modal.css";
 const PUBLICS_DISPONIBLES = ["7-10", "11-15", "16-20", "Post-bac", "Adultes"];
 const DUREES_DISPONIBLES = ["<30min", "30-60min", "1-2h", "2-4h", "Projet"];
 const GROUPES_DISPONIBLES = ["Petit", "Moyen", "Grand"];
-const PREPARATIONS_DISPONIBLES = ["Légère", "Moyenne", "Importante"];
 const CONTEXTES_DISPONIBLES = ["Scolaire", "Études sup.", "Entreprise"];
 
 // ── Utilitaire ID ──────────────────────────────────────────────
@@ -29,7 +28,7 @@ function parserJSON(texte) {
   const liste = Array.isArray(data) ? data : (Array.isArray(data.activites) ? data.activites : null);
   if (!liste) throw new Error("Format JSON non reconnu. Attendu : un tableau ou { activites: [...] }");
 
-  const CHAMPS_REQUIS = ["titre", "public", "duree", "groupe", "preparation", "themes", "contexte", "description_courte", "description", "apprentissage_cle"];
+  const CHAMPS_REQUIS = ["titre", "public", "duree", "groupe", "themes", "contexte", "description_courte", "description", "apprentissage_cle"];
   return liste.map((a, i) => {
     for (const c of CHAMPS_REQUIS) {
       if (a[c] === undefined || a[c] === null) throw new Error(`Activité ${i + 1} : champ manquant « ${c} »`);
@@ -42,7 +41,6 @@ function parserJSON(texte) {
       duree: String(a.duree).trim(),
       duree_detail: a.duree_detail || null,
       groupe: normaliserTableau(a.groupe),
-      preparation: String(a.preparation).trim(),
       themes: normaliserTableau(a.themes),
       contexte: normaliserTableau(a.contexte),
       description_courte: String(a.description_courte).trim(),
@@ -77,7 +75,6 @@ function parserMarkdown(texte) {
     const publicStr = extraireChamp("Public");
     const dureeStr = extraireChamp("Durée");
     const groupeStr = extraireChamp("Groupe");
-    const preparation = extraireChamp("Préparation");
     const themesStr = extraireChamp("Thèmes");
     const contexteStr = extraireChamp("Contexte");
 
@@ -111,7 +108,6 @@ function parserMarkdown(texte) {
       duree,
       duree_detail,
       groupe: splitter(groupeStr),
-      preparation,
       themes: splitter(themesStr),
       contexte: splitter(contexteStr),
       description_courte: description.split(".")[0]?.trim() || description.slice(0, 100),
@@ -247,7 +243,6 @@ export function ImportFichierModal({ onClose, onImport }) {
     "public": ["11-15", "16-20"],
     "duree": "30-60min",
     "groupe": ["Moyen"],
-    "preparation": "Légère",
     "themes": ["IA déconnecté"],
     "contexte": ["Scolaire"],
     "description_courte": "...",
@@ -263,7 +258,6 @@ export function ImportFichierModal({ onClose, onImport }) {
 **Public :** 11-15, 16-20
 **Durée :** 30-60min
 **Groupe :** Moyen
-**Préparation :** Légère
 **Thèmes :** IA déconnecté
 **Contexte :** Scolaire
 
@@ -343,7 +337,6 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
         duree: initialData.duree || "<30min",
         duree_detail: initialData.duree_detail || "",
         groupe: initialData.groupe || ["Moyen"],
-        preparation: initialData.preparation || "Légère",
         themes: initialData.themes || [],
         contexte: initialData.contexte || [],
         description_courte: initialData.description_courte || "",
@@ -357,7 +350,6 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
       duree: "<30min",
       duree_detail: "",
       groupe: ["Moyen"],
-      preparation: "Légère",
       themes: [],
       contexte: [],
       description_courte: "",
@@ -500,19 +492,6 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
                   onClick={() => toggleMulti("groupe", g)}
                   type="button"
                 >{g}</button>
-              ))}
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="form-label">Préparation</label>
-            <div className="form-chips">
-              {PREPARATIONS_DISPONIBLES.map((p) => (
-                <button
-                  key={p}
-                  className={`form-chip ${form.preparation === p ? "form-chip-active" : ""}`}
-                  onClick={() => setField("preparation", p)}
-                  type="button"
-                >{p}</button>
               ))}
             </div>
           </div>

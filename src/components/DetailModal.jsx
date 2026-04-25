@@ -46,7 +46,6 @@ export default function DetailModal({ activite, onClose, panier, setPanier, pani
         <div className="modal-meta-row">
           <span className="modal-meta"><strong>Durée</strong> · {activite.duree_detail || activite.duree}</span>
           <span className="modal-meta"><strong>Groupe</strong> · {activite.groupe.join(", ")}</span>
-          <span className="modal-meta"><strong>Préparation</strong> · {activite.preparation}</span>
         </div>
         <div className="modal-section">
           <h3 className="modal-section-title">Public</h3>
