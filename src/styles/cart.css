@@ -47,7 +47,7 @@
   background: none;
   border: none;
   color: var(--text-faint);
-  cursor: pointer;
+  cursor: var(--cursor-hand);
   font-size: 18px;
   line-height: 1;
   padding: 0;
@@ -85,7 +85,7 @@
   border: 1px solid var(--border-strong);
   border-radius: 3px;
   color: var(--text-muted);
-  cursor: pointer;
+  cursor: var(--cursor-hand);
   font-size: 11px;
   line-height: 1;
   padding: 1px 4px;
@@ -136,6 +136,79 @@
 .cart-texte-input:focus { border-color: var(--accent); }
 .cart-texte-input::placeholder { color: var(--text-faint); font-style: italic; }
 
+/* DURÉE DES ENCARTS */
+.cart-texte-duree {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border-strong);
+}
+.cart-texte-duree-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+.cart-texte-duree-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.cart-texte-duree-input {
+  width: 52px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 3px 6px;
+  outline: none;
+  text-align: right;
+  transition: border-color 120ms ease;
+}
+.cart-texte-duree-input:focus { border-color: var(--accent); }
+.cart-texte-duree-unit {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* TOTAL DURÉE */
+.cart-duree-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 12px;
+  margin-top: 4px;
+  background: var(--accent-soft);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.cart-duree-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent-deep);
+  font-weight: 500;
+}
+.cart-duree-value {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--accent-deep);
+  letter-spacing: -0.01em;
+}
+.cart-duree-projet {
+  font-size: 12px;
+  font-family: var(--sans);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--text-muted);
+}
+
 /* BOUTON AJOUTER ENCART */
 .cart-encart-btn {
   margin-top: 6px;
@@ -150,14 +223,14 @@
 .cart-drag-handle {
   font-size: 13px;
   color: var(--text-faint);
-  cursor: grab;
+  cursor: var(--cursor-hand);
   padding-right: 4px;
   user-select: none;
   flex-shrink: 0;
   line-height: 1;
 }
 .cart-drag-handle:active {
-  cursor: grabbing;
+  cursor: var(--cursor-hand);
 }
 .cart-item-dragging,
 .cart-texte-dragging {
@@ -199,7 +272,7 @@
   background: none;
   border: none;
   border-bottom: 1px solid var(--border);
-  cursor: pointer;
+  cursor: var(--cursor-hand);
   text-align: left;
   transition: background 120ms ease;
   font-family: var(--sans);

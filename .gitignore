@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# TWA keystore (ne jamais commiter)
+android.keystore
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

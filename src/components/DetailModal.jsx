@@ -2,6 +2,12 @@ import React from "react";
 import "../styles/modal.css";
 
 export default function DetailModal({ activite, onClose, panier, setPanier, panierOrdre, setPanierOrdre, onEdit, onDelete }) {
+  React.useEffect(() => {
+    function handleKey(e) { if (e.key === "Escape") onClose(); }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
   if (!activite) return null;
 
   const estEpingle = panier.has(activite.id);
@@ -35,7 +41,7 @@ export default function DetailModal({ activite, onClose, panier, setPanier, pani
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>×</button>
-        <div className="modal-eyebrow">{activite.id} · {activite.phase}</div>
+        <div className="modal-eyebrow">{activite.id}</div>
         <h2 className="modal-title">{activite.titre}</h2>
         <div className="modal-meta-row">
           <span className="modal-meta"><strong>Durée</strong> · {activite.duree_detail || activite.duree}</span>

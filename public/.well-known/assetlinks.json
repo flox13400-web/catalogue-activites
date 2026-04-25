@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "io.github.flox13400_web.catalogue_ia",
+    "sha256_cert_fingerprints": [
+      "1A:16:17:BF:87:6E:CF:E7:09:F1:EE:65:A9:66:B4:AF:16:81:89:07:74:2C:AB:33:EC:7D:9A:DC:4E:A0:7C:2F"
+    ]
+  }
+}]

@@ -17,6 +17,7 @@
   --shadow-card: 0 1px 2px rgba(0,0,0,0.03), 0 1px 0 rgba(0,0,0,0.02);
   --shadow-card-hover: 0 8px 24px rgba(168, 122, 63, 0.08), 0 2px 4px rgba(0,0,0,0.04);
   --shadow-modal: 0 20px 60px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08);
+  --cursor-hand: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 16 16'%3E%3Cdefs%3E%3ClinearGradient id='hg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f5d090'/%3E%3Cstop offset='0.5' stop-color='%23d4a574'/%3E%3Cstop offset='1' stop-color='%23a87a3f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M6.75 1a.75.75 0 0 1 .75.75V8a.5.5 0 0 0 1 0V5.467l.086-.004c.317-.012.637-.008.816.027.134.027.294.096.448.182.077.042.15.147.15.314V8a.5.5 0 0 0 1 0V6.435l.106-.01c.316-.024.584-.01.708.04.118.046.3.207.486.43.081.096.15.19.2.26V8.5a.5.5 0 1 0 1 0v-1h.342a1 1 0 0 1 .995 1.1l-.39 3.124A6 6 0 0 1 8 14a6 6 0 0 1-5.548-3.693.5.5 0 0 0-.048-.088l-1.625-2.8A1.5 1.5 0 0 1 2.09 5.64l1.17-.935a2.62 2.62 0 0 0 .605-.833l.04-.08a.5.5 0 0 0 .05-.213L4 1.75a.75.75 0 0 1 .75-.75h2z' fill='url(%23hg)' stroke='%231a1a1a' stroke-width='.6' stroke-linejoin='round' paint-order='stroke fill'/%3E%3Cellipse cx='7.5' cy='1.5' rx='.45' ry='.28' fill='white' opacity='.55'/%3E%3C/svg%3E") 14 2, pointer;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -112,7 +113,7 @@ body, .app {
   border: 1px solid var(--accent-deep);
   background: var(--accent-deep);
   color: var(--bg-elevated);
-  cursor: pointer;
+  cursor: var(--cursor-hand);
   letter-spacing: 0.01em;
   transition: background 150ms ease, border-color 150ms ease;
   white-space: nowrap;
@@ -133,7 +134,7 @@ body, .app {
   border: 1px solid #c0392b;
   background: #fef9f9;
   color: #c0392b;
-  cursor: pointer;
+  cursor: var(--cursor-hand);
   letter-spacing: 0.01em;
   transition: background 150ms ease, color 150ms ease;
   white-space: nowrap;
@@ -236,7 +237,7 @@ body, .app {
   border: 1px solid var(--accent-deep);
   background: var(--accent-deep);
   color: var(--bg-elevated);
-  cursor: pointer;
+  cursor: var(--cursor-hand);
   font-weight: 500;
   letter-spacing: 0.01em;
   transition: background 150ms ease;
@@ -259,7 +260,7 @@ body, .app {
   font-family: var(--sans);
   font-size: 12px;
   color: var(--text-muted);
-  cursor: pointer;
+  cursor: var(--cursor-hand);
   padding: 8px;
   letter-spacing: 0.02em;
   transition: border-color 120ms ease, color 120ms ease;

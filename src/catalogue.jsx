@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 
 import ACTIVITES_NATIVES from "./data/activites.json";
-import { PHASE_ORDER, FILTRES_INIT, applyFilters } from "./utils/filters";
+import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
 import { genererIdCustom, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
 import Header from "./components/Header";
@@ -9,7 +9,7 @@ import FilterPanel from "./components/FilterPanel";
 import CartPanel from "./components/CartPanel";
 import DetailModal from "./components/DetailModal";
 import PrintView from "./components/PrintView";
-import { ActivityCard, PhaseSection } from "./components/ActivityCard";
+import { ActivityCard } from "./components/ActivityCard";
 
 import "./styles/global.css";
 
@@ -69,15 +69,6 @@ export default function Catalogue() {
     [filtres, toutesActivites]
   );
 
-  const groupedByPhase = useMemo(() => {
-    const groups = {};
-    for (const phase of PHASE_ORDER) groups[phase] = [];
-    for (const a of activitesFiltrees) {
-      if (groups[a.phase]) groups[a.phase].push(a);
-    }
-    return groups;
-  }, [activitesFiltrees]);
-
   const panierAffichage = panierOrdre
     .map(item => {
       if (item.type === "activite") {
@@ -93,7 +84,6 @@ export default function Catalogue() {
     const nouvelleActivite = {
       id,
       titre: formData.titre.trim(),
-      phase: formData.phase,
       public: formData.public,
       duree: formData.duree,
       duree_detail: formData.duree_detail.trim() || null,
@@ -137,7 +127,6 @@ export default function Catalogue() {
     const activiteMiseAJour = {
       id,
       titre: formData.titre.trim(),
-      phase: formData.phase,
       public: formData.public,
       duree: formData.duree,
       duree_detail: formData.duree_detail.trim() || null,
@@ -218,17 +207,16 @@ export default function Catalogue() {
               <p className="no-results-hint">Essayez de réduire le nombre de critères sélectionnés.</p>
             </div>
           ) : (
-            PHASE_ORDER.map((phase) =>
-              groupedByPhase[phase].length > 0 ? (
-                <PhaseSection
-                  key={phase}
-                  phase={phase}
-                  activites={groupedByPhase[phase]}
-                  onCardClick={setSelected}
-                  panier={panier}
+            <div className="cards-grid">
+              {activitesFiltrees.map((a) => (
+                <ActivityCard
+                  key={a.id}
+                  activite={a}
+                  onClick={setSelected}
+                  estEpingle={panier.has(a.id)}
                 />
-              ) : null
-            )
+              ))}
+            </div>
           )}
           <footer className="app-footer">
             <p>

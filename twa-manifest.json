@@ -1,0 +1,37 @@
+{
+  "packageId": "io.github.flox13400_web.catalogue_ia",
+  "host": "flox13400-web.github.io",
+  "name": "Catalogue d'activités pédagogiques IA",
+  "launcherName": "Catalogue IA",
+  "display": "standalone",
+  "orientation": "default",
+  "themeColor": "#a87a3f",
+  "themeColorDark": "#a87a3f",
+  "navigationColor": "#a87a3f",
+  "navigationColorDark": "#a87a3f",
+  "backgroundColor": "#faf9f6",
+  "enableNotifications": false,
+  "startUrl": "/catalogue-activites/",
+  "iconUrl": "https://flox13400-web.github.io/catalogue-activites/icon.svg",
+  "maskableIconUrl": "https://flox13400-web.github.io/catalogue-activites/icon.svg",
+  "monochromeIconUrl": "https://flox13400-web.github.io/catalogue-activites/icon.svg",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "android.keystore",
+    "alias": "catalogue-ia"
+  },
+  "appVersionCode": 1,
+  "appVersionName": "1.0.0",
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://flox13400-web.github.io/catalogue-activites/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": { "enabled": false },
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "playBilling": { "enabled": false },
+  "fingerprints": [
+    "1A:16:17:BF:87:6E:CF:E7:09:F1:EE:65:A9:66:B4:AF:16:81:89:07:74:2C:AB:33:EC:7D:9A:DC:4E:A0:7C:2F"
+  ]
+}

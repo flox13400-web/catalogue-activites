@@ -35,7 +35,6 @@ export default function PrintView({ panierAffichage }) {
                 <span className="print-toc-num">{i + 1}.</span>
                 <span className="print-toc-name">{item.activite.titre}</span>
                 <span className="print-toc-id">{item.activite.id}</span>
-                <span className="print-toc-phase">{item.activite.phase}</span>
               </li>
             ))}
           </ol>
@@ -60,10 +59,7 @@ export default function PrintView({ panierAffichage }) {
                 <span className="print-fiche-num">{item.num}</span>
                 <div>
                   <h2 className="print-fiche-titre">{a.titre}</h2>
-                  <div className="print-fiche-id-phase">
-                    <span className="print-fiche-id">{a.id}</span>
-                    <span className="print-fiche-phase">{a.phase}</span>
-                  </div>
+                  <span className="print-fiche-id">{a.id}</span>
                 </div>
               </div>
             </div>

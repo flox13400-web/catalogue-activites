@@ -1,25 +1,3 @@
-export const PHASE_ORDER = [
-  "Avant",
-  "Demander",
-  "Produire",
-  "Évaluer",
-  "Sécuriser",
-  "Piloter",
-  "Construire",
-  "Contribuer",
-];
-
-export const PHASE_DESCRIPTIONS = {
-  Avant: "Comprendre ce qu'est l'IA",
-  Demander: "Formuler des prompts",
-  Produire: "Comprendre et utiliser le traitement",
-  Évaluer: "Exercer son esprit critique",
-  Sécuriser: "Risques et conformité",
-  Piloter: "Managers et dirigeants",
-  Construire: "Se positionner professionnellement",
-  Contribuer: "Soutenir dans la durée et partager",
-};
-
 export const FILTRES_INIT = {
   public: [],
   duree: [],

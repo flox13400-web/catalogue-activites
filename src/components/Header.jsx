@@ -1,5 +1,4 @@
 import React from "react";
-import { PHASE_ORDER } from "../utils/filters";
 import "../styles/global.css";
 
 export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onReinitialiser, nbNativesModifiees, nbNativesSupprimees }) {
@@ -8,13 +7,13 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <div className="header-eyebrow">Ressources pédagogiques · IA générative</div>
+          <div className="header-eyebrow">Bilbiothèque interactive</div>
           <h1 className="header-title">
-            Catalogue des <em>activités</em> sans écran
+            Catalogue<em> d'activités</em>
           </h1>
           <p className="header-subtitle">
-            Une bibliothèque éditoriale de {totalActivites} activités pour enseigner
-            le fonctionnement, les usages et les limites des IA génératives.
+            Concevoir des scénarios
+            n'a jamais été aussi facile.
           </p>
         </div>
         <div className="header-right">
@@ -25,10 +24,6 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
           <div className="header-stat">
             <div className="header-stat-num">{totalActivites}</div>
             <div className="header-stat-label">activités</div>
-          </div>
-          <div className="header-stat">
-            <div className="header-stat-num">{PHASE_ORDER.length}</div>
-            <div className="header-stat-label">phases</div>
           </div>
           <button className="btn-nouvelle-activite" onClick={onNouvelleActivite}>
             ✚ Nouvelle activité

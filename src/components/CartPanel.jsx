@@ -2,6 +2,23 @@ import React from "react";
 import { exportJSON, exportMarkdown, exportCSV } from "../utils/export";
 import "../styles/cart.css";
 
+const DUREE_PLAGES = {
+  "<30min":   { min: 10, max: 30 },
+  "30-60min": { min: 30, max: 60 },
+  "1-2h":     { min: 60, max: 120 },
+  "2-4h":     { min: 120, max: 240 },
+  "Projet":   null,
+};
+
+function formatMinutes(m) {
+  if (m === 0) return "0min";
+  const h = Math.floor(m / 60);
+  const min = m % 60;
+  if (h === 0) return `${min}min`;
+  if (min === 0) return `${h}h`;
+  return `${h}h${String(min).padStart(2, "0")}`;
+}
+
 export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites }) {
   const [exportOuvert, setExportOuvert] = React.useState(false);
   const [dragCartIndex, setDragCartIndex] = React.useState(null);
@@ -22,6 +39,26 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
   const totalItems = panierItems.length;
   const totalActivites = panierItems.filter(i => i.type === "activite").length;
   const activitesPourExport = panierItems.filter(i => i.type === "activite").map(i => i.activite);
+
+  // ── Calcul de la durée totale ──────────────────────────────────
+  const dureeTotal = (() => {
+    let min = 0, max = 0, hasProjet = false;
+    for (const item of panierItems) {
+      if (item.type === "activite") {
+        const plage = DUREE_PLAGES[item.activite.duree];
+        if (plage === null) { hasProjet = true; }
+        else if (plage) { min += plage.min; max += plage.max; }
+      } else if (item.type === "texte" && (item.duree ?? 0) > 0) {
+        min += item.duree;
+        max += item.duree;
+      }
+    }
+    return { min, max, hasProjet };
+  })();
+
+  const afficherDuree = dureeTotal.min > 0 || dureeTotal.max > 0 || dureeTotal.hasProjet;
+
+  // ── Actions panier ─────────────────────────────────────────────
 
   function retirer(id) {
     setPanier(prev => { const next = new Set(prev); next.delete(id); return next; });
@@ -52,7 +89,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
   }
 
   function ajouterEncart() {
-    setPanierOrdre(prev => [...prev, { type: "texte", id: `TEXT-${Date.now()}`, contenu: "" }]);
+    setPanierOrdre(prev => [...prev, { type: "texte", id: `TEXT-${Date.now()}`, contenu: "", duree: 0 }]);
   }
 
   function updateEncart(id, contenu) {
@@ -61,11 +98,17 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     ));
   }
 
+  function updateEncartDuree(id, duree) {
+    setPanierOrdre(prev => prev.map(item =>
+      item.type === "texte" && item.id === id ? { ...item, duree } : item
+    ));
+  }
+
   function supprimerEncart(id) {
     setPanierOrdre(prev => prev.filter(item => !(item.type === "texte" && item.id === id)));
   }
 
-  // ── Drag depuis le catalogue vers le panier ────────────────────
+  // ── Drag depuis le catalogue ───────────────────────────────────
 
   function handlePanelDragOver(e) {
     if (e.dataTransfer.types.includes("text/activity-id")) {
@@ -89,7 +132,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     setCartDropActive(false);
   }
 
-  // ── Drag interne au panier (réordonnancement) ──────────────────
+  // ── Drag interne (réordonnancement) ───────────────────────────
 
   function handleItemDragStart(e, i) {
     setDragCartIndex(i);
@@ -165,6 +208,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
               const isDragOver = dragOverCartIndex === i && dragCartIndex !== i;
 
               if (item.type === "texte") {
+                const dureeVal = item.duree ?? 0;
                 return (
                   <div
                     key={item.id}
@@ -190,6 +234,24 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                       onChange={e => updateEncart(item.id, e.target.value)}
                       rows={3}
                     />
+                    <div className="cart-texte-duree">
+                      <span className="cart-texte-duree-label">Durée</span>
+                      <div className="cart-texte-duree-row">
+                        <input
+                          type="number"
+                          className="cart-texte-duree-input"
+                          min="0"
+                          max="999"
+                          placeholder="0"
+                          value={dureeVal > 0 ? dureeVal : ""}
+                          onChange={e => {
+                            const v = parseInt(e.target.value, 10);
+                            updateEncartDuree(item.id, isNaN(v) || v < 0 ? 0 : v);
+                          }}
+                        />
+                        <span className="cart-texte-duree-unit">min</span>
+                      </div>
+                    </div>
                   </div>
                 );
               }
@@ -220,6 +282,19 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                 </div>
               );
             })}
+
+            {afficherDuree && (
+              <div className="cart-duree-total">
+                <span className="cart-duree-label">Durée estimée</span>
+                <span className="cart-duree-value">
+                  {dureeTotal.min === dureeTotal.max
+                    ? formatMinutes(dureeTotal.min)
+                    : `${formatMinutes(dureeTotal.min)} – ${formatMinutes(dureeTotal.max)}`}
+                  {dureeTotal.hasProjet && <span className="cart-duree-projet"> + projet</span>}
+                </span>
+              </div>
+            )}
+
             <button className="btn-reset cart-encart-btn" onClick={ajouterEncart}>
               ＋ Ajouter un encart
             </button>

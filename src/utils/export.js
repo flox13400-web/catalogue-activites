@@ -32,7 +32,6 @@ export function exportMarkdown(activites) {
   activites.forEach((a, i) => {
     lignes.push(`## ${i + 1}. ${a.titre} \`${a.id}\``);
     lignes.push(``);
-    lignes.push(`**Phase :** ${a.phase}  `);
     lignes.push(`**Public :** ${a.public.join(", ")}  `);
     lignes.push(`**Durée :** ${a.duree_detail || a.duree}  `);
     lignes.push(`**Groupe :** ${a.groupe.join(", ")}  `);
@@ -56,7 +55,7 @@ export function exportMarkdown(activites) {
 }
 
 export function exportCSV(activites) {
-  const entetes = ["id", "titre", "phase", "public", "duree", "groupe", "preparation", "themes", "contexte", "description_courte", "apprentissage_cle"];
+  const entetes = ["id", "titre", "public", "duree", "groupe", "preparation", "themes", "contexte", "description_courte", "apprentissage_cle"];
   const echapper = (v) => `"${String(v).replace(/"/g, '""')}"`;
 
   const lignes = [
@@ -65,7 +64,6 @@ export function exportCSV(activites) {
       [
         a.id,
         a.titre,
-        a.phase,
         a.public.join(" | "),
         a.duree_detail || a.duree,
         a.groupe.join(" | "),

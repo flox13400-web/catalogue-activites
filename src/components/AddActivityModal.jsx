@@ -3,10 +3,6 @@ import "../styles/modal.css";
 
 // ── Constantes formulaire ──────────────────────────────────────
 
-const PHASES_DISPONIBLES = [
-  "Avant", "Demander", "Produire", "Évaluer",
-  "Sécuriser", "Piloter", "Construire", "Contribuer",
-];
 const PUBLICS_DISPONIBLES = ["7-10", "11-15", "16-20", "Post-bac", "Adultes"];
 const DUREES_DISPONIBLES = ["<30min", "30-60min", "1-2h", "2-4h", "Projet"];
 const GROUPES_DISPONIBLES = ["Petit", "Moyen", "Grand"];
@@ -33,7 +29,7 @@ function parserJSON(texte) {
   const liste = Array.isArray(data) ? data : (Array.isArray(data.activites) ? data.activites : null);
   if (!liste) throw new Error("Format JSON non reconnu. Attendu : un tableau ou { activites: [...] }");
 
-  const CHAMPS_REQUIS = ["titre", "phase", "public", "duree", "groupe", "preparation", "themes", "contexte", "description_courte", "description", "apprentissage_cle"];
+  const CHAMPS_REQUIS = ["titre", "public", "duree", "groupe", "preparation", "themes", "contexte", "description_courte", "description", "apprentissage_cle"];
   return liste.map((a, i) => {
     for (const c of CHAMPS_REQUIS) {
       if (a[c] === undefined || a[c] === null) throw new Error(`Activité ${i + 1} : champ manquant « ${c} »`);
@@ -42,7 +38,6 @@ function parserJSON(texte) {
     return {
       id: a.id || null,
       titre: String(a.titre).trim(),
-      phase: String(a.phase).trim(),
       public: normaliserTableau(a.public),
       duree: String(a.duree).trim(),
       duree_detail: a.duree_detail || null,
@@ -79,7 +74,6 @@ function parserMarkdown(texte) {
       return l ? l.match(re)[1].trim() : "";
     }
 
-    const phase = extraireChamp("Phase");
     const publicStr = extraireChamp("Public");
     const dureeStr = extraireChamp("Durée");
     const groupeStr = extraireChamp("Groupe");
@@ -108,12 +102,11 @@ function parserMarkdown(texte) {
     const duree = DUREES_OK.includes(dureeStr) ? dureeStr : (DUREES_OK.find((d) => dureeStr.includes(d)) || "<30min");
     const duree_detail = dureeStr !== duree ? dureeStr : null;
 
-    if (!titre || !phase) continue;
+    if (!titre) continue;
 
     activites.push({
       id,
       titre,
-      phase,
       public: splitter(publicStr),
       duree,
       duree_detail,
@@ -246,7 +239,6 @@ export function ImportFichierModal({ onClose, onImport }) {
                 <pre className="import-format-code">{`[
   {
     "titre": "Nom de l'activité",
-    "phase": "Avant",
     "public": ["11-15", "16-20"],
     "duree": "30-60min",
     "groupe": ["Moyen"],
@@ -263,7 +255,6 @@ export function ImportFichierModal({ onClose, onImport }) {
                 <div className="import-format-title">Format Markdown (export catalogue)</div>
                 <pre className="import-format-code">{`## 1. Titre de l'activité \`ID\`
 
-**Phase :** Avant
 **Public :** 11-15, 16-20
 **Durée :** 30-60min
 **Groupe :** Moyen
@@ -316,7 +307,7 @@ Déroulé de l'activité...
                   <div className="import-preview-info">
                     <div className="import-preview-titre">{a.titre}</div>
                     <div className="import-preview-meta">
-                      {a.phase} · {a.public.join(", ")} · {a.duree}
+                      {a.public.join(", ")} · {a.duree}
                     </div>
                   </div>
                 </div>
@@ -343,7 +334,6 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
     if (initialData) {
       return {
         titre: initialData.titre || "",
-        phase: initialData.phase || "Avant",
         public: initialData.public || [],
         duree: initialData.duree || "<30min",
         duree_detail: initialData.duree_detail || "",
@@ -358,7 +348,6 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
     }
     return {
       titre: "",
-      phase: "Avant",
       public: [],
       duree: "<30min",
       duree_detail: "",
@@ -452,20 +441,6 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
             onChange={(e) => setField("titre", e.target.value)}
           />
           {erreurs.titre && <div className="form-error">{erreurs.titre}</div>}
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Phase</label>
-          <div className="form-chips">
-            {PHASES_DISPONIBLES.map((p) => (
-              <button
-                key={p}
-                className={`form-chip ${form.phase === p ? "form-chip-active" : ""}`}
-                onClick={() => setField("phase", p)}
-                type="button"
-              >{p}</button>
-            ))}
-          </div>
         </div>
 
         <div className="form-group">

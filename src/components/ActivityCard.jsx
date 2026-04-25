@@ -1,5 +1,4 @@
 import React from "react";
-import { PHASE_DESCRIPTIONS } from "../utils/filters";
 import "../styles/card.css";
 
 function MetaItem({ label, value }) {
@@ -26,9 +25,6 @@ export function ActivityCard({ activite, onClick, estEpingle }) {
     >
       <div className="card-top">
         <span className="card-id">{activite.id}</span>
-        <span className={`card-phase phase-${activite.phase.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")}`}>
-          {activite.phase}
-        </span>
         {estEpingle && <span className="card-epingle-badge" title="Dans le panier">📌</span>}
         {activite._custom && <span className="card-custom-badge">✎ perso</span>}
         {activite._modifiee && !activite._custom && <span className="card-modifiee-badge">✎ modifiée</span>}
@@ -56,29 +52,5 @@ export function ActivityCard({ activite, onClick, estEpingle }) {
         </div>
       </div>
     </article>
-  );
-}
-
-export function PhaseSection({ phase, activites, onCardClick, panier }) {
-  return (
-    <section className="phase-section">
-      <header className="phase-header">
-        <div className="phase-header-left">
-          <h2 className="phase-title">{phase}</h2>
-          <p className="phase-desc">{PHASE_DESCRIPTIONS[phase]}</p>
-        </div>
-        <div className="phase-count">{activites.length}</div>
-      </header>
-      <div className="cards-grid">
-        {activites.map((a) => (
-          <ActivityCard
-            key={a.id}
-            activite={a}
-            onClick={onCardClick}
-            estEpingle={panier.has(a.id)}
-          />
-        ))}
-      </div>
-    </section>
   );
 }
