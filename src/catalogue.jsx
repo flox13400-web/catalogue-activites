@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 
-import ACTIVITES_NATIVES from "./data/activites.json";
+import ACTIVITES_NATIVES from "./data/ia_deconnecte.json";
 import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
 import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
