@@ -244,12 +244,14 @@ export default function Catalogue() {
   }
 
   function handleChargerCatalogueBase() {
-    if (nativesLoaded) {
-      if (!window.confirm(
-        "Charger le catalogue de base ?\n\nLes 105 activités natives seront rechargées dans leur version d'origine. Vos modifications sur ces activités seront perdues."
-      )) return;
+    const existingIds = new Set([
+      ...activitesNatives.map(a => a.id),
+      ...activitesCustom.map(a => a.id),
+    ]);
+    const nouvelles = ACTIVITES_NATIVES.filter(a => !existingIds.has(a.id));
+    if (nouvelles.length > 0) {
+      setActivitesNatives(prev => [...prev, ...nouvelles]);
     }
-    setActivitesNatives(ACTIVITES_NATIVES);
     setNativesLoaded(true);
     setShowChoixImport(false);
   }
