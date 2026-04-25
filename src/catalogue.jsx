@@ -26,9 +26,15 @@ export default function Catalogue() {
 
   const [activitesNatives, setActivitesNatives] = useState(() => {
     const data = loadJSON(KEYS.natives, null);
-    if (Array.isArray(data) && data.length > 0) return data;
-    saveJSON(KEYS.natives, ACTIVITES_NATIVES);
-    return ACTIVITES_NATIVES;
+    return Array.isArray(data) ? data : [];
+  });
+
+  const [nativesLoaded, setNativesLoaded] = useState(() => {
+    const flag = loadJSON(KEYS.nativesLoaded, null);
+    if (flag !== null) return Boolean(flag);
+    // Migration : si des données natives existent déjà, considérer comme chargé
+    const data = loadJSON(KEYS.natives, null);
+    return data !== null;
   });
 
   const [activitesCustom, setActivitesCustom] = useState(() => {
@@ -59,6 +65,7 @@ export default function Catalogue() {
   useEffect(() => { saveJSON(KEYS.natives, activitesNatives); }, [activitesNatives]);
   useEffect(() => { saveJSON(KEYS.custom, activitesCustom); }, [activitesCustom]);
   useEffect(() => { saveJSON(KEYS.corbeille, corbeille); }, [corbeille]);
+  useEffect(() => { saveJSON(KEYS.nativesLoaded, nativesLoaded); }, [nativesLoaded]);
 
   const toutesActivites = useMemo(
     () => [...activitesNatives, ...activitesCustom],
@@ -236,11 +243,23 @@ export default function Catalogue() {
     setCorbeille([]);
   }
 
+  function handleChargerCatalogueBase() {
+    if (nativesLoaded) {
+      if (!window.confirm(
+        "Charger le catalogue de base ?\n\nLes 105 activités natives seront rechargées dans leur version d'origine. Vos modifications sur ces activités seront perdues."
+      )) return;
+    }
+    setActivitesNatives(ACTIVITES_NATIVES);
+    setNativesLoaded(true);
+    setShowChoixImport(false);
+  }
+
   function handleReinitialiser() {
     if (!window.confirm(
       "Réinitialiser les 105 activités natives ?\n\nToutes vos modifications sur les activités natives seront perdues. Vos activités personnalisées seront conservées."
     )) return;
     setActivitesNatives(ACTIVITES_NATIVES);
+    setNativesLoaded(true);
     const idsNatifs = new Set(ACTIVITES_NATIVES.map((a) => a.id));
     setPanierOrdre((prev) => prev.filter(item =>
       item.type === "texte" || idsNatifs.has(item.id) || activitesCustom.some((a) => a.id === item.id)
@@ -255,7 +274,7 @@ export default function Catalogue() {
   }
 
   const nbNativesModifiees = activitesNatives.filter((a) => a._modifiee).length;
-  const nbNativesSupprimees = ACTIVITES_NATIVES.length - activitesNatives.length;
+  const nbNativesSupprimees = nativesLoaded ? ACTIVITES_NATIVES.length - activitesNatives.length : 0;
 
   return (
     <div className="app">
@@ -282,7 +301,13 @@ export default function Catalogue() {
           onMobileClose={() => setMobilePanelOpen(null)}
         />
         <main className="main">
-          {activitesFiltrees.length === 0 ? (
+          {toutesActivites.length === 0 ? (
+            <div className="empty-catalogue">
+              <p className="empty-catalogue-title">Votre catalogue est vide</p>
+              <p className="empty-catalogue-hint">Chargez le catalogue de base ou ajoutez vos propres activités.</p>
+              <button className="btn empty-catalogue-btn" onClick={() => setShowChoixImport(true)}>+ Ajouter des activités</button>
+            </div>
+          ) : activitesFiltrees.length === 0 ? (
             <div className="no-results">
               <p className="no-results-title">Aucune activité ne correspond à ces filtres.</p>
               <p className="no-results-hint">Essayez de réduire le nombre de critères sélectionnés.</p>
@@ -370,6 +395,7 @@ export default function Catalogue() {
           onClose={() => setShowChoixImport(false)}
           onManuel={() => { setShowChoixImport(false); setShowAddModal(true); }}
           onImport={() => { setShowChoixImport(false); setShowImportModal(true); }}
+          onChargerCatalogueBase={handleChargerCatalogueBase}
         />
       )}
 

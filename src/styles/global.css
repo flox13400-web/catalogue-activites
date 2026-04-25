@@ -349,6 +349,27 @@ body, .app {
   color: var(--text-muted);
 }
 
+/* CATALOGUE VIDE */
+.empty-catalogue {
+  padding: 80px 24px;
+  text-align: center;
+}
+.empty-catalogue-title {
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.empty-catalogue-hint {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+}
+.empty-catalogue-btn {
+  font-size: 14px;
+  padding: 10px 20px;
+}
+
 /* ÉLÉMENTS MOBILES (cachés sur desktop) */
 .mobile-toolbar { display: none; }
 .mobile-backdrop { display: none; }

@@ -204,6 +204,22 @@
 .choix-import-icon { font-size: 28px; line-height: 1; }
 .choix-import-label { font-size: 14px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
 .choix-import-desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; }
+.choix-import-card-base {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.choix-import-card-base:hover {
+  background: var(--accent-soft);
+  box-shadow: 0 4px 16px rgba(168,122,63,0.18);
+}
+.choix-import-card-base .choix-import-icon { font-size: 22px; }
+.choix-import-card-base .choix-import-label { font-size: 13px; }
+.choix-import-card-base .choix-import-desc { font-size: 11px; }
 
 /* MODALE IMPORT FICHIER */
 .modal-import {

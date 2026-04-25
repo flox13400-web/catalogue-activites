@@ -1,12 +1,12 @@
 [
   {
     "id": "A01",
-    "titre": "L'aspirateur à mots",
+    "titre": "#L'aspirateur à mots",
     "public": [
       "7-10",
       "11-15"
     ],
-    "duree": "<30min",
+    "duree": "20min",
     "duree_detail": null,
     "groupe": [
       "Moyen"
@@ -19,43 +19,20 @@
       "Scolaire"
     ],
     "description_courte": "Chaque enfant reçoit un livre et lit à voix basse pendant 5 minutes.",
-    "description": "Chaque enfant reçoit un livre et lit à voix basse pendant 5 minutes. Ils sont des \"petits cerveaux\" qui s'entraînent en absorbant du texte. Vivent physiquement la phase d'entraînement.",
+    "description": "Chaque enfant reçoit un livre et lit à voix basse pendant 5 minutes. Ils sont des \"petits cerveaux\" qui s'entraînent en absorbant du texte. Vivent physiquement la phase d'entraînement. Puis l'animateur pose une série de questions auxquelles chacun va répondre différemment (en fonction de la source qu'il aura lu).",
     "apprentissage_cle": "Une IA ne sait que ce qu'elle a \"lu\". Sa connaissance dépend de ce avec quoi on l'a nourrie."
   },
   {
-    "id": "A02",
-    "titre": "Le jeu des cartes-mots",
-    "public": [
-      "7-10",
-      "11-15"
-    ],
-    "duree": "30-60min",
-    "duree_detail": null,
-    "groupe": [
-      "Moyen"
-    ],
-    "preparation": "Moyenne",
-    "themes": [
-      "IA déconnecté"
-    ],
-    "contexte": [
-      "Scolaire"
-    ],
-    "description_courte": "Les enfants regroupent physiquement dans la pièce des cartes-mots qui \"se ressemblent\" par le sens.",
-    "description": "Les enfants regroupent physiquement dans la pièce des cartes-mots qui \"se ressemblent\" par le sens. Pour les 11-15 ans, version avancée avec mots abstraits et plusieurs axes de regroupement (sens, connotation, registre).",
-    "apprentissage_cle": "L'IA \"range\" les mots selon leur proximité de sens dans un espace à des centaines de dimensions."
-  },
-  {
     "id": "A03",
-    "titre": "Le bibliothécaire aveugle",
+    "titre": "#Le bibliothécaire aveugle",
     "public": [
       "7-10",
-      "11-15"
+      "11-15", "16-20", "Adultes", "Post-bac"
     ],
-    "duree": "<30min",
+    "duree": "15min",
     "duree_detail": null,
     "groupe": [
-      "Moyen"
+      "Moyen", "Petit"
     ],
     "preparation": "Légère",
     "themes": [
@@ -65,18 +42,18 @@
       "Scolaire"
     ],
     "description_courte": "Un enfant joue le \"bibliothécaire\" qui n'a lu que 5 livres précis. Les autres lui posent des questions.",
-    "description": "Un enfant joue le \"bibliothécaire\" qui n'a lu que 5 livres précis. Les autres lui posent des questions. S'il ne sait pas, il doit soit dire \"je ne sais pas\", soit inventer une réponse plausible.",
+    "description": "L'animateur joue le \"bibliothécaire\" qui a lu 5 livres précis. Les enfants lui posent des questions. S'il ne sait pas, il doit soit dire \"je ne sais pas\", soit inventer une réponse plausible et le cas échéant, les enfants doivent deviner s'il dit vrai ou non.",
     "apprentissage_cle": "Une IA ne sait pas tout, et quand elle ne sait pas, elle invente parfois sans le dire."
   },
   {
     "id": "A04",
-    "titre": "L'analyse comparative de corpus",
+    "titre": "#L'analyse comparative de corpus",
     "public": [
-      "11-15",
+      "Adultes",
       "16-20",
       "Post-bac"
     ],
-    "duree": "30-60min",
+    "duree": "30min",
     "duree_detail": null,
     "groupe": [
       "Moyen"
@@ -95,13 +72,14 @@
   },
   {
     "id": "A05",
-    "titre": "L'archéologie des biais",
+    "titre": "#L'archéologie des biais",
     "public": [
       "11-15",
       "16-20",
-      "Post-bac"
+      "Post-bac",
+      "Adultes"
     ],
-    "duree": "<30min",
+    "duree": "30min",
     "duree_detail": null,
     "groupe": [
       "Moyen"
@@ -114,19 +92,19 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Séries de données présentées : contributeurs Wikipédia par genre, langues sur internet, pays d'origine des contenus.",
-    "description": "Séries de données présentées : contributeurs Wikipédia par genre, langues sur internet, pays d'origine des contenus. Les participants prédisent les conséquences puis vérifient. Version post-bac : enquête par groupes sur langues, genres, temporalité, classes sociales.",
+    "description_courte": "Les apprenants, par groupe de 2 ou 3 personnes, réalisent des recherches à propos d'une thématique imposée en fonction d'un pays...",
+    "description": "Les apprenants, par groupe de 2 ou 3 personnes, réalisent des recherches à propos d'une thématique imposée en fonction d'un pays pris au hasard (sur la langue, genres, temporalité, classes sociales...). Puis ils échangent chacun leur tour sur leurs trouvailles et constatent les différences.",
     "apprentissage_cle": "Les biais de l'IA ne sortent pas de nulle part : ils sont le reflet mathématique des biais de ceux qui ont produit les données."
   },
   {
     "id": "A06",
-    "titre": "Le débat \"l'IA pense-t-elle ?\"",
+    "titre": "#Le débat \"l'IA pense-t-elle ?\"",
     "public": [
       "11-15",
       "16-20",
       "Post-bac"
     ],
-    "duree": "30-60min",
+    "duree": "45min",
     "duree_detail": null,
     "groupe": [
       "Moyen"
@@ -140,108 +118,16 @@
       "Études sup."
     ],
     "description_courte": "Deux camps défendent des positions tirées au sort : \"l'IA comprend vraiment\" vs \"l'IA simule la compréhension\".",
-    "description": "Deux camps défendent des positions tirées au sort : \"l'IA comprend vraiment\" vs \"l'IA simule la compréhension\". Introduction à la chambre chinoise de Searle. Version post-bac : séminaire de 3 séances sur textes primaires (Turing, Searle, Dennett).",
+    "description": "Deux camps défendent des positions tirées au sort : \"l'IA comprend vraiment\" vs \"l'IA simule la compréhension\". Introduction à la chambre chinoise de Searle.",
     "apprentissage_cle": "La question \"l'IA comprend-elle ?\" est une vraie question philosophique, débattue par les chercheurs eux-mêmes."
   },
   {
-    "id": "A07",
-    "titre": "Anatomie d'un modèle LLM",
-    "public": [
-      "16-20",
-      "Post-bac"
-    ],
-    "duree": "2-4h",
-    "duree_detail": null,
-    "groupe": [
-      "Moyen"
-    ],
-    "preparation": "Importante",
-    "themes": [
-      "IA déconnecté"
-    ],
-    "contexte": [
-      "Scolaire",
-      "Études sup."
-    ],
-    "description_courte": "4 groupes incarnent les 4 étapes de fabrication : corpus brut, fine-tuning, alignement, RLHF.",
-    "description": "4 groupes incarnent les 4 étapes de fabrication : corpus brut, fine-tuning, alignement, RLHF. Chaque groupe présente son travail et ses choix. Version post-bac étendue avec pipeline complet (cahier des charges, pré-traitement, architecture, évaluation, déploiement).",
-    "apprentissage_cle": "Un LLM n'est pas \"juste entraîné sur internet\". C'est le produit d'une chaîne de décisions humaines à plusieurs étapes."
-  },
-  {
-    "id": "A08",
-    "titre": "Cartographie géopolitique des acteurs IA",
-    "public": [
-      "16-20",
-      "Post-bac"
-    ],
-    "duree": "1-2h",
-    "duree_detail": null,
-    "groupe": [
-      "Moyen"
-    ],
-    "preparation": "Importante",
-    "themes": [
-      "IA déconnecté"
-    ],
-    "contexte": [
-      "Scolaire",
-      "Études sup."
-    ],
-    "description_courte": "Cartographier l'écosystème IA mondial : acteurs, localisations, financements, modèles économiques, alliances.",
-    "description": "Cartographier l'écosystème IA mondial : acteurs, localisations, financements, modèles économiques, alliances. Production : fresque murale collective. Quelles implications pour notre discipline, notre pays ?",
-    "apprentissage_cle": "L'IA n'est pas neutre géopolitiquement. C'est un enjeu de souveraineté."
-  },
-  {
-    "id": "A09",
-    "titre": "Lecture critique de papers fondateurs",
-    "public": [
-      "Post-bac"
-    ],
-    "duree": "2-4h",
-    "duree_detail": null,
-    "groupe": [
-      "Petit"
-    ],
-    "preparation": "Importante",
-    "themes": [
-      "IA déconnecté"
-    ],
-    "contexte": [
-      "Études sup."
-    ],
-    "description_courte": "Lecture critique en groupes de 3 papers fondateurs : *Attention Is All You Need* (Vaswani 2017), *Language Models are…",
-    "description": "Lecture critique en groupes de 3 papers fondateurs : *Attention Is All You Need* (Vaswani 2017), *Language Models are Few-Shot Learners* (Brown 2020), *Training language models with RLHF* (Ouyang 2022). Note critique par groupe.",
-    "apprentissage_cle": "Savoir lire la littérature primaire est la première compétence d'un utilisateur expert."
-  },
-  {
-    "id": "A10",
-    "titre": "L'IA dans ma discipline",
-    "public": [
-      "Post-bac"
-    ],
-    "duree": "1-2h",
-    "duree_detail": null,
-    "groupe": [
-      "Moyen"
-    ],
-    "preparation": "Moyenne",
-    "themes": [
-      "IA déconnecté"
-    ],
-    "contexte": [
-      "Études sup."
-    ],
-    "description_courte": "Regroupement par discipline (médecine, droit, ingénierie, SHS, arts, commerce).",
-    "description": "Regroupement par discipline (médecine, droit, ingénierie, SHS, arts, commerce). Chaque groupe analyse : usages actuels, promesses, controverses, chercheurs de référence, angles morts collectifs. Présentation croisée interdisciplinaire.",
-    "apprentissage_cle": "Chaque discipline développe un rapport spécifique à l'IA. Sortir de son silo éclaire les enjeux communs."
-  },
-  {
     "id": "A11",
-    "titre": "La démystification factuelle",
+    "titre": "#La démystification factuelle",
     "public": [
       "Adultes"
     ],
-    "duree": "30-60min",
+    "duree": "45min",
     "duree_detail": null,
     "groupe": [
       "Moyen"

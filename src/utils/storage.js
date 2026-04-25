@@ -3,6 +3,7 @@ export const KEYS = {
   custom: "catalogue_custom_activites",
   panier: "catalogue_panier_ordre",
   corbeille: "catalogue_corbeille",
+  nativesLoaded: "catalogue_natives_loaded",
 };
 
 export function loadJSON(key, fallback) {
