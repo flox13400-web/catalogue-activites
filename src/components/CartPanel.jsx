@@ -10,6 +10,29 @@ const DUREE_PLAGES = {
   "Projet":   null,
 };
 
+function parseDureeString(str) {
+  if (!str) return null;
+  str = str.trim();
+  let m = str.match(/^(\d+)\s*min$/i);
+  if (m) return parseInt(m[1], 10);
+  m = str.match(/^(\d+)\s*h\s*(\d+)\s*(?:min)?$/i);
+  if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+  m = str.match(/^(\d+)\s*h$/i);
+  if (m) return parseInt(m[1], 10) * 60;
+  m = str.match(/^(\d+)$/);
+  if (m) return parseInt(m[1], 10);
+  return null;
+}
+
+function parseDureeActivite(activite) {
+  const plage = DUREE_PLAGES[activite.duree];
+  if (plage === null) return { min: 0, max: 0, hasProjet: true };
+  if (plage) return { min: plage.min, max: plage.max, hasProjet: false };
+  const minutes = parseDureeString(activite.duree_detail || activite.duree);
+  if (minutes !== null) return { min: minutes, max: minutes, hasProjet: false };
+  return { min: 0, max: 0, hasProjet: false };
+}
+
 function formatMinutes(m) {
   if (m === 0) return "0min";
   const h = Math.floor(m / 60);
@@ -59,7 +82,6 @@ function generatePrintHTML(panierItems) {
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Durée</div><div class="print-fiche-meta-value">${esc(a.duree_detail || a.duree)}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Public</div><div class="print-fiche-meta-value">${esc(a.public.join(", "))}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Taille groupe</div><div class="print-fiche-meta-value">${esc(a.groupe.join(", "))}</div></div>
-<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Préparation</div><div class="print-fiche-meta-value">${esc(a.preparation)}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Thèmes</div><div class="print-fiche-meta-value">${esc(a.themes.join(", "))}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Contexte</div><div class="print-fiche-meta-value">${esc(a.contexte.join(", "))}</div></div>
 </div>
@@ -148,9 +170,9 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     let min = 0, max = 0, hasProjet = false;
     for (const item of panierItems) {
       if (item.type === "activite") {
-        const plage = DUREE_PLAGES[item.activite.duree];
-        if (plage === null) { hasProjet = true; }
-        else if (plage) { min += plage.min; max += plage.max; }
+        const { min: dMin, max: dMax, hasProjet: hp } = parseDureeActivite(item.activite);
+        min += dMin; max += dMax;
+        if (hp) hasProjet = true;
       } else if (item.type === "texte" && (item.duree ?? 0) > 0) {
         min += item.duree;
         max += item.duree;
@@ -483,7 +505,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                     <button className="cart-item-remove" onClick={() => retirer(a.id)} title="Retirer">×</button>
                   </div>
                   <div className="cart-item-titre">{a.titre}</div>
-                  <div className="cart-item-meta">{a.duree} · {a.groupe.join(", ")} · {a.preparation}</div>
+                  <div className="cart-item-meta">{a.duree_detail || a.duree} · {a.groupe.join(", ")}</div>
                 </div>
               );
             })}
