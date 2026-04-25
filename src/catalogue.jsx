@@ -203,6 +203,15 @@ export default function Catalogue() {
     setCorbeille([]);
   }
 
+  function handleViderCatalogue() {
+    if (!window.confirm(
+      `Vider le catalogue ?\n\nLes ${activites.length} activité${activites.length > 1 ? "s" : ""} seront supprimées. Le panier sera également vidé.`
+    )) return;
+    setActivites([]);
+    setPanier(new Set());
+    setPanierOrdre([]);
+  }
+
   function handleChargerCatalogueBase() {
     const existingIds = new Set(activites.map(a => a.id));
     const nouvelles = ACTIVITES_NATIVES.filter(a => !existingIds.has(a.id));
@@ -219,6 +228,7 @@ export default function Catalogue() {
         totalActivites={activites.length}
         filteredCount={activitesFiltrees.length}
         onNouvelleActivite={() => setShowChoixImport(true)}
+        onViderCatalogue={handleViderCatalogue}
       />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />

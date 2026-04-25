@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/global.css";
 
-export default function Header({ totalActivites, filteredCount, onNouvelleActivite }) {
+export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue }) {
   return (
     <header className="header">
       <div className="header-inner">
@@ -27,6 +27,11 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
           <button className="btn-nouvelle-activite" onClick={onNouvelleActivite}>
             ✚ Nouvelle activité
           </button>
+          {totalActivites > 0 && (
+            <button className="btn-vider-catalogue" onClick={onViderCatalogue}>
+              Vider le catalogue
+            </button>
+          )}
         </div>
       </div>
     </header>
