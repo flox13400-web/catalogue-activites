@@ -506,3 +506,111 @@
 }
 .btn-add-theme:hover:not(:disabled) { background: var(--accent-deep); color: #fff; }
 .btn-add-theme:disabled { opacity: 0.35; cursor: default; }
+
+/* MODALE CORBEILLE */
+.modal-corbeille {
+  max-width: 580px;
+}
+.corbeille-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 4px;
+  line-height: 1.6;
+}
+.corbeille-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 380px;
+  overflow-y: auto;
+  margin: 4px 0 20px;
+  padding-right: 4px;
+}
+.corbeille-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 10px 14px;
+}
+.corbeille-item-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.corbeille-badge {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.corbeille-badge-suppression {
+  background: #fef0f0;
+  color: #c0392b;
+  border: 1px solid #e8b8b8;
+}
+.corbeille-badge-modification {
+  background: #f0f4ff;
+  color: #3a5bd9;
+  border: 1px solid #9ab0f5;
+}
+.corbeille-item-info {
+  flex: 1;
+  min-width: 0;
+}
+.corbeille-item-titre {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.corbeille-item-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.btn-corbeille-restore {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--accent-deep);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  cursor: var(--cursor-hand);
+  white-space: nowrap;
+  transition: background 120ms ease, color 120ms ease;
+  flex-shrink: 0;
+}
+.btn-corbeille-restore:hover {
+  background: var(--accent-deep);
+  color: var(--bg-elevated);
+}
+.corbeille-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.corbeille-vider {
+  color: #c0392b;
+  border-color: #e8b8b8;
+}
+.corbeille-vider:hover {
+  border-color: #c0392b;
+  color: #c0392b;
+  background: #fef0f0;
+}

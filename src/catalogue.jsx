@@ -9,6 +9,7 @@ import FilterPanel from "./components/FilterPanel";
 import CartPanel from "./components/CartPanel";
 import DetailModal from "./components/DetailModal";
 import PrintView from "./components/PrintView";
+import CorbeillModal from "./components/CorbeillModal";
 import { ActivityCard } from "./components/ActivityCard";
 
 import "./styles/global.css";
@@ -20,6 +21,7 @@ export default function Catalogue() {
   const [showChoixImport, setShowChoixImport] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [showCorbeille, setShowCorbeille] = useState(false);
   const [editingActivite, setEditingActivite] = useState(null);
 
   const [activitesNatives, setActivitesNatives] = useState(() => {
@@ -48,9 +50,15 @@ export default function Catalogue() {
     return raw.map(item => typeof item === "string" ? { type: "activite", id: item } : item);
   });
 
+  const [corbeille, setCorbeille] = useState(() => {
+    const data = loadJSON(KEYS.corbeille, []);
+    return Array.isArray(data) ? data : [];
+  });
+
   useEffect(() => { saveJSON(KEYS.panier, panierOrdre); }, [panierOrdre]);
   useEffect(() => { saveJSON(KEYS.natives, activitesNatives); }, [activitesNatives]);
   useEffect(() => { saveJSON(KEYS.custom, activitesCustom); }, [activitesCustom]);
+  useEffect(() => { saveJSON(KEYS.corbeille, corbeille); }, [corbeille]);
 
   const toutesActivites = useMemo(
     () => [...activitesNatives, ...activitesCustom],
@@ -122,9 +130,26 @@ export default function Catalogue() {
     setShowImportModal(false);
   }
 
+  function pousserEnCorbeille(type, activite, estNative) {
+    setCorbeille(prev => [
+      ...prev,
+      {
+        id: `TRASH-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        type,
+        date: new Date().toISOString(),
+        activite,
+        estNative,
+      },
+    ]);
+  }
+
   function handleUpdateActivite(formData) {
     const id = editingActivite.id;
     const estNative = activitesNatives.some((a) => a.id === id);
+    const originale = estNative
+      ? activitesNatives.find((a) => a.id === id)
+      : activitesCustom.find((a) => a.id === id);
+    if (originale) pousserEnCorbeille("modification", originale, estNative);
     const activiteMiseAJour = {
       id,
       titre: formData.titre.trim(),
@@ -152,6 +177,10 @@ export default function Catalogue() {
 
   function handleDeleteActivite(id) {
     const estNative = activitesNatives.some((a) => a.id === id);
+    const activite = estNative
+      ? activitesNatives.find((a) => a.id === id)
+      : activitesCustom.find((a) => a.id === id);
+    if (activite) pousserEnCorbeille("suppression", activite, estNative);
     if (estNative) {
       setActivitesNatives((prev) => prev.filter((a) => a.id !== id));
     } else {
@@ -159,6 +188,48 @@ export default function Catalogue() {
     }
     setPanier((prev) => { const next = new Set(prev); next.delete(id); return next; });
     setPanierOrdre((prev) => prev.filter(item => !(item.type === "activite" && item.id === id)));
+  }
+
+  function handleRestoreFromCorbeille(trashId) {
+    const entry = corbeille.find(e => e.id === trashId);
+    if (!entry) return;
+    const { activite, estNative } = entry;
+    const restaurer = (prev) => {
+      const idx = prev.findIndex(a => a.id === activite.id);
+      if (idx >= 0) { const next = [...prev]; next[idx] = activite; return next; }
+      return [...prev, activite];
+    };
+    if (estNative) setActivitesNatives(restaurer);
+    else setActivitesCustom(restaurer);
+    setCorbeille(prev => prev.filter(e => e.id !== trashId));
+  }
+
+  function handleRestoreTout() {
+    // Pour chaque activité, restaurer la version la plus ancienne (= l'originale)
+    const parId = new Map();
+    for (const entry of corbeille) {
+      const id = entry.activite.id;
+      if (!parId.has(id) || new Date(entry.date) < new Date(parId.get(id).date)) {
+        parId.set(id, entry);
+      }
+    }
+    const restaurer = (estNative) => (prev) => {
+      let next = [...prev];
+      for (const entry of parId.values()) {
+        if (entry.estNative !== estNative) continue;
+        const idx = next.findIndex(a => a.id === entry.activite.id);
+        if (idx >= 0) next[idx] = entry.activite;
+        else next.push(entry.activite);
+      }
+      return next;
+    };
+    setActivitesNatives(restaurer(true));
+    setActivitesCustom(restaurer(false));
+    setCorbeille([]);
+  }
+
+  function handleViderCorbeille() {
+    setCorbeille([]);
   }
 
   function handleReinitialiser() {
@@ -190,8 +261,10 @@ export default function Catalogue() {
         filteredCount={activitesFiltrees.length}
         onNouvelleActivite={() => setShowChoixImport(true)}
         onReinitialiser={handleReinitialiser}
+        onOuvrirCorbeille={() => setShowCorbeille(true)}
         nbNativesModifiees={nbNativesModifiees}
         nbNativesSupprimees={nbNativesSupprimees}
+        nbCorbeille={corbeille.length}
       />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
@@ -303,6 +376,16 @@ export default function Catalogue() {
           onSave={editingActivite ? handleUpdateActivite : handleSaveActivite}
           tousThemes={tousThemes}
           initialData={editingActivite}
+        />
+      )}
+
+      {showCorbeille && (
+        <CorbeillModal
+          corbeille={corbeille}
+          onRestore={handleRestoreFromCorbeille}
+          onRestoreTout={handleRestoreTout}
+          onVider={handleViderCorbeille}
+          onClose={() => setShowCorbeille(false)}
         />
       )}
     </div>
