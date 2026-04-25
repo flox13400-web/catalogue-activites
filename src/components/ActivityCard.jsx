@@ -26,8 +26,6 @@ export function ActivityCard({ activite, onClick, estEpingle }) {
       <div className="card-top">
         <span className="card-id">{activite.id}</span>
         {estEpingle && <span className="card-epingle-badge" title="Dans le panier">📌</span>}
-        {activite._custom && <span className="card-custom-badge">✎ perso</span>}
-        {activite._modifiee && !activite._custom && <span className="card-modifiee-badge">✎ modifiée</span>}
       </div>
       <h3 className="card-title">{activite.titre}</h3>
       <p className="card-desc">{activite.description_courte}</p>

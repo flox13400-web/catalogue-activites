@@ -131,27 +131,6 @@
   margin-left: auto;
 }
 
-/* BADGES CARTES */
-.card-custom-badge {
-  font-size: 10px;
-  background: var(--accent-soft);
-  color: var(--accent-deep);
-  border: 1px solid var(--accent);
-  border-radius: 3px;
-  padding: 2px 6px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-}
-.card-modifiee-badge {
-  font-size: 10px;
-  background: #f0f4ff;
-  color: #3a5bd9;
-  border: 1px solid #9ab0f5;
-  border-radius: 3px;
-  padding: 2px 6px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-}
 
 /* FICHE IMPRIMABLE — invisible à l'écran */
 .print-view {

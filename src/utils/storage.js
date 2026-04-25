@@ -1,9 +1,7 @@
 export const KEYS = {
-  natives: "catalogue_activites_natives",
-  custom: "catalogue_custom_activites",
+  activites: "catalogue_activites",
   panier: "catalogue_panier_ordre",
   corbeille: "catalogue_corbeille",
-  nativesLoaded: "catalogue_natives_loaded",
 };
 
 export function loadJSON(key, fallback) {

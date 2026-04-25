@@ -1,8 +1,7 @@
 import React from "react";
 import "../styles/global.css";
 
-export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onReinitialiser, nbNativesModifiees, nbNativesSupprimees }) {
-  const aDesModifs = nbNativesModifiees > 0 || nbNativesSupprimees > 0;
+export default function Header({ totalActivites, filteredCount, onNouvelleActivite }) {
   return (
     <header className="header">
       <div className="header-inner">
@@ -28,16 +27,6 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
           <button className="btn-nouvelle-activite" onClick={onNouvelleActivite}>
             ✚ Nouvelle activité
           </button>
-          {aDesModifs && (
-            <button className="btn-reinitialiser" onClick={onReinitialiser} title="Remettre les 105 activités d'origine">
-              ↺ Réinitialiser
-              <span className="btn-reinitialiser-badge">
-                {nbNativesModifiees > 0 && `${nbNativesModifiees} modif.`}
-                {nbNativesModifiees > 0 && nbNativesSupprimees > 0 && " · "}
-                {nbNativesSupprimees > 0 && `${nbNativesSupprimees} supprimée${nbNativesSupprimees > 1 ? "s" : ""}`}
-              </span>
-            </button>
-          )}
         </div>
       </div>
     </header>

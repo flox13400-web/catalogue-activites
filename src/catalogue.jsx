@@ -3,7 +3,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import ACTIVITES_NATIVES from "./data/activites.json";
 import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
-import { genererIdCustom, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
+import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
 import Header from "./components/Header";
 import FilterPanel from "./components/FilterPanel";
 import CartPanel from "./components/CartPanel";
@@ -24,22 +24,16 @@ export default function Catalogue() {
   const [showCorbeille, setShowCorbeille] = useState(false);
   const [editingActivite, setEditingActivite] = useState(null);
 
-  const [activitesNatives, setActivitesNatives] = useState(() => {
-    const data = loadJSON(KEYS.natives, null);
-    return Array.isArray(data) ? data : [];
-  });
-
-  const [nativesLoaded, setNativesLoaded] = useState(() => {
-    const flag = loadJSON(KEYS.nativesLoaded, null);
-    if (flag !== null) return Boolean(flag);
-    // Migration : si des données natives existent déjà, considérer comme chargé
-    const data = loadJSON(KEYS.natives, null);
-    return data !== null;
-  });
-
-  const [activitesCustom, setActivitesCustom] = useState(() => {
-    const data = loadJSON(KEYS.custom, []);
-    return Array.isArray(data) ? data : [];
+  const [activites, setActivites] = useState(() => {
+    const unified = loadJSON(KEYS.activites, null);
+    if (Array.isArray(unified)) return unified;
+    // Migration depuis l'ancien format split natives/custom
+    const natives = loadJSON("catalogue_activites_natives", []);
+    const custom = loadJSON("catalogue_custom_activites", []);
+    return [
+      ...(Array.isArray(natives) ? natives : []),
+      ...(Array.isArray(custom) ? custom : []),
+    ];
   });
 
   const [panier, setPanier] = useState(() => {
@@ -62,33 +56,26 @@ export default function Catalogue() {
   });
 
   useEffect(() => { saveJSON(KEYS.panier, panierOrdre); }, [panierOrdre]);
-  useEffect(() => { saveJSON(KEYS.natives, activitesNatives); }, [activitesNatives]);
-  useEffect(() => { saveJSON(KEYS.custom, activitesCustom); }, [activitesCustom]);
+  useEffect(() => { saveJSON(KEYS.activites, activites); }, [activites]);
   useEffect(() => { saveJSON(KEYS.corbeille, corbeille); }, [corbeille]);
-  useEffect(() => { saveJSON(KEYS.nativesLoaded, nativesLoaded); }, [nativesLoaded]);
-
-  const toutesActivites = useMemo(
-    () => [...activitesNatives, ...activitesCustom],
-    [activitesNatives, activitesCustom]
-  );
 
   const tousThemes = useMemo(() => {
     const set = new Set();
-    for (const a of toutesActivites) {
-      if (Array.isArray(a.themes)) a.themes.forEach((t) => set.add(t));
+    for (const a of activites) {
+      if (Array.isArray(a.themes)) a.themes.forEach(t => set.add(t));
     }
     return [...set];
-  }, [toutesActivites]);
+  }, [activites]);
 
   const activitesFiltrees = useMemo(
-    () => applyFilters(toutesActivites, filtres),
-    [filtres, toutesActivites]
+    () => applyFilters(activites, filtres),
+    [filtres, activites]
   );
 
   const panierAffichage = panierOrdre
     .map(item => {
       if (item.type === "activite") {
-        const activite = toutesActivites.find(a => a.id === item.id);
+        const activite = activites.find(a => a.id === item.id);
         return activite ? { ...item, activite } : null;
       }
       return item;
@@ -96,7 +83,7 @@ export default function Catalogue() {
     .filter(Boolean);
 
   function handleSaveActivite(formData) {
-    const id = genererIdCustom(activitesCustom);
+    const id = genererIdActivite(activites);
     const nouvelleActivite = {
       id,
       titre: formData.titre.trim(),
@@ -110,34 +97,33 @@ export default function Catalogue() {
       description_courte: formData.description_courte.trim(),
       description: formData.description.trim(),
       apprentissage_cle: formData.apprentissage_cle.trim(),
-      _custom: true,
     };
-    setActivitesCustom((prev) => [...prev, nouvelleActivite]);
+    setActivites(prev => [...prev, nouvelleActivite]);
     setShowAddModal(false);
   }
 
   function handleImportActivites(nouvellesActivites) {
-    const ids = new Set([...activitesNatives.map((a) => a.id), ...activitesCustom.map((a) => a.id)]);
-    const nums = activitesCustom
-      .map((a) => { const m = a.id.match(/^CUS-(\d+)$/); return m ? parseInt(m[1], 10) : 0; })
+    const ids = new Set(activites.map(a => a.id));
+    const nums = activites
+      .map(a => { const m = a.id.match(/^CUS-(\d+)$/); return m ? parseInt(m[1], 10) : 0; })
       .filter(Boolean);
     let nextNum = nums.length > 0 ? Math.max(...nums) + 1 : 1;
 
-    const activitesAvecIds = nouvellesActivites.map((a) => {
+    const activitesAvecIds = nouvellesActivites.map(a => {
       let id = a.id;
       if (!id || ids.has(id)) {
         id = `CUS-${String(nextNum).padStart(3, "0")}`;
         nextNum++;
       }
       ids.add(id);
-      return { ...a, id, _custom: true };
+      return { ...a, id };
     });
 
-    setActivitesCustom((prev) => [...prev, ...activitesAvecIds]);
+    setActivites(prev => [...prev, ...activitesAvecIds]);
     setShowImportModal(false);
   }
 
-  function pousserEnCorbeille(type, activite, estNative) {
+  function pousserEnCorbeille(type, activite) {
     setCorbeille(prev => [
       ...prev,
       {
@@ -145,18 +131,14 @@ export default function Catalogue() {
         type,
         date: new Date().toISOString(),
         activite,
-        estNative,
       },
     ]);
   }
 
   function handleUpdateActivite(formData) {
     const id = editingActivite.id;
-    const estNative = activitesNatives.some((a) => a.id === id);
-    const originale = estNative
-      ? activitesNatives.find((a) => a.id === id)
-      : activitesCustom.find((a) => a.id === id);
-    if (originale) pousserEnCorbeille("modification", originale, estNative);
+    const originale = activites.find(a => a.id === id);
+    if (originale) pousserEnCorbeille("modification", originale);
     const activiteMiseAJour = {
       id,
       titre: formData.titre.trim(),
@@ -170,49 +152,32 @@ export default function Catalogue() {
       description_courte: formData.description_courte.trim(),
       description: formData.description.trim(),
       apprentissage_cle: formData.apprentissage_cle.trim(),
-      ...(editingActivite._custom ? { _custom: true } : {}),
-      ...(editingActivite._modifiee ? { _modifiee: true } : {}),
-      ...(!estNative ? {} : { _modifiee: true }),
     };
-    if (estNative) {
-      setActivitesNatives((prev) => prev.map((a) => (a.id === id ? activiteMiseAJour : a)));
-    } else {
-      setActivitesCustom((prev) => prev.map((a) => (a.id === id ? activiteMiseAJour : a)));
-    }
+    setActivites(prev => prev.map(a => a.id === id ? activiteMiseAJour : a));
     setEditingActivite(null);
   }
 
   function handleDeleteActivite(id) {
-    const estNative = activitesNatives.some((a) => a.id === id);
-    const activite = estNative
-      ? activitesNatives.find((a) => a.id === id)
-      : activitesCustom.find((a) => a.id === id);
-    if (activite) pousserEnCorbeille("suppression", activite, estNative);
-    if (estNative) {
-      setActivitesNatives((prev) => prev.filter((a) => a.id !== id));
-    } else {
-      setActivitesCustom((prev) => prev.filter((a) => a.id !== id));
-    }
-    setPanier((prev) => { const next = new Set(prev); next.delete(id); return next; });
-    setPanierOrdre((prev) => prev.filter(item => !(item.type === "activite" && item.id === id)));
+    const activite = activites.find(a => a.id === id);
+    if (activite) pousserEnCorbeille("suppression", activite);
+    setActivites(prev => prev.filter(a => a.id !== id));
+    setPanier(prev => { const next = new Set(prev); next.delete(id); return next; });
+    setPanierOrdre(prev => prev.filter(item => !(item.type === "activite" && item.id === id)));
   }
 
   function handleRestoreFromCorbeille(trashId) {
     const entry = corbeille.find(e => e.id === trashId);
     if (!entry) return;
-    const { activite, estNative } = entry;
-    const restaurer = (prev) => {
+    const { activite } = entry;
+    setActivites(prev => {
       const idx = prev.findIndex(a => a.id === activite.id);
       if (idx >= 0) { const next = [...prev]; next[idx] = activite; return next; }
       return [...prev, activite];
-    };
-    if (estNative) setActivitesNatives(restaurer);
-    else setActivitesCustom(restaurer);
+    });
     setCorbeille(prev => prev.filter(e => e.id !== trashId));
   }
 
   function handleRestoreTout() {
-    // Pour chaque activité, restaurer la version la plus ancienne (= l'originale)
     const parId = new Map();
     for (const entry of corbeille) {
       const id = entry.activite.id;
@@ -220,18 +185,15 @@ export default function Catalogue() {
         parId.set(id, entry);
       }
     }
-    const restaurer = (estNative) => (prev) => {
+    setActivites(prev => {
       let next = [...prev];
       for (const entry of parId.values()) {
-        if (entry.estNative !== estNative) continue;
         const idx = next.findIndex(a => a.id === entry.activite.id);
         if (idx >= 0) next[idx] = entry.activite;
         else next.push(entry.activite);
       }
       return next;
-    };
-    setActivitesNatives(restaurer(true));
-    setActivitesCustom(restaurer(false));
+    });
     setCorbeille([]);
   }
 
@@ -244,50 +206,21 @@ export default function Catalogue() {
   }
 
   function handleChargerCatalogueBase() {
-    const existingIds = new Set([
-      ...activitesNatives.map(a => a.id),
-      ...activitesCustom.map(a => a.id),
-    ]);
+    const existingIds = new Set(activites.map(a => a.id));
     const nouvelles = ACTIVITES_NATIVES.filter(a => !existingIds.has(a.id));
     if (nouvelles.length > 0) {
-      setActivitesNatives(prev => [...prev, ...nouvelles]);
+      setActivites(prev => [...prev, ...nouvelles]);
     }
-    setNativesLoaded(true);
     setShowChoixImport(false);
   }
-
-  function handleReinitialiser() {
-    if (!window.confirm(
-      "Réinitialiser les 105 activités natives ?\n\nToutes vos modifications sur les activités natives seront perdues. Vos activités personnalisées seront conservées."
-    )) return;
-    setActivitesNatives(ACTIVITES_NATIVES);
-    setNativesLoaded(true);
-    const idsNatifs = new Set(ACTIVITES_NATIVES.map((a) => a.id));
-    setPanierOrdre((prev) => prev.filter(item =>
-      item.type === "texte" || idsNatifs.has(item.id) || activitesCustom.some((a) => a.id === item.id)
-    ));
-    setPanier((prev) => {
-      const next = new Set();
-      for (const id of prev) {
-        if (idsNatifs.has(id) || activitesCustom.some((a) => a.id === id)) next.add(id);
-      }
-      return next;
-    });
-  }
-
-  const nbNativesModifiees = activitesNatives.filter((a) => a._modifiee).length;
-  const nbNativesSupprimees = nativesLoaded ? ACTIVITES_NATIVES.length - activitesNatives.length : 0;
 
   return (
     <div className="app">
       <PrintView panierAffichage={panierAffichage} />
       <Header
-        totalActivites={toutesActivites.length}
+        totalActivites={activites.length}
         filteredCount={activitesFiltrees.length}
         onNouvelleActivite={() => setShowChoixImport(true)}
-        onReinitialiser={handleReinitialiser}
-        nbNativesModifiees={nbNativesModifiees}
-        nbNativesSupprimees={nbNativesSupprimees}
       />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
@@ -297,13 +230,13 @@ export default function Catalogue() {
           filtres={filtres}
           setFiltres={setFiltres}
           filteredCount={activitesFiltrees.length}
-          totalActivites={toutesActivites.length}
+          totalActivites={activites.length}
           tousThemes={tousThemes}
           mobileOpen={mobilePanelOpen === "filters"}
           onMobileClose={() => setMobilePanelOpen(null)}
         />
         <main className="main">
-          {toutesActivites.length === 0 ? (
+          {activites.length === 0 ? (
             <div className="empty-catalogue">
               <p className="empty-catalogue-title">Votre catalogue est vide</p>
               <p className="empty-catalogue-hint">Chargez le catalogue de base ou ajoutez vos propres activités.</p>
@@ -316,7 +249,7 @@ export default function Catalogue() {
             </div>
           ) : (
             <div className="cards-grid">
-              {activitesFiltrees.map((a) => (
+              {activitesFiltrees.map(a => (
                 <ActivityCard
                   key={a.id}
                   activite={a}
@@ -327,15 +260,7 @@ export default function Catalogue() {
             </div>
           )}
           <footer className="app-footer">
-            <p>
-              Catalogue · {toutesActivites.length} activités
-              {activitesCustom.length > 0 && (
-                <span className="footer-custom-count">
-                  (dont {activitesCustom.length} personnalisée{activitesCustom.length > 1 ? "s" : ""})
-                </span>
-              )}
-              {" "}· {activitesFiltrees.length} affichées
-            </p>
+            <p>Catalogue · {activites.length} activité{activites.length !== 1 ? "s" : ""} · {activitesFiltrees.length} affichées</p>
           </footer>
         </main>
         <CartPanel
@@ -343,7 +268,7 @@ export default function Catalogue() {
           setPanier={setPanier}
           panierOrdre={panierOrdre}
           setPanierOrdre={setPanierOrdre}
-          toutesActivites={toutesActivites}
+          toutesActivites={activites}
           mobileOpen={mobilePanelOpen === "cart"}
           onMobileClose={() => setMobilePanelOpen(null)}
           nbCorbeille={corbeille.length}
@@ -387,7 +312,7 @@ export default function Catalogue() {
           setPanier={setPanier}
           panierOrdre={panierOrdre}
           setPanierOrdre={setPanierOrdre}
-          onEdit={(a) => { setEditingActivite(a); setShowAddModal(true); }}
+          onEdit={a => { setEditingActivite(a); setShowAddModal(true); }}
           onDelete={handleDeleteActivite}
         />
       )}
@@ -405,7 +330,6 @@ export default function Catalogue() {
         <ImportFichierModal
           onClose={() => setShowImportModal(false)}
           onImport={handleImportActivites}
-          activitesCustom={activitesCustom}
         />
       )}
 

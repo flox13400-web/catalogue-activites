@@ -11,8 +11,8 @@ const CONTEXTES_DISPONIBLES = ["Scolaire", "Études sup.", "Entreprise"];
 
 // ── Utilitaire ID ──────────────────────────────────────────────
 
-export function genererIdCustom(activitesCustom) {
-  const nums = activitesCustom
+export function genererIdActivite(activites) {
+  const nums = activites
     .map((a) => {
       const m = a.id.match(/^CUS-(\d+)$/);
       return m ? parseInt(m[1], 10) : 0;
