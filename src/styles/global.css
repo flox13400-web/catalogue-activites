@@ -226,7 +226,7 @@ body, .app {
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
 }
 .panel-title {
   font-family: var(--serif);

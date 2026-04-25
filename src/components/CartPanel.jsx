@@ -376,7 +376,12 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
       <div className="panel-header">
         <button className="panel-mobile-close" onClick={onMobileClose}>×</button>
         <h2 className="panel-title">Panier de séance</h2>
-        <span className="panel-subtitle">{totalActivites} activité{totalActivites !== 1 ? "s" : ""}</span>
+        <div className="panel-header-end">
+          <span className="panel-subtitle">{totalActivites} activité{totalActivites !== 1 ? "s" : ""}</span>
+          <button className="cart-panel-corbeille-btn" onClick={onOuvrirCorbeille} title="Corbeille">
+            🗑 <span className="cart-panel-corbeille-count">{nbCorbeille}</span>
+          </button>
+        </div>
       </div>
       <div className={`panel-body ${panierOrdre.length === 0 ? "panel-body-empty" : ""}`}>
         {panierOrdre.length === 0 ? (
@@ -507,10 +512,6 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
         )}
       </div>
       <div className="panel-footer">
-        <button className="btn-reset cart-corbeille-btn" onClick={onOuvrirCorbeille}>
-          🗑 Corbeille
-          <span className="cart-corbeille-count">{nbCorbeille}</span>
-        </button>
         {totalActivites === 0 ? (
           <div className="panel-footer-actions">
             <button className="btn btn-disabled" disabled>Exporter</button>
