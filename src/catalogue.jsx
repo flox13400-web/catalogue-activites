@@ -16,6 +16,7 @@ import "./styles/global.css";
 export default function Catalogue() {
   const [selected, setSelected] = useState(null);
   const [filtres, setFiltres] = useState(FILTRES_INIT);
+  const [mobilePanelOpen, setMobilePanelOpen] = useState(null);
   const [showChoixImport, setShowChoixImport] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -192,6 +193,9 @@ export default function Catalogue() {
         nbNativesModifiees={nbNativesModifiees}
         nbNativesSupprimees={nbNativesSupprimees}
       />
+      {mobilePanelOpen && (
+        <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
+      )}
       <div className="layout">
         <FilterPanel
           filtres={filtres}
@@ -199,6 +203,8 @@ export default function Catalogue() {
           filteredCount={activitesFiltrees.length}
           totalActivites={toutesActivites.length}
           tousThemes={tousThemes}
+          mobileOpen={mobilePanelOpen === "filters"}
+          onMobileClose={() => setMobilePanelOpen(null)}
         />
         <main className="main">
           {activitesFiltrees.length === 0 ? (
@@ -236,7 +242,30 @@ export default function Catalogue() {
           panierOrdre={panierOrdre}
           setPanierOrdre={setPanierOrdre}
           toutesActivites={toutesActivites}
+          mobileOpen={mobilePanelOpen === "cart"}
+          onMobileClose={() => setMobilePanelOpen(null)}
         />
+      </div>
+
+      <div className="mobile-toolbar">
+        <button
+          className={`mobile-toolbar-btn${mobilePanelOpen === "filters" ? " mobile-toolbar-btn-active" : ""}`}
+          onClick={() => setMobilePanelOpen(mobilePanelOpen === "filters" ? null : "filters")}
+        >
+          ⚙ Filtres
+          {(Object.entries(filtres).filter(([k]) => k !== "search").some(([, a]) => a.length > 0) || filtres.search.trim()) && (
+            <span className="mobile-toolbar-badge">
+              {Object.entries(filtres).filter(([k]) => k !== "search").reduce((n, [, a]) => n + a.length, 0) + (filtres.search.trim() ? 1 : 0)}
+            </span>
+          )}
+        </button>
+        <button
+          className={`mobile-toolbar-btn${mobilePanelOpen === "cart" ? " mobile-toolbar-btn-active" : ""}`}
+          onClick={() => setMobilePanelOpen(mobilePanelOpen === "cart" ? null : "cart")}
+        >
+          📋 Panier
+          {panier.size > 0 && <span className="mobile-toolbar-badge">{panier.size}</span>}
+        </button>
       </div>
 
       {selected && (

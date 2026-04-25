@@ -68,7 +68,7 @@ function ThemeFilterGroup({ active, tousThemes, onToggle, onClear }) {
   );
 }
 
-export default function FilterPanel({ filtres, setFiltres, filteredCount, totalActivites, tousThemes }) {
+export default function FilterPanel({ filtres, setFiltres, filteredCount, totalActivites, tousThemes, mobileOpen, onMobileClose }) {
   function toggle(key, value) {
     setFiltres((prev) => {
       const arr = prev[key];
@@ -89,10 +89,11 @@ export default function FilterPanel({ filtres, setFiltres, filteredCount, totalA
       .some(([, arr]) => arr.length > 0) || filtres.search.trim() !== "";
 
   return (
-    <aside className="panel panel-filters">
+    <aside className={`panel panel-filters${mobileOpen ? " panel-open" : ""}`}>
       <div className="panel-header">
         <h2 className="panel-title">Filtres</h2>
         <span className="panel-subtitle">{filteredCount} / {totalActivites}</span>
+        <button className="panel-mobile-close" onClick={onMobileClose}>×</button>
       </div>
       <div className="panel-body">
         <div className="search-box">

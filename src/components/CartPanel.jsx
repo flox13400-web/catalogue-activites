@@ -19,7 +19,7 @@ function formatMinutes(m) {
   return `${h}h${String(min).padStart(2, "0")}`;
 }
 
-export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites }) {
+export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites, mobileOpen, onMobileClose }) {
   const [exportOuvert, setExportOuvert] = React.useState(false);
   const [dragCartIndex, setDragCartIndex] = React.useState(null);
   const [dragOverCartIndex, setDragOverCartIndex] = React.useState(null);
@@ -183,12 +183,13 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
   return (
     <aside
       ref={panelRef}
-      className={`panel panel-cart ${cartDropActive ? "panel-cart-drop-active" : ""}`}
+      className={`panel panel-cart${mobileOpen ? " panel-open" : ""}${cartDropActive ? " panel-cart-drop-active" : ""}`}
       onDragOver={handlePanelDragOver}
       onDragLeave={handlePanelDragLeave}
       onDrop={handlePanelDrop}
     >
       <div className="panel-header">
+        <button className="panel-mobile-close" onClick={onMobileClose}>×</button>
         <h2 className="panel-title">Panier de séance</h2>
         <span className="panel-subtitle">{totalActivites} activité{totalActivites !== 1 ? "s" : ""}</span>
       </div>
