@@ -209,6 +209,40 @@
   color: var(--text-muted);
 }
 
+/* BOUTON CORBEILLE DANS LE FOOTER */
+.cart-corbeille-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+.cart-corbeille-btn:hover {
+  border-color: #e8b8b8;
+  color: #c0392b;
+  background: #fef0f0;
+}
+.cart-corbeille-count {
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--border-strong);
+  color: var(--text-muted);
+  border-radius: 9px;
+  min-width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  transition: background 120ms ease, color 120ms ease;
+}
+.cart-corbeille-btn:hover .cart-corbeille-count {
+  background: #c0392b;
+  color: #fff;
+}
+
 /* BOUTON AJOUTER ENCART */
 .cart-encart-btn {
   margin-top: 6px;

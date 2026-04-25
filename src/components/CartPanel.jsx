@@ -120,7 +120,7 @@ ${toc}${items}
 </body></html>`;
 }
 
-export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites, mobileOpen, onMobileClose }) {
+export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites, mobileOpen, onMobileClose, nbCorbeille, onOuvrirCorbeille }) {
   const [exportOuvert, setExportOuvert] = React.useState(false);
   const [dragCartIndex, setDragCartIndex] = React.useState(null);
   const [dragOverCartIndex, setDragOverCartIndex] = React.useState(null);
@@ -507,6 +507,10 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
         )}
       </div>
       <div className="panel-footer">
+        <button className="btn-reset cart-corbeille-btn" onClick={onOuvrirCorbeille}>
+          🗑 Corbeille
+          <span className="cart-corbeille-count">{nbCorbeille}</span>
+        </button>
         {totalActivites === 0 ? (
           <div className="panel-footer-actions">
             <button className="btn btn-disabled" disabled>Exporter</button>

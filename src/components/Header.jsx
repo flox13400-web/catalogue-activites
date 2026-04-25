@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/global.css";
 
-export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onReinitialiser, onOuvrirCorbeille, nbNativesModifiees, nbNativesSupprimees, nbCorbeille }) {
+export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onReinitialiser, nbNativesModifiees, nbNativesSupprimees }) {
   const aDesModifs = nbNativesModifiees > 0 || nbNativesSupprimees > 0;
   return (
     <header className="header">
@@ -36,12 +36,6 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
                 {nbNativesModifiees > 0 && nbNativesSupprimees > 0 && " · "}
                 {nbNativesSupprimees > 0 && `${nbNativesSupprimees} supprimée${nbNativesSupprimees > 1 ? "s" : ""}`}
               </span>
-            </button>
-          )}
-          {nbCorbeille > 0 && (
-            <button className="btn-corbeille" onClick={onOuvrirCorbeille} title="Voir les éléments supprimés ou modifiés">
-              🗑 Corbeille
-              <span className="btn-corbeille-badge">{nbCorbeille}</span>
             </button>
           )}
         </div>

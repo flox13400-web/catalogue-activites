@@ -484,4 +484,8 @@ body, .app {
     font-weight: 600;
     line-height: 1;
   }
+  .mobile-toolbar-badge-corbeille {
+    background: var(--border-strong);
+    color: var(--text-muted);
+  }
 }

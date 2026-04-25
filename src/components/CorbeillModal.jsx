@@ -5,7 +5,7 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
 }
 
-export default function CorbeillModal({ corbeille, onRestore, onRestoreTout, onVider, onClose }) {
+export default function CorbeillModal({ corbeille, onRestore, onDeleteEntry, onRestoreTout, onVider, onClose }) {
   const nb = corbeille.length;
 
   function handleRestoreTout() {
@@ -40,20 +40,23 @@ export default function CorbeillModal({ corbeille, onRestore, onRestoreTout, onV
             <div className="corbeille-list">
               {[...corbeille].reverse().map(entry => (
                 <div key={entry.id} className="corbeille-item">
-                  <div className="corbeille-item-left">
-                    <span className={`corbeille-badge corbeille-badge-${entry.type}`}>
-                      {entry.type === "suppression" ? "supprimée" : "modifiée"}
-                    </span>
-                    <div className="corbeille-item-info">
-                      <div className="corbeille-item-titre">{entry.activite.titre}</div>
-                      <div className="corbeille-item-meta">
-                        {entry.activite.id} · {entry.activite.duree} · {formatDate(entry.date)}
-                      </div>
+                  <span className={`corbeille-badge corbeille-badge-${entry.type}`}>
+                    {entry.type === "suppression" ? "supprimée" : "modifiée"}
+                  </span>
+                  <div className="corbeille-item-info">
+                    <div className="corbeille-item-titre">{entry.activite.titre}</div>
+                    <div className="corbeille-item-meta">
+                      {entry.activite.id} · {entry.activite.duree} · {formatDate(entry.date)}
                     </div>
                   </div>
-                  <button className="btn-corbeille-restore" onClick={() => onRestore(entry.id)}>
-                    Restaurer
-                  </button>
+                  <div className="corbeille-item-actions">
+                    <button className="btn-corbeille-restore" onClick={() => onRestore(entry.id)}>
+                      Restaurer
+                    </button>
+                    <button className="btn-corbeille-delete" onClick={() => onDeleteEntry(entry.id)} title="Supprimer définitivement">
+                      ×
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -63,7 +66,7 @@ export default function CorbeillModal({ corbeille, onRestore, onRestoreTout, onV
                 ↺ Tout restaurer
               </button>
               <button className="btn-reset corbeille-vider" onClick={handleVider}>
-                Vider la corbeille
+                Tout supprimer
               </button>
             </div>
           </>

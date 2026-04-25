@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npm run *)",
       "Bash(keytool -help)",
-      "Bash(java -version)"
+      "Bash(java -version)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }

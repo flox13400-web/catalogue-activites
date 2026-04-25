@@ -228,6 +228,10 @@ export default function Catalogue() {
     setCorbeille([]);
   }
 
+  function handleDeleteFromCorbeille(trashId) {
+    setCorbeille(prev => prev.filter(e => e.id !== trashId));
+  }
+
   function handleViderCorbeille() {
     setCorbeille([]);
   }
@@ -261,10 +265,8 @@ export default function Catalogue() {
         filteredCount={activitesFiltrees.length}
         onNouvelleActivite={() => setShowChoixImport(true)}
         onReinitialiser={handleReinitialiser}
-        onOuvrirCorbeille={() => setShowCorbeille(true)}
         nbNativesModifiees={nbNativesModifiees}
         nbNativesSupprimees={nbNativesSupprimees}
-        nbCorbeille={corbeille.length}
       />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
@@ -317,6 +319,8 @@ export default function Catalogue() {
           toutesActivites={toutesActivites}
           mobileOpen={mobilePanelOpen === "cart"}
           onMobileClose={() => setMobilePanelOpen(null)}
+          nbCorbeille={corbeille.length}
+          onOuvrirCorbeille={() => setShowCorbeille(true)}
         />
       </div>
 
@@ -338,6 +342,13 @@ export default function Catalogue() {
         >
           📋 Panier
           {panier.size > 0 && <span className="mobile-toolbar-badge">{panier.size}</span>}
+        </button>
+        <button
+          className="mobile-toolbar-btn"
+          onClick={() => setShowCorbeille(true)}
+        >
+          🗑 Corbeille
+          <span className="mobile-toolbar-badge mobile-toolbar-badge-corbeille">{corbeille.length}</span>
         </button>
       </div>
 
@@ -383,6 +394,7 @@ export default function Catalogue() {
         <CorbeillModal
           corbeille={corbeille}
           onRestore={handleRestoreFromCorbeille}
+          onDeleteEntry={handleDeleteFromCorbeille}
           onRestoreTout={handleRestoreTout}
           onVider={handleViderCorbeille}
           onClose={() => setShowCorbeille(false)}
