@@ -1,6 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
 
-import ACTIVITES_NATIVES from "./data/ia_deconnecte.json";
 import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
 import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
@@ -212,14 +211,6 @@ export default function Catalogue() {
     setPanierOrdre([]);
   }
 
-  function handleChargerCatalogueBase() {
-    const existingIds = new Set(activites.map(a => a.id));
-    const nouvelles = ACTIVITES_NATIVES.filter(a => !existingIds.has(a.id));
-    if (nouvelles.length > 0) {
-      setActivites(prev => [...prev, ...nouvelles]);
-    }
-    setShowChoixImport(false);
-  }
 
   return (
     <div className="app">
@@ -330,7 +321,6 @@ export default function Catalogue() {
           onClose={() => setShowChoixImport(false)}
           onManuel={() => { setShowChoixImport(false); setShowAddModal(true); }}
           onImport={() => { setShowChoixImport(false); setShowImportModal(true); }}
-          onChargerCatalogueBase={handleChargerCatalogueBase}
         />
       )}
 

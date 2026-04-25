@@ -122,7 +122,7 @@ function parserMarkdown(texte) {
 
 // ── ChoixImportModal ───────────────────────────────────────────
 
-export function ChoixImportModal({ onClose, onManuel, onImport, onChargerCatalogueBase }) {
+export function ChoixImportModal({ onClose, onManuel, onImport }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal modal-choix" onClick={(e) => e.stopPropagation()}>
@@ -130,7 +130,7 @@ export function ChoixImportModal({ onClose, onManuel, onImport, onChargerCatalog
         <div className="modal-eyebrow">Nouvelle activité</div>
         <h2 className="modal-title">Comment voulez-vous ajouter ?</h2>
         <p className="modal-choix-desc">
-          Créez une activité en la saisissant manuellement, importez un fichier, ou chargez le catalogue de base.
+          Créez une activité en la saisissant manuellement, ou importez un fichier JSON ou Markdown contenant plusieurs activités à la fois.
         </p>
         <div className="choix-import-grid">
           <button className="choix-import-card" onClick={onManuel}>
@@ -142,11 +142,6 @@ export function ChoixImportModal({ onClose, onManuel, onImport, onChargerCatalog
             <span className="choix-import-icon">📂</span>
             <span className="choix-import-label">Importer un fichier</span>
             <span className="choix-import-desc">Charger un fichier .json ou .md avec plusieurs activités</span>
-          </button>
-          <button className="choix-import-card choix-import-card-base" onClick={onChargerCatalogueBase}>
-            <span className="choix-import-icon">📚</span>
-            <span className="choix-import-label">Catalogue de base</span>
-            <span className="choix-import-desc">Charger les 105 activités pédagogiques intégrées</span>
           </button>
         </div>
       </div>
