@@ -7,9 +7,9 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <div className="header-eyebrow">Bilbiothèque interactive</div>
+          <div className="header-eyebrow">Interacthèque</div>
           <h1 className="header-title">
-            Catalogue<em> d'activités</em>
+            La bibliothèque <em> interactive</em>
           </h1>
           <p className="header-subtitle">
             Concevoir des scénarios

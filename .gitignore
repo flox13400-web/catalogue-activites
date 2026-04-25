@@ -15,6 +15,14 @@ dist-ssr
 # TWA keystore (ne jamais commiter)
 android.keystore
 
+# TWA build artifacts
+*.apk
+*.aab
+*.idsig
+.gradle/
+build/
+app/build/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

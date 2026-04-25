@@ -4,12 +4,13 @@
   "name": "Catalogue d'activités pédagogiques IA",
   "launcherName": "Catalogue IA",
   "display": "standalone",
-  "orientation": "default",
-  "themeColor": "#a87a3f",
-  "themeColorDark": "#a87a3f",
-  "navigationColor": "#a87a3f",
-  "navigationColorDark": "#a87a3f",
-  "backgroundColor": "#faf9f6",
+  "themeColor": "#A87A3F",
+  "themeColorDark": "#A87A3F",
+  "navigationColor": "#A87A3F",
+  "navigationColorDark": "#A87A3F",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#FAF9F6",
   "enableNotifications": false,
   "startUrl": "/catalogue-activites/",
   "iconUrl": "https://raw.githubusercontent.com/flox13400-web/catalogue-activites/master/public/icon.svg",
@@ -20,18 +21,26 @@
     "path": "android.keystore",
     "alias": "catalogue-ia"
   },
-  "appVersionCode": 1,
-  "appVersionName": "1.0.0",
+  "appVersionName": "Interacthèque-V3.0",
+  "appVersionCode": 2,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://flox13400-web.github.io/catalogue-activites/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
-  "alphaDependencies": { "enabled": false },
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "playBilling": { "enabled": false },
+  "minSdkVersion": 21,
+  "orientation": "default",
   "fingerprints": [
     "1A:16:17:BF:87:6E:CF:E7:09:F1:EE:65:A9:66:B4:AF:16:81:89:07:74:2C:AB:33:EC:7D:9A:DC:4E:A0:7C:2F"
-  ]
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "displayOverride": [],
+  "appVersion": "Interacthèque-V3.0"
 }
