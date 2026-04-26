@@ -230,12 +230,52 @@ export function ChoixImportModal({ onClose, onManuel, onImport }) {
 
 // ── ImportFichierModal ─────────────────────────────────────────
 
+const EXEMPLE_JSON = `[
+  {
+    "titre": "Nom de l'activité",
+    "public": ["11-15", "16-20"],
+    "duree": "30-60min",
+    "groupe": ["Moyen"],
+    "themes": ["IA déconnecté"],
+    "contexte": ["Scolaire"],
+    "description_courte": "...",
+    "description": "...",
+    "apprentissage_cle": "..."
+  }
+]`;
+
+const EXEMPLE_MD = `## 1. Titre de l'activité \`ID\`
+
+**Public :** 11-15, 16-20
+**Durée :** 30-60min
+**Groupe :** Moyen
+**Thèmes :** IA déconnecté
+**Contexte :** Scolaire
+
+### Description
+
+Déroulé de l'activité...
+
+### Apprentissage clé
+
+> Ce que les participants retiennent.
+
+---`;
+
 export function ImportFichierModal({ onClose, onImport }) {
   const [etat, setEtat] = React.useState("idle");
   const [erreur, setErreur] = React.useState("");
   const [preview, setPreview] = React.useState([]);
   const [dragging, setDragging] = React.useState(false);
+  const [copie, setCopie] = React.useState(null);
   const inputRef = React.useRef(null);
+
+  function copierExemple(id, texte) {
+    navigator.clipboard.writeText(texte).then(() => {
+      setCopie(id);
+      setTimeout(() => setCopie(null), 2000);
+    });
+  }
 
   function lireFichier(fichier) {
     if (!fichier) return;
@@ -316,40 +356,26 @@ export function ImportFichierModal({ onClose, onImport }) {
             </div>
             <div className="import-formats">
               <div className="import-format-block">
-                <div className="import-format-title">Format JSON attendu</div>
-                <pre className="import-format-code">{`[
-  {
-    "titre": "Nom de l'activité",
-    "public": ["11-15", "16-20"],
-    "duree": "30-60min",
-    "groupe": ["Moyen"],
-    "themes": ["IA déconnecté"],
-    "contexte": ["Scolaire"],
-    "description_courte": "...",
-    "description": "...",
-    "apprentissage_cle": "..."
-  }
-]`}</pre>
+                <div className="import-format-block-header">
+                  <div className="import-format-title">Format JSON attendu</div>
+                  <button
+                    className={`btn-copier-exemple${copie === "json" ? " btn-copier-exemple-ok" : ""}`}
+                    onClick={() => copierExemple("json", EXEMPLE_JSON)}
+                    type="button"
+                  >{copie === "json" ? "Copié !" : "Copier"}</button>
+                </div>
+                <pre className="import-format-code">{EXEMPLE_JSON}</pre>
               </div>
               <div className="import-format-block">
-                <div className="import-format-title">Format Markdown (export catalogue)</div>
-                <pre className="import-format-code">{`## 1. Titre de l'activité \`ID\`
-
-**Public :** 11-15, 16-20
-**Durée :** 30-60min
-**Groupe :** Moyen
-**Thèmes :** IA déconnecté
-**Contexte :** Scolaire
-
-### Description
-
-Déroulé de l'activité...
-
-### Apprentissage clé
-
-> Ce que les participants retiennent.
-
----`}</pre>
+                <div className="import-format-block-header">
+                  <div className="import-format-title">Format Markdown (export catalogue)</div>
+                  <button
+                    className={`btn-copier-exemple${copie === "md" ? " btn-copier-exemple-ok" : ""}`}
+                    onClick={() => copierExemple("md", EXEMPLE_MD)}
+                    type="button"
+                  >{copie === "md" ? "Copié !" : "Copier"}</button>
+                </div>
+                <pre className="import-format-code">{EXEMPLE_MD}</pre>
               </div>
             </div>
           </>
