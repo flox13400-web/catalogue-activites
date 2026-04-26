@@ -1,13 +1,18 @@
 import React from "react";
 import "../styles/global.css";
 import LogoBrand from "./LogoBrand";
+import LogoMark from "./LogoMark";
 
 export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue }) {
   return (
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <LogoBrand className="header-brand" />
+          <LogoBrand className="header-nom" />
+          <div className="header-baseline-row">
+            <LogoMark className="header-mark" />
+            <span className="header-tagline">TICE ton architecture pédagogique</span>
+          </div>
         </div>
         <div className="header-right">
           <div className="header-stat">

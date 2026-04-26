@@ -52,10 +52,28 @@ body, .app {
   gap: 64px;
   align-items: end;
 }
-.header-brand {
+.header-nom {
   display: block;
-  height: 60px;
+  height: 48px;
   width: auto;
+}
+.header-baseline-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.header-mark {
+  display: block;
+  height: 18px;
+  width: auto;
+  flex-shrink: 0;
+}
+.header-tagline {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1;
 }
 .header-right {
   display: flex;
