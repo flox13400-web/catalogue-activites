@@ -62,6 +62,7 @@ body, .app {
   height: 64px;
   width: auto;
   flex-shrink: 0;
+  mix-blend-mode: multiply;
 }
 .header-text {
   display: flex;
