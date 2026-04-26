@@ -23,7 +23,7 @@ export function genererIdActivite(activites) {
 
 // ── Parsers d'import ───────────────────────────────────────────
 
-function parserJSON(texte) {
+export function parserJSON(texte) {
   const data = JSON.parse(texte);
   const liste = Array.isArray(data) ? data : (Array.isArray(data.activites) ? data.activites : null);
   if (!liste) throw new Error("Format JSON non reconnu. Attendu : un tableau ou { activites: [...] }");
@@ -50,7 +50,7 @@ function parserJSON(texte) {
   });
 }
 
-function parserMarkdown(texte) {
+export function parserMarkdown(texte) {
   const sections = texte.split(/\n---+\n/).map((s) => s.trim()).filter(Boolean);
   const activites = [];
 
@@ -120,7 +120,7 @@ function parserMarkdown(texte) {
   return activites;
 }
 
-function parserCSV(texte) {
+export function parserCSV(texte) {
   const contenu = texte.replace(/^﻿/, "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
   const lignes = contenu.split("\n").filter(l => l.trim());
   if (lignes.length < 2) throw new Error("Le fichier CSV doit contenir une ligne d'en-têtes et au moins une ligne de données.");
