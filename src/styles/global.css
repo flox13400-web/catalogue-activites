@@ -52,22 +52,26 @@ body, .app {
   gap: 64px;
   align-items: end;
 }
-.header-nom {
-  display: block;
-  height: 48px;
-  width: auto;
-}
-.header-baseline-row {
+.header-left {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 16px;
 }
 .header-mark {
   display: block;
-  height: 18px;
+  height: 64px;
   width: auto;
   flex-shrink: 0;
+}
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.header-nom {
+  display: block;
+  height: 44px;
+  width: auto;
 }
 .header-tagline {
   font-family: var(--sans);

@@ -8,9 +8,9 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <LogoBrand className="header-nom" />
-          <div className="header-baseline-row">
-            <LogoMark className="header-mark" />
+          <LogoMark className="header-mark" />
+          <div className="header-text">
+            <LogoBrand className="header-nom" />
             <span className="header-tagline">TICE ton architecture pédagogique</span>
           </div>
         </div>
