@@ -6,7 +6,10 @@
       "Bash(java -version)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(node -e \"const fs = require\\('fs'\\); try { JSON.parse\\(fs.readFileSync\\('src/data/activites.json', 'utf8'\\)\\); console.log\\('valid JSON'\\); } catch\\(e\\) { console.log\\('Error:', e.message\\); }\")",
+      "Bash(xxd public/logo-sequencia-baseline.svg)",
+      "Bash(node -e ' *)"
     ]
   }
 }
