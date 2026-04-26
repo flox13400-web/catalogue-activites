@@ -53,31 +53,9 @@ body, .app {
   align-items: end;
 }
 .header-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 14px;
-}
-.header-logo {
-  max-height: 40px;
-  width: auto;
   display: block;
-  flex-shrink: 0;
-}
-.header-title {
-  font-family: var(--serif);
-  font-weight: 700;
-  font-size: 42px;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  margin: 0;
-}
-.header-subtitle {
-  font-size: 16px;
-  color: var(--text-muted);
-  max-width: 540px;
-  line-height: 1.6;
+  max-height: 100px;
+  width: auto;
 }
 .header-right {
   display: flex;
@@ -378,9 +356,7 @@ body, .app {
     gap: 14px;
     align-items: start;
   }
-  .header-title { font-size: 32px; margin-bottom: 10px; }
-  .header-subtitle { font-size: 14px; }
-  .header-right { justify-content: flex-start; flex-wrap: wrap; gap: 12px; }
+.header-right { justify-content: flex-start; flex-wrap: wrap; gap: 12px; }
   .header-stat-num { font-size: 26px; }
   .btn-nouvelle-activite { width: 100%; text-align: center; }
 

@@ -6,18 +6,11 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <div className="header-brand">
-            <img
-              src="/logo-sequencia.svg"
-              alt="SEQUENCIA"
-              className="header-logo"
-              onError={e => { e.currentTarget.hidden = true; }}
-            />
-            <h1 className="header-title">SEQUENCIA</h1>
-          </div>
-          <p className="header-subtitle">
-            TICE ton architecture pédagogique
-          </p>
+          <img
+            src="/logo-sequencia-baseline.svg"
+            alt="SEQUENCIA — TICE ton architecture pédagogique"
+            className="header-brand"
+          />
         </div>
         <div className="header-right">
           <div className="header-stat">
