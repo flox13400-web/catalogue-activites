@@ -6,13 +6,16 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <div className="header-eyebrow">Interacthèque</div>
-          <h1 className="header-title">
-            La bibliothèque <em> interactive</em>
-          </h1>
+          <div className="header-brand">
+            <img
+              src="/logo-sequencia.svg"
+              alt="SEQUENCIA"
+              className="header-logo"
+            />
+            <h1 className="header-title">SEQUENCIA</h1>
+          </div>
           <p className="header-subtitle">
-            Concevoir des scénarios
-            n'a jamais été aussi facile.
+            TICE ton architecture pédagogique
           </p>
         </div>
         <div className="header-right">

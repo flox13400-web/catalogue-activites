@@ -126,9 +126,9 @@ body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;line-height:1.
 .print-fiche-section{margin-bottom:8pt}
 .print-fiche-section-label{font-size:6.5pt;text-transform:uppercase;letter-spacing:.14em;color:#999;font-family:Arial,sans-serif;margin-bottom:3pt}
 .print-fiche-body{font-size:9.5pt;line-height:1.55;color:#222;margin:0}
-.print-fiche-apprentissage{background:#f0ede6;border-left:3pt solid #a87a3f;padding:7pt 10pt;border-radius:0 3pt 3pt 0;margin-top:8pt}
+.print-fiche-apprentissage{background:#FAEAE7;border-left:3pt solid #D46A54;padding:7pt 10pt;border-radius:0 3pt 3pt 0;margin-top:8pt}
 .print-fiche-apprentissage-text{font-size:9.5pt;font-style:italic;color:#333;margin:0;line-height:1.5}
-.print-texte-libre{border-left:3pt solid #d4a574;padding:8pt 12pt;margin-bottom:14pt;background:#faf8f4;border-radius:0 3pt 3pt 0;font-style:italic;font-size:10.5pt;color:#444;line-height:1.6;page-break-inside:avoid}
+.print-texte-libre{border-left:3pt solid #D46A54;padding:8pt 12pt;margin-bottom:14pt;background:#faf8f4;border-radius:0 3pt 3pt 0;font-style:italic;font-size:10.5pt;color:#444;line-height:1.6;page-break-inside:avoid}
 .print-texte-libre p{margin:0}
 .print-doc-footer{margin-top:20pt;padding-top:8pt;border-top:1pt solid #ddd;text-align:center;font-size:7.5pt;color:#aaa;font-family:Arial,sans-serif}
 </style></head><body>

@@ -1,14 +1,14 @@
 {
-  "name": "Catalogue d'activités pédagogiques IA",
-  "short_name": "Catalogue IA",
-  "description": "105 activités pour enseigner le fonctionnement, les usages et les limites des IA génératives.",
+  "name": "SEQUENCIA",
+  "short_name": "SEQUENCIA",
+  "description": "Concevez et partagez vos architectures pédagogiques avec SEQUENCIA — l'outil de séquençage pour formateurs et enseignants.",
   "lang": "fr",
   "start_url": "/catalogue-activites/",
   "scope": "/catalogue-activites/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#faf9f6",
-  "theme_color": "#a87a3f",
+  "background_color": "#F8F9FA",
+  "theme_color": "#D46A54",
   "categories": ["education"],
   "icons": [
     {
