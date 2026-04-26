@@ -50,8 +50,9 @@ function esc(str) {
     .replace(/"/g, "&quot;");
 }
 
-function generatePrintHTML(panierItems) {
+function generatePrintHTML(panierItems, titre = "") {
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const titreDoc = titre.trim() || "Fiche de séance";
   const activites = panierItems.filter(i => i.type === "activite");
   if (activites.length === 0) return null;
 
@@ -94,7 +95,7 @@ function generatePrintHTML(panierItems) {
   const plural = nbAct > 1 ? "s" : "";
 
   return `<!DOCTYPE html>
-<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fiche de séance</title>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(titreDoc)}</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;line-height:1.6;color:#111;background:#fff;padding:18mm 20mm}
@@ -133,16 +134,16 @@ body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;line-height:1.
 </style></head><body>
 <div class="print-doc-header">
   <div class="print-doc-eyebrow">Ressources pédagogiques · IA générative</div>
-  <h1 class="print-doc-title">Fiche de séance</h1>
+  <h1 class="print-doc-title">${esc(titreDoc)}</h1>
   <div class="print-doc-meta"><span>Exporté le ${esc(date)}</span><span class="print-doc-meta-sep">·</span><span>${nbAct} activité${plural}</span></div>
 </div>
 ${toc}${items}
-<div class="print-doc-footer">Catalogue d'activités pédagogiques · IA générative — ${nbAct} activité${plural}</div>
+<div class="print-doc-footer">${esc(titreDoc)} · ${nbAct} activité${plural}</div>
 <script>window.addEventListener('load',function(){window.print();})</script>
 </body></html>`;
 }
 
-export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites, mobileOpen, onMobileClose, nbCorbeille, onOuvrirCorbeille }) {
+export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites, mobileOpen, onMobileClose, nbCorbeille, onOuvrirCorbeille, titreSeance, setTitreSeance }) {
   const [exportOuvert, setExportOuvert] = React.useState(false);
   const [dragCartIndex, setDragCartIndex] = React.useState(null);
   const [dragOverCartIndex, setDragOverCartIndex] = React.useState(null);
@@ -260,7 +261,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
   function handlePrint() {
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (isMobile) {
-      const html = generatePrintHTML(panierItems);
+      const html = generatePrintHTML(panierItems, titreSeance);
       if (!html) return;
       const blob = new Blob([html], { type: "text/html" });
       const url = URL.createObjectURL(blob);
@@ -405,6 +406,16 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
           </button>
         </div>
       </div>
+      <div className="cart-titre-zone">
+        <input
+          type="text"
+          className="cart-titre-input"
+          placeholder="Titre de la séance…"
+          value={titreSeance}
+          onChange={e => setTitreSeance(e.target.value)}
+          maxLength={100}
+        />
+      </div>
       <div className={`panel-body ${panierOrdre.length === 0 ? "panel-body-empty" : ""}`}>
         {panierOrdre.length === 0 ? (
           <div className="empty-state">
@@ -415,6 +426,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
             <p className="empty-state-hint">Cliquez sur une carte puis "Épingler" — ou glissez-la ici</p>
           </div>
         ) : (
+          <>
           <div
             className="cart-list"
             ref={cartListRef}
@@ -531,6 +543,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
               </button>
             )}
           </div>
+          </>
         )}
       </div>
       <div className="panel-footer">
@@ -547,21 +560,21 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
               </button>
               {exportOuvert && (
                 <div className="export-menu">
-                  <button className="export-option" onClick={() => { exportJSON(activitesPourExport); setExportOuvert(false); }}>
+                  <button className="export-option" onClick={() => { exportJSON(activitesPourExport, titreSeance); setExportOuvert(false); }}>
                     <span className="export-option-icon">&#123;&#125;</span>
                     <div>
                       <div className="export-option-label">JSON</div>
                       <div className="export-option-desc">Toutes les données · seance-ia.json</div>
                     </div>
                   </button>
-                  <button className="export-option" onClick={() => { exportMarkdown(activitesPourExport); setExportOuvert(false); }}>
+                  <button className="export-option" onClick={() => { exportMarkdown(activitesPourExport, titreSeance); setExportOuvert(false); }}>
                     <span className="export-option-icon">&#9776;</span>
                     <div>
                       <div className="export-option-label">Markdown</div>
                       <div className="export-option-desc">Fiche lisible · seance-ia.md</div>
                     </div>
                   </button>
-                  <button className="export-option" onClick={() => { exportCSV(activitesPourExport); setExportOuvert(false); }}>
+                  <button className="export-option" onClick={() => { exportCSV(activitesPourExport, titreSeance); setExportOuvert(false); }}>
                     <span className="export-option-icon">&#9783;</span>
                     <div>
                       <div className="export-option-label">CSV</div>

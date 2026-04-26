@@ -2,6 +2,7 @@ export const KEYS = {
   activites: "catalogue_activites",
   panier: "catalogue_panier_ordre",
   corbeille: "catalogue_corbeille",
+  titreSeance: "catalogue_panier_titre",
 };
 
 export function loadJSON(key, fallback) {

@@ -1,8 +1,9 @@
 import React from "react";
 import "../styles/card.css";
 
-export default function PrintView({ panierAffichage }) {
+export default function PrintView({ panierAffichage, titreSeance = "" }) {
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const titreDoc = titreSeance.trim() || "Fiche de séance";
 
   const activites = panierAffichage.filter(i => i.type === "activite");
   if (activites.length === 0) return null;
@@ -18,7 +19,7 @@ export default function PrintView({ panierAffichage }) {
     <div className="print-view">
       <div className="print-doc-header">
         <div className="print-doc-eyebrow">Ressources pédagogiques · IA générative</div>
-        <h1 className="print-doc-title">Fiche de séance</h1>
+        <h1 className="print-doc-title">{titreDoc}</h1>
         <div className="print-doc-meta">
           <span>Exporté le {date}</span>
           <span className="print-doc-meta-sep">·</span>
@@ -105,7 +106,7 @@ export default function PrintView({ panierAffichage }) {
       })}
 
       <div className="print-doc-footer">
-        Catalogue d'activités pédagogiques · IA générative — {activites.length} activité{activites.length > 1 ? "s" : ""}
+        {titreDoc} · {activites.length} activité{activites.length > 1 ? "s" : ""}
       </div>
     </div>
   );

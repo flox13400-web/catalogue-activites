@@ -8,9 +8,9 @@ function telecharger(contenu, nomFichier, typeMime) {
   URL.revokeObjectURL(url);
 }
 
-export function exportJSON(activites) {
+export function exportJSON(activites, titre = "") {
   const data = {
-    export: "Catalogue IA — Panier de séance",
+    export: titre.trim() || "Catalogue IA — Panier de séance",
     date: new Date().toLocaleDateString("fr-FR"),
     nombre: activites.length,
     activites: activites,
@@ -18,10 +18,11 @@ export function exportJSON(activites) {
   telecharger(JSON.stringify(data, null, 2), "seance-ia.json", "application/json");
 }
 
-export function exportMarkdown(activites) {
+export function exportMarkdown(activites, titre = "") {
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const titreAffiche = titre.trim() || "Fiche de séance — IA générative";
   const lignes = [
-    `# Fiche de séance — IA générative`,
+    `# ${titreAffiche}`,
     ``,
     `*Exporté le ${date} · ${activites.length} activité${activites.length > 1 ? "s" : ""}*`,
     ``,
@@ -54,7 +55,7 @@ export function exportMarkdown(activites) {
   telecharger(lignes.join("\n"), "seance-ia.md", "text/markdown;charset=utf-8");
 }
 
-export function exportCSV(activites) {
+export function exportCSV(activites, _titre = "") {
   const entetes = ["id", "titre", "public", "duree", "groupe", "preparation", "themes", "contexte", "description_courte", "apprentissage_cle"];
   const echapper = (v) => `"${String(v).replace(/"/g, '""')}"`;
 

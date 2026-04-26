@@ -54,9 +54,14 @@ export default function Catalogue() {
     return Array.isArray(data) ? data : [];
   });
 
+  const [titreSeance, setTitreSeance] = useState(() =>
+    loadJSON(KEYS.titreSeance, "") ?? ""
+  );
+
   useEffect(() => { saveJSON(KEYS.panier, panierOrdre); }, [panierOrdre]);
   useEffect(() => { saveJSON(KEYS.activites, activites); }, [activites]);
   useEffect(() => { saveJSON(KEYS.corbeille, corbeille); }, [corbeille]);
+  useEffect(() => { saveJSON(KEYS.titreSeance, titreSeance); }, [titreSeance]);
 
   const tousThemes = useMemo(() => {
     const set = new Set();
@@ -214,7 +219,7 @@ export default function Catalogue() {
 
   return (
     <div className="app">
-      <PrintView panierAffichage={panierAffichage} />
+      <PrintView panierAffichage={panierAffichage} titreSeance={titreSeance} />
       <Header
         totalActivites={activites.length}
         filteredCount={activitesFiltrees.length}
@@ -272,6 +277,8 @@ export default function Catalogue() {
           onMobileClose={() => setMobilePanelOpen(null)}
           nbCorbeille={corbeille.length}
           onOuvrirCorbeille={() => setShowCorbeille(true)}
+          titreSeance={titreSeance}
+          setTitreSeance={setTitreSeance}
         />
       </div>
 

@@ -1,3 +1,31 @@
+/* TITRE DE SÉANCE */
+.cart-titre-zone {
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+.cart-titre-input {
+  width: 100%;
+  font-family: var(--serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.cart-titre-input::placeholder {
+  color: var(--text-faint);
+  font-weight: 400;
+  font-style: italic;
+}
+.cart-titre-input:focus {
+  border-color: var(--accent);
+}
+
 /* PANIER VIDE */
 .empty-state {
   text-align: center;
