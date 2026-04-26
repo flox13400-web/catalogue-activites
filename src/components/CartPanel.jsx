@@ -54,6 +54,13 @@ function qrSrc(url, size = 160) {
   return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`;
 }
 
+function isUrlHttps(url) {
+  try {
+    const u = new URL(url);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch { return false; }
+}
+
 function getDureeStr(panierItems) {
   let min = 0, max = 0, hasProjet = false;
   for (const item of panierItems) {
@@ -103,7 +110,8 @@ function generatePrintHTML(panierItems, titre = "") {
     }
     if (item.type === "qrcode") {
       if (!item.url?.trim() && !item.legende?.trim()) return "";
-      const imgTag = item.url?.trim()
+      const urlValide = item.url?.trim() && isUrlHttps(item.url.trim());
+      const imgTag = urlValide
         ? `<img src="${qrSrc(item.url.trim(), 160)}" alt="QR Code" class="print-qrcode-img" width="160" height="160" />`
         : "";
       const legendeTag = item.legende?.trim()
@@ -319,7 +327,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
       if (!html) return;
       const blob = new Blob([html], { type: "text/html" });
       const url = URL.createObjectURL(blob);
-      const win = window.open(url, "_blank");
+      const win = window.open(url, "_blank", "noopener,noreferrer");
       if (win) {
         setTimeout(() => URL.revokeObjectURL(url), 15000);
       } else {
@@ -527,15 +535,19 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
             onChange={e => updateEncartField(item.id, "url", e.target.value)}
           />
           {item.url.trim() && (
-            <div className="cart-qrcode-preview">
-              <img
-                src={qrSrc(item.url.trim(), 140)}
-                alt="QR Code"
-                className="cart-qrcode-img"
-                width="140"
-                height="140"
-              />
-            </div>
+            isUrlHttps(item.url.trim()) ? (
+              <div className="cart-qrcode-preview">
+                <img
+                  src={qrSrc(item.url.trim(), 140)}
+                  alt="QR Code"
+                  className="cart-qrcode-img"
+                  width="140"
+                  height="140"
+                />
+              </div>
+            ) : (
+              <div className="cart-qrcode-warning">⚠ L'URL doit commencer par https://</div>
+            )
           )}
           <textarea
             className="cart-texte-input"

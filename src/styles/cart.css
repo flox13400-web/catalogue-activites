@@ -373,6 +373,15 @@
   border: 1px solid var(--border);
   border-radius: 4px;
 }
+.cart-qrcode-warning {
+  font-size: 11px;
+  color: #c0392b;
+  background: #fef0f0;
+  border: 1px solid #e8b8b8;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+}
 
 /* ENCART OBJECTIF PÉDAGOGIQUE */
 .cart-objectif-template {
