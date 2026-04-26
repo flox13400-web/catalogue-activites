@@ -160,7 +160,8 @@
   .header,
   .layout,
   .modal-backdrop,
-  .app-footer {
+  .app-footer,
+  .mobile-toolbar {
     display: none !important;
   }
 
@@ -185,11 +186,13 @@
     margin-bottom: 20pt;
   }
   .print-doc-eyebrow {
-    font-size: 7.5pt;
+    font-size: 9pt;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: #666;
+    letter-spacing: 0.25em;
+    color: #D46A54;
     margin-bottom: 6pt;
+    font-weight: 700;
+    font-family: Arial, sans-serif;
   }
   .print-doc-title {
     font-family: Georgia, serif;

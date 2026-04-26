@@ -54,9 +54,30 @@ function qrSrc(url, size = 160) {
   return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`;
 }
 
+function getDureeStr(panierItems) {
+  let min = 0, max = 0, hasProjet = false;
+  for (const item of panierItems) {
+    if (item.type === "activite" && item.activite) {
+      const a = item.activite;
+      const plage = DUREE_PLAGES[a.duree];
+      if (plage === null) { hasProjet = true; continue; }
+      if (plage) { min += plage.min; max += plage.max; continue; }
+      const mn = parseDureeString(a.duree_detail || a.duree);
+      if (mn !== null) { min += mn; max += mn; }
+    } else if ((item.duree ?? 0) > 0) {
+      min += item.duree;
+      max += item.duree;
+    }
+  }
+  if (min === 0 && max === 0 && !hasProjet) return null;
+  const range = min === max ? formatMinutes(min) : `${formatMinutes(min)} – ${formatMinutes(max)}`;
+  return hasProjet ? `${range} + projet` : range;
+}
+
 function generatePrintHTML(panierItems, titre = "") {
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   const titreDoc = titre.trim() || "Fiche de séance";
+  const dureeStr = getDureeStr(panierItems);
   const activites = panierItems.filter(i => i.type === "activite");
   if (activites.length === 0) return null;
 
@@ -121,7 +142,7 @@ function generatePrintHTML(panierItems, titre = "") {
 body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;line-height:1.6;color:#111;background:#fff;padding:18mm 20mm}
 @media print{@page{margin:18mm 20mm;size:A4}}
 .print-doc-header{text-align:center;border-bottom:2px solid #1a1a1a;padding-bottom:14pt;margin-bottom:20pt}
-.print-doc-eyebrow{font-size:7.5pt;text-transform:uppercase;letter-spacing:.2em;color:#666;margin-bottom:6pt}
+.print-doc-eyebrow{font-size:9pt;text-transform:uppercase;letter-spacing:.25em;color:#D46A54;margin-bottom:6pt;font-weight:700;font-family:Arial,sans-serif}
 .print-doc-title{font-family:Georgia,serif;font-size:26pt;font-weight:normal;font-style:italic;letter-spacing:-.01em;margin-bottom:8pt}
 .print-doc-meta{font-size:8.5pt;color:#555;display:flex;justify-content:center;gap:8pt;align-items:center}
 .print-doc-meta-sep{color:#bbb}
@@ -159,12 +180,12 @@ body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;line-height:1.
 .print-doc-footer{margin-top:20pt;padding-top:8pt;border-top:1pt solid #ddd;text-align:center;font-size:7.5pt;color:#aaa;font-family:Arial,sans-serif}
 </style></head><body>
 <div class="print-doc-header">
-  <div class="print-doc-eyebrow">Ressources pédagogiques · IA générative</div>
+  <div class="print-doc-eyebrow">SEQUENCIA</div>
   <h1 class="print-doc-title">${esc(titreDoc)}</h1>
-  <div class="print-doc-meta"><span>Exporté le ${esc(date)}</span><span class="print-doc-meta-sep">·</span><span>${nbAct} activité${plural}</span></div>
+  <div class="print-doc-meta"><span>Exporté le ${esc(date)}</span>${dureeStr ? `<span class="print-doc-meta-sep">·</span><span>${esc(dureeStr)}</span>` : ""}</div>
 </div>
 ${toc}${items}
-<div class="print-doc-footer">${esc(titreDoc)} · ${nbAct} activité${plural}</div>
+<div class="print-doc-footer">${esc(titreDoc)}${dureeStr ? ` · ${esc(dureeStr)}` : ""}</div>
 <script>window.addEventListener('load',function(){window.print();})</script>
 </body></html>`;
 }
