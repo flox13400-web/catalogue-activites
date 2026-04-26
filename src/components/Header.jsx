@@ -1,14 +1,12 @@
 import React from "react";
 import "../styles/global.css";
 import LogoBrand from "./LogoBrand";
-import LogoMark from "./LogoMark";
-
 export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue }) {
   return (
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <LogoMark className="header-mark" />
+          <img src="/logo-sequencia.png" alt="" className="header-mark" />
           <div className="header-text">
             <LogoBrand className="header-nom" />
             <span className="header-tagline">TICE ton architecture pédagogique</span>
