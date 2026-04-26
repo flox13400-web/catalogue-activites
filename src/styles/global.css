@@ -54,7 +54,7 @@ body, .app {
 }
 .header-brand {
   display: block;
-  max-height: 100px;
+  height: 60px;
   width: auto;
 }
 .header-right {
