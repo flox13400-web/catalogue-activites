@@ -6,7 +6,7 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <img src="/logo-sequencia.png" alt="" className="header-mark" />
+          <img src={`${import.meta.env.BASE_URL}logo-sequencia.png`} alt="" className="header-mark" />
           <div className="header-text">
             <LogoBrand className="header-nom" />
             <span className="header-tagline">TICE ton architecture pédagogique</span>
