@@ -1,16 +1,13 @@
 import React from "react";
 import "../styles/global.css";
+import LogoBrand from "./LogoBrand";
 
 export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue }) {
   return (
     <header className="header">
       <div className="header-inner">
         <div className="header-left">
-          <img
-            src="/logo-sequencia-baseline.svg"
-            alt="SEQUENCIA — TICE ton architecture pédagogique"
-            className="header-brand"
-          />
+          <LogoBrand className="header-brand" />
         </div>
         <div className="header-right">
           <div className="header-stat">
