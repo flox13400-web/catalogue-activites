@@ -122,27 +122,55 @@ function parserMarkdown(texte) {
 
 // ── ChoixImportModal ───────────────────────────────────────────
 
-export function ChoixImportModal({ onClose, onManuel, onImport }) {
+const CATALOGUES_INTEGRES = [
+  {
+    slug: "ia_deconnecte",
+    titre: "IA déconnecté",
+    nb: 100,
+    desc: "100 activités pédagogiques pour explorer l'intelligence artificielle sans écran ni connexion — pour tous les niveaux, de 7 ans aux adultes.",
+  },
+];
+
+export function ChoixImportModal({ onClose, onManuel, onImport, onCatalogueIntegre }) {
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal modal-choix" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>×</button>
-        <div className="modal-eyebrow">Nouvelle activité</div>
-        <h2 className="modal-title">Comment voulez-vous ajouter ?</h2>
-        <p className="modal-choix-desc">
-          Créez une activité en la saisissant manuellement, ou importez un fichier JSON ou Markdown contenant plusieurs activités à la fois.
-        </p>
-        <div className="choix-import-grid">
-          <button className="choix-import-card" onClick={onManuel}>
-            <span className="choix-import-icon">✍️</span>
-            <span className="choix-import-label">Saisie manuelle</span>
-            <span className="choix-import-desc">Remplir le formulaire pour créer une seule activité</span>
-          </button>
-          <button className="choix-import-card" onClick={onImport}>
-            <span className="choix-import-icon">📂</span>
-            <span className="choix-import-label">Importer un fichier</span>
-            <span className="choix-import-desc">Charger un fichier .json ou .md avec plusieurs activités</span>
-          </button>
+        <div className="modal-eyebrow">Ajouter des activités</div>
+        <h2 className="modal-title">Par où commencer ?</h2>
+
+        <div className="choix-section">
+          <div className="choix-section-label">Catalogues prêts à l'emploi</div>
+          {CATALOGUES_INTEGRES.map(({ slug, titre, nb, desc }) => (
+            <button
+              key={slug}
+              className="choix-catalogue-card"
+              onClick={() => onCatalogueIntegre(slug)}
+            >
+              <div className="choix-catalogue-header">
+                <span className="choix-catalogue-titre">{titre}</span>
+                <span className="choix-catalogue-count">{nb} activités</span>
+              </div>
+              <p className="choix-catalogue-desc">{desc}</p>
+              <span className="choix-catalogue-cta">Charger ce catalogue →</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="choix-section">
+          <div className="choix-section-label">Autres options</div>
+          <div className="choix-import-grid">
+            <button className="choix-import-card" onClick={onManuel}>
+              <span className="choix-import-icon">✍</span>
+              <span className="choix-import-label">Créer manuellement</span>
+              <span className="choix-import-desc">Formulaire pour saisir une activité</span>
+            </button>
+            <button className="choix-import-card" onClick={onImport}>
+              <span className="choix-import-icon">📂</span>
+              <span className="choix-import-label">Importer un fichier</span>
+              <span className="choix-import-desc">Catalogue JSON ou Markdown sauvegardé</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

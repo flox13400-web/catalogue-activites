@@ -4,6 +4,7 @@ import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
 import { exportCatalogue } from "./utils/export";
 import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
+import iaDeconnecte from "./data/ia_deconnecte.json";
 import Header from "./components/Header";
 import FilterPanel from "./components/FilterPanel";
 import CartPanel from "./components/CartPanel";
@@ -119,6 +120,13 @@ export default function Catalogue() {
     };
     setActivites(prev => [...prev, nouvelleActivite]);
     setShowAddModal(false);
+  }
+
+  function handleCatalogueIntegre(slug) {
+    const sources = { ia_deconnecte: iaDeconnecte };
+    const data = sources[slug];
+    if (data) handleImportActivites(data);
+    setShowChoixImport(false);
   }
 
   function handleImportActivites(nouvellesActivites) {
@@ -351,6 +359,7 @@ export default function Catalogue() {
           onClose={() => setShowChoixImport(false)}
           onManuel={() => { setShowChoixImport(false); setShowAddModal(true); }}
           onImport={() => { setShowChoixImport(false); setShowImportModal(true); }}
+          onCatalogueIntegre={handleCatalogueIntegre}
         />
       )}
 
