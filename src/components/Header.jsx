@@ -11,6 +11,7 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
               src="/logo-sequencia.svg"
               alt="SEQUENCIA"
               className="header-logo"
+              onError={e => { e.currentTarget.hidden = true; }}
             />
             <h1 className="header-title">SEQUENCIA</h1>
           </div>
