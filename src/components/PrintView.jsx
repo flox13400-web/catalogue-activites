@@ -1,6 +1,10 @@
 import React from "react";
 import "../styles/card.css";
 
+function qrSrc(url, size = 160) {
+  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`;
+}
+
 export default function PrintView({ panierAffichage, titreSeance = "" }) {
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   const titreDoc = titreSeance.trim() || "Fiche de séance";
@@ -8,7 +12,6 @@ export default function PrintView({ panierAffichage, titreSeance = "" }) {
   const activites = panierAffichage.filter(i => i.type === "activite");
   if (activites.length === 0) return null;
 
-  // Pré-numérotation : les encarts n'ont pas de numéro
   let actNum = 0;
   const itemsNumerotes = panierAffichage.map(item => {
     if (item.type === "activite") return { ...item, num: ++actNum };
@@ -52,6 +55,38 @@ export default function PrintView({ panierAffichage, titreSeance = "" }) {
           );
         }
 
+        if (item.type === "qrcode") {
+          if (!item.url?.trim() && !item.legende?.trim()) return null;
+          return (
+            <div key={item.id} className="print-qrcode">
+              {item.url?.trim() && (
+                <img
+                  src={qrSrc(item.url.trim(), 160)}
+                  alt="QR Code"
+                  className="print-qrcode-img"
+                  width="160"
+                  height="160"
+                />
+              )}
+              {item.legende?.trim() && (
+                <p className="print-qrcode-legende">{item.legende}</p>
+              )}
+            </div>
+          );
+        }
+
+        if (item.type === "objectif") {
+          const blank = <span className="print-objectif-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
+          const c1 = item.champ1?.trim() ? <strong>{item.champ1}</strong> : blank;
+          const c2 = item.champ2?.trim() ? <strong>{item.champ2}</strong> : blank;
+          const c3 = item.champ3?.trim() ? <strong>{item.champ3}</strong> : blank;
+          return (
+            <div key={item.id} className="print-objectif">
+              <p>A l'issue de {c1}, l'apprenant sera capable de {c2}. La compétence sera acquise si {c3}.</p>
+            </div>
+          );
+        }
+
         const a = item.activite;
         return (
           <div key={item.id} className="print-fiche">
@@ -79,16 +114,8 @@ export default function PrintView({ panierAffichage, titreSeance = "" }) {
                 <div className="print-fiche-meta-value">{a.groupe.join(", ")}</div>
               </div>
               <div className="print-fiche-meta-item">
-                <div className="print-fiche-meta-label">Préparation</div>
-                <div className="print-fiche-meta-value">{a.preparation}</div>
-              </div>
-              <div className="print-fiche-meta-item">
                 <div className="print-fiche-meta-label">Thèmes</div>
                 <div className="print-fiche-meta-value">{a.themes.join(", ")}</div>
-              </div>
-              <div className="print-fiche-meta-item">
-                <div className="print-fiche-meta-label">Contexte</div>
-                <div className="print-fiche-meta-value">{a.contexte.join(", ")}</div>
               </div>
             </div>
 

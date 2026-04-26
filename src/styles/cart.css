@@ -310,6 +310,97 @@
   background: var(--accent-soft);
 }
 
+/* MENU TYPE D'ENCART */
+.cart-encart-add { display: flex; flex-direction: column; gap: 0; margin-top: 6px; }
+.cart-encart-menu {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+}
+.cart-encart-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  cursor: var(--cursor-hand);
+  font-family: var(--sans);
+  transition: background 120ms ease;
+}
+.cart-encart-menu-item:last-child { border-bottom: none; }
+.cart-encart-menu-item:hover { background: var(--accent-soft); }
+.cart-encart-menu-icon { font-size: 16px; flex-shrink: 0; line-height: 1; width: 20px; text-align: center; }
+.cart-encart-menu-label { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 1px; }
+.cart-encart-menu-desc { font-size: 10px; color: var(--text-muted); }
+.cart-encart-btn-open { background: var(--accent-soft); }
+.cart-encart-type-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  font-weight: 500;
+}
+
+/* ENCART QR CODE */
+.cart-qrcode-url {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 6px 8px;
+  outline: none;
+  margin-bottom: 8px;
+  transition: border-color 120ms ease;
+}
+.cart-qrcode-url:focus { border-color: var(--accent); }
+.cart-qrcode-url::placeholder { color: var(--text-faint); }
+.cart-qrcode-preview {
+  display: flex;
+  justify-content: center;
+  padding: 6px 0 10px;
+}
+.cart-qrcode-img {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* ENCART OBJECTIF PÉDAGOGIQUE */
+.cart-objectif-template {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 6px;
+  font-size: 12px;
+  line-height: 2;
+  margin-bottom: 8px;
+}
+.cart-objectif-sep { color: var(--text-muted); white-space: nowrap; }
+.cart-objectif-input {
+  flex: 1;
+  min-width: 90px;
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--border-strong);
+  padding: 1px 3px;
+  outline: none;
+  transition: border-color 120ms ease;
+}
+.cart-objectif-input:focus { border-bottom-color: var(--accent); }
+.cart-objectif-input::placeholder { color: var(--text-faint); font-style: italic; }
+
 /* EXPORT */
 .export-wrapper { position: relative; }
 .export-menu {

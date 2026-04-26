@@ -50,6 +50,10 @@ function esc(str) {
     .replace(/"/g, "&quot;");
 }
 
+function qrSrc(url, size = 160) {
+  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`;
+}
+
 function generatePrintHTML(panierItems, titre = "") {
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
   const titreDoc = titre.trim() || "Fiche de séance";
@@ -76,6 +80,23 @@ function generatePrintHTML(panierItems, titre = "") {
       if (!item.contenu.trim()) return "";
       return `<div class="print-texte-libre"><p>${esc(item.contenu)}</p></div>`;
     }
+    if (item.type === "qrcode") {
+      if (!item.url?.trim() && !item.legende?.trim()) return "";
+      const imgTag = item.url?.trim()
+        ? `<img src="${qrSrc(item.url.trim(), 160)}" alt="QR Code" class="print-qrcode-img" width="160" height="160" />`
+        : "";
+      const legendeTag = item.legende?.trim()
+        ? `<p class="print-qrcode-legende">${esc(item.legende)}</p>`
+        : "";
+      return `<div class="print-qrcode">${imgTag}${legendeTag}</div>`;
+    }
+    if (item.type === "objectif") {
+      const blank = `<span class="print-objectif-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`;
+      const c1 = item.champ1?.trim() ? `<strong>${esc(item.champ1)}</strong>` : blank;
+      const c2 = item.champ2?.trim() ? `<strong>${esc(item.champ2)}</strong>` : blank;
+      const c3 = item.champ3?.trim() ? `<strong>${esc(item.champ3)}</strong>` : blank;
+      return `<div class="print-objectif"><p>A l'issue de ${c1}, l'apprenant sera capable de ${c2}. La compétence sera acquise si ${c3}.</p></div>`;
+    }
     const a = item.activite;
     return `<div class="print-fiche">
 <div class="print-fiche-header"><div class="print-fiche-header-left"><span class="print-fiche-num">${item.num}</span><div><h2 class="print-fiche-titre">${esc(a.titre)}</h2><span class="print-fiche-id">${esc(a.id)}</span></div></div></div>
@@ -84,7 +105,6 @@ function generatePrintHTML(panierItems, titre = "") {
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Public</div><div class="print-fiche-meta-value">${esc(a.public.join(", "))}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Taille groupe</div><div class="print-fiche-meta-value">${esc(a.groupe.join(", "))}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Thèmes</div><div class="print-fiche-meta-value">${esc(a.themes.join(", "))}</div></div>
-<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Contexte</div><div class="print-fiche-meta-value">${esc(a.contexte.join(", "))}</div></div>
 </div>
 <div class="print-fiche-section"><div class="print-fiche-section-label">Description</div><p class="print-fiche-body">${esc(a.description)}</p></div>
 <div class="print-fiche-apprentissage"><div class="print-fiche-section-label">Apprentissage clé</div><p class="print-fiche-apprentissage-text">« ${esc(a.apprentissage_cle)} »</p></div>
@@ -130,6 +150,12 @@ body{font-family:Georgia,'Times New Roman',serif;font-size:10.5pt;line-height:1.
 .print-fiche-apprentissage-text{font-size:9.5pt;font-style:italic;color:#333;margin:0;line-height:1.5}
 .print-texte-libre{border-left:3pt solid #D46A54;padding:8pt 12pt;margin-bottom:14pt;background:#faf8f4;border-radius:0 3pt 3pt 0;font-style:italic;font-size:10.5pt;color:#444;line-height:1.6;page-break-inside:avoid}
 .print-texte-libre p{margin:0}
+.print-qrcode{display:flex;flex-direction:column;align-items:center;gap:8pt;padding:10pt 0 14pt;margin-bottom:14pt;border-bottom:.5pt solid #e0ddd6;page-break-inside:avoid}
+.print-qrcode-img{border:1pt solid #ddd;border-radius:3pt}
+.print-qrcode-legende{font-size:9.5pt;color:#444;text-align:center;font-style:italic;margin:0}
+.print-objectif{background:#f0f4fb;border-left:3pt solid #5b7ec8;padding:10pt 14pt;margin-bottom:14pt;border-radius:0 3pt 3pt 0;page-break-inside:avoid}
+.print-objectif p{font-size:10.5pt;line-height:1.8;margin:0;color:#222}
+.print-objectif-blank{border-bottom:1pt solid #aaa;min-width:50pt;display:inline-block;vertical-align:bottom}
 .print-doc-footer{margin-top:20pt;padding-top:8pt;border-top:1pt solid #ddd;text-align:center;font-size:7.5pt;color:#aaa;font-family:Arial,sans-serif}
 </style></head><body>
 <div class="print-doc-header">
@@ -143,8 +169,15 @@ ${toc}${items}
 </body></html>`;
 }
 
+const ENCART_TYPES = [
+  { type: "texte",    icon: "✏",  label: "Texte libre",             desc: "Encart de texte personnalisé" },
+  { type: "qrcode",  icon: "⬛", label: "QR code",                 desc: "Lien transformé en QR code imprimable" },
+  { type: "objectif",icon: "◎",  label: "Objectif pédagogique",    desc: "À l'issue de… l'apprenant sera capable de…" },
+];
+
 export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites, mobileOpen, onMobileClose, nbCorbeille, onOuvrirCorbeille, titreSeance, setTitreSeance }) {
   const [exportOuvert, setExportOuvert] = React.useState(false);
+  const [encartMenuOuvert, setEncartMenuOuvert] = React.useState(false);
   const [dragCartIndex, setDragCartIndex] = React.useState(null);
   const [dragOverCartIndex, setDragOverCartIndex] = React.useState(null);
   const [cartDropActive, setCartDropActive] = React.useState(false);
@@ -174,7 +207,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
         const { min: dMin, max: dMax, hasProjet: hp } = parseDureeActivite(item.activite);
         min += dMin; max += dMax;
         if (hp) hasProjet = true;
-      } else if (item.type === "texte" && (item.duree ?? 0) > 0) {
+      } else if ((item.duree ?? 0) > 0) {
         min += item.duree;
         max += item.duree;
       }
@@ -236,24 +269,24 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     });
   }
 
-  function ajouterEncart() {
-    setPanierOrdre(prev => [...prev, { type: "texte", id: `TEXT-${Date.now()}`, contenu: "", duree: 0 }]);
+  function ajouterEncartDeType(type) {
+    const id = `${type.toUpperCase()}-${Date.now()}`;
+    let item;
+    if (type === "texte")    item = { type, id, contenu: "", duree: 0 };
+    if (type === "qrcode")   item = { type, id, url: "", legende: "", duree: 0 };
+    if (type === "objectif") item = { type, id, champ1: "", champ2: "", champ3: "", duree: 0 };
+    setPanierOrdre(prev => [...prev, item]);
+    setEncartMenuOuvert(false);
   }
 
-  function updateEncart(id, contenu) {
+  function updateEncartField(id, field, value) {
     setPanierOrdre(prev => prev.map(item =>
-      item.type === "texte" && item.id === id ? { ...item, contenu } : item
-    ));
-  }
-
-  function updateEncartDuree(id, duree) {
-    setPanierOrdre(prev => prev.map(item =>
-      item.type === "texte" && item.id === id ? { ...item, duree } : item
+      item.id === id ? { ...item, [field]: value } : item
     ));
   }
 
   function supprimerEncart(id) {
-    setPanierOrdre(prev => prev.filter(item => !(item.type === "texte" && item.id === id)));
+    setPanierOrdre(prev => prev.filter(item => item.type === "activite" || item.id !== id));
   }
 
   // ── Impression ─────────────────────────────────────────────────
@@ -388,6 +421,152 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     setDragOverCartIndex(null);
   }
 
+  // ── Render d'un encart (non-activité) ─────────────────────────
+
+  function renderEncart(item, i) {
+    const isDragging = dragCartIndex === i;
+    const isDragOver = dragOverCartIndex === i && dragCartIndex !== i;
+    const dureeVal = item.duree ?? 0;
+    const dragProps = {
+      draggable: true,
+      onDragStart: (e) => handleItemDragStart(e, i),
+      onDragOver:  (e) => handleItemDragOver(e, i),
+      onDrop:      (e) => handleItemDrop(e, i),
+      onDragEnd:   handleItemDragEnd,
+    };
+
+    const controls = (typeLabel) => (
+      <div className="cart-texte-controls">
+        <span
+          className="cart-drag-handle"
+          title="Déplacer"
+          onTouchStart={(e) => handleDragHandleTouchStart(e, i)}
+        >⠿</span>
+        <div className="cart-item-order">
+          <button className="cart-order-btn" onClick={() => monter(i)} disabled={i === 0} title="Monter">↑</button>
+          <button className="cart-order-btn" onClick={() => descendre(i)} disabled={i === totalItems - 1} title="Descendre">↓</button>
+        </div>
+        <span className="cart-encart-type-label">{typeLabel}</span>
+        <button className="cart-item-remove" onClick={() => supprimerEncart(item.id)} title="Supprimer">×</button>
+      </div>
+    );
+
+    const dureeField = (
+      <div className="cart-texte-duree">
+        <span className="cart-texte-duree-label">Durée</span>
+        <div className="cart-texte-duree-row">
+          <input
+            type="number"
+            className="cart-texte-duree-input"
+            min="0"
+            max="999"
+            placeholder="0"
+            value={dureeVal > 0 ? dureeVal : ""}
+            onChange={e => {
+              const v = parseInt(e.target.value, 10);
+              updateEncartField(item.id, "duree", isNaN(v) || v < 0 ? 0 : v);
+            }}
+          />
+          <span className="cart-texte-duree-unit">min</span>
+        </div>
+      </div>
+    );
+
+    if (item.type === "texte") {
+      return (
+        <div key={item.id} data-cart-idx={i}
+          className={`cart-texte${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
+          {...dragProps}
+        >
+          {controls("Texte")}
+          <textarea
+            className="cart-texte-input"
+            placeholder="Encart de texte libre…"
+            value={item.contenu}
+            onChange={e => updateEncartField(item.id, "contenu", e.target.value)}
+            rows={3}
+          />
+          {dureeField}
+        </div>
+      );
+    }
+
+    if (item.type === "qrcode") {
+      return (
+        <div key={item.id} data-cart-idx={i}
+          className={`cart-texte${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
+          {...dragProps}
+        >
+          {controls("QR code")}
+          <input
+            type="url"
+            className="cart-qrcode-url"
+            placeholder="https://…"
+            value={item.url}
+            onChange={e => updateEncartField(item.id, "url", e.target.value)}
+          />
+          {item.url.trim() && (
+            <div className="cart-qrcode-preview">
+              <img
+                src={qrSrc(item.url.trim(), 140)}
+                alt="QR Code"
+                className="cart-qrcode-img"
+                width="140"
+                height="140"
+              />
+            </div>
+          )}
+          <textarea
+            className="cart-texte-input"
+            placeholder="Légende (optionnel)…"
+            value={item.legende}
+            onChange={e => updateEncartField(item.id, "legende", e.target.value)}
+            rows={2}
+          />
+          {dureeField}
+        </div>
+      );
+    }
+
+    if (item.type === "objectif") {
+      return (
+        <div key={item.id} data-cart-idx={i}
+          className={`cart-texte${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
+          {...dragProps}
+        >
+          {controls("Objectif")}
+          <div className="cart-objectif-template">
+            <span className="cart-objectif-sep">A l'issue de</span>
+            <input
+              className="cart-objectif-input"
+              value={item.champ1}
+              onChange={e => updateEncartField(item.id, "champ1", e.target.value)}
+              placeholder="la formation…"
+            />
+            <span className="cart-objectif-sep">, l'apprenant sera capable de</span>
+            <input
+              className="cart-objectif-input"
+              value={item.champ2}
+              onChange={e => updateEncartField(item.id, "champ2", e.target.value)}
+              placeholder="réaliser…"
+            />
+            <span className="cart-objectif-sep">. La compétence sera acquise si</span>
+            <input
+              className="cart-objectif-input"
+              value={item.champ3}
+              onChange={e => updateEncartField(item.id, "champ3", e.target.value)}
+              placeholder="il/elle peut démontrer…"
+            />
+            <span className="cart-objectif-sep">.</span>
+          </div>
+          {dureeField}
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   return (
     <aside
       ref={panelRef}
@@ -433,63 +612,10 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
             onTouchEnd={handleCartListTouchEnd}
           >
             {panierItems.map((item, i) => {
+              if (item.type !== "activite") return renderEncart(item, i);
+
               const isDragging = dragCartIndex === i;
               const isDragOver = dragOverCartIndex === i && dragCartIndex !== i;
-
-              if (item.type === "texte") {
-                const dureeVal = item.duree ?? 0;
-                return (
-                  <div
-                    key={item.id}
-                    data-cart-idx={i}
-                    className={`cart-texte${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
-                    draggable
-                    onDragStart={(e) => handleItemDragStart(e, i)}
-                    onDragOver={(e) => handleItemDragOver(e, i)}
-                    onDrop={(e) => handleItemDrop(e, i)}
-                    onDragEnd={handleItemDragEnd}
-                  >
-                    <div className="cart-texte-controls">
-                      <span
-                        className="cart-drag-handle"
-                        title="Déplacer"
-                        onTouchStart={(e) => handleDragHandleTouchStart(e, i)}
-                      >⠿</span>
-                      <div className="cart-item-order">
-                        <button className="cart-order-btn" onClick={() => monter(i)} disabled={i === 0} title="Monter">↑</button>
-                        <button className="cart-order-btn" onClick={() => descendre(i)} disabled={i === totalItems - 1} title="Descendre">↓</button>
-                      </div>
-                      <button className="cart-item-remove" onClick={() => supprimerEncart(item.id)} title="Supprimer">×</button>
-                    </div>
-                    <textarea
-                      className="cart-texte-input"
-                      placeholder="Encart de texte libre…"
-                      value={item.contenu}
-                      onChange={e => updateEncart(item.id, e.target.value)}
-                      rows={3}
-                    />
-                    <div className="cart-texte-duree">
-                      <span className="cart-texte-duree-label">Durée</span>
-                      <div className="cart-texte-duree-row">
-                        <input
-                          type="number"
-                          className="cart-texte-duree-input"
-                          min="0"
-                          max="999"
-                          placeholder="0"
-                          value={dureeVal > 0 ? dureeVal : ""}
-                          onChange={e => {
-                            const v = parseInt(e.target.value, 10);
-                            updateEncartDuree(item.id, isNaN(v) || v < 0 ? 0 : v);
-                          }}
-                        />
-                        <span className="cart-texte-duree-unit">min</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-
               const a = item.activite;
               return (
                 <div
@@ -534,9 +660,32 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
               </div>
             )}
 
-            <button className="btn-reset cart-encart-btn" onClick={ajouterEncart}>
-              ＋ Ajouter un encart
-            </button>
+            <div className="cart-encart-add">
+              {encartMenuOuvert && (
+                <div className="cart-encart-menu">
+                  {ENCART_TYPES.map(({ type, icon, label, desc }) => (
+                    <button
+                      key={type}
+                      className="cart-encart-menu-item"
+                      onClick={() => ajouterEncartDeType(type)}
+                    >
+                      <span className="cart-encart-menu-icon">{icon}</span>
+                      <div>
+                        <div className="cart-encart-menu-label">{label}</div>
+                        <div className="cart-encart-menu-desc">{desc}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+              <button
+                className={`btn-reset cart-encart-btn${encartMenuOuvert ? " cart-encart-btn-open" : ""}`}
+                onClick={() => setEncartMenuOuvert(v => !v)}
+              >
+                ＋ Ajouter un encart {encartMenuOuvert ? "▲" : "▼"}
+              </button>
+            </div>
+
             {totalItems > 1 && (
               <button className="btn-reset cart-vider" onClick={viderPanier}>
                 Vider le panier

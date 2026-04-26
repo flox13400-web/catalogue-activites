@@ -373,6 +373,44 @@
   }
   .print-texte-libre p { margin: 0; }
 
+  /* QR code imprimé */
+  .print-qrcode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8pt;
+    padding: 10pt 0 14pt;
+    margin-bottom: 14pt;
+    border-bottom: 0.5pt solid #e0ddd6;
+    page-break-inside: avoid;
+  }
+  .print-qrcode-img { border: 1pt solid #ddd; border-radius: 3pt; }
+  .print-qrcode-legende {
+    font-size: 9.5pt;
+    color: #444;
+    text-align: center;
+    font-style: italic;
+    margin: 0;
+    max-width: 240pt;
+  }
+
+  /* Objectif pédagogique imprimé */
+  .print-objectif {
+    background: #f0f4fb;
+    border-left: 3pt solid #5b7ec8;
+    padding: 10pt 14pt;
+    margin-bottom: 14pt;
+    border-radius: 0 3pt 3pt 0;
+    page-break-inside: avoid;
+  }
+  .print-objectif p { font-size: 10.5pt; line-height: 1.8; margin: 0; color: #222; }
+  .print-objectif-blank {
+    border-bottom: 1pt solid #aaa;
+    min-width: 50pt;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
   .print-doc-footer {
     margin-top: 20pt;
     padding-top: 8pt;
