@@ -21,19 +21,21 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
             <div className="header-stat-num">{totalActivites}</div>
             <div className="header-stat-label">activités</div>
           </div>
-          <button className="btn-nouvelle-activite" onClick={onNouvelleActivite}>
-            ✚ Nouvelle activité
-          </button>
-          {totalActivites > 0 && (
-            <button className="btn-sauvegarder-catalogue" onClick={onSauvegarderCatalogue} title="Télécharger tout le catalogue en JSON">
-              ⬇ Sauvegarder
+          <div className="header-actions">
+            <button className="btn-nouvelle-activite" onClick={onNouvelleActivite}>
+              ✚ Nouvelle activité
             </button>
-          )}
-          {totalActivites > 0 && (
-            <button className="btn-vider-catalogue" onClick={onViderCatalogue}>
-              Vider le catalogue
-            </button>
-          )}
+            {totalActivites > 0 && (
+              <button className="btn-sauvegarder-catalogue" onClick={onSauvegarderCatalogue} title="Télécharger tout le catalogue en JSON">
+                Sauvegarder
+              </button>
+            )}
+            {totalActivites > 0 && (
+              <button className="btn-vider-catalogue" onClick={onViderCatalogue}>
+                Vider le catalogue
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </header>
