@@ -41,7 +41,6 @@ export function exportMarkdown(activites, titre = "") {
     lignes.push(`**Public :** ${a.public.join(", ")}  `);
     lignes.push(`**Durée :** ${a.duree_detail || a.duree}  `);
     lignes.push(`**Groupe :** ${a.groupe.join(", ")}  `);
-    lignes.push(`**Préparation :** ${a.preparation}  `);
     lignes.push(`**Thèmes :** ${a.themes.join(", ")}  `);
     lignes.push(`**Contexte :** ${a.contexte.join(", ")}`);
     lignes.push(``);
@@ -61,7 +60,7 @@ export function exportMarkdown(activites, titre = "") {
 }
 
 export function exportCSV(activites, _titre = "") {
-  const entetes = ["id", "titre", "public", "duree", "groupe", "preparation", "themes", "contexte", "description_courte", "apprentissage_cle"];
+  const entetes = ["id", "titre", "public", "duree", "duree_detail", "groupe", "themes", "contexte", "description_courte", "apprentissage_cle"];
   const echapper = (v) => `"${String(v).replace(/"/g, '""')}"`;
 
   const lignes = [
@@ -71,9 +70,9 @@ export function exportCSV(activites, _titre = "") {
         a.id,
         a.titre,
         a.public.join(" | "),
-        a.duree_detail || a.duree,
+        a.duree,
+        a.duree_detail || "",
         a.groupe.join(" | "),
-        a.preparation,
         a.themes.join(" | "),
         a.contexte.join(" | "),
         a.description_courte,

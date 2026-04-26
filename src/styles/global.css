@@ -404,7 +404,10 @@ body, .app {
   }
 .header-right { justify-content: flex-start; flex-wrap: wrap; gap: 12px; }
   .header-stat-num { font-size: 26px; }
-  .btn-nouvelle-activite { width: 100%; text-align: center; }
+  .header-actions { flex-wrap: wrap; width: 100%; }
+  .btn-nouvelle-activite { flex-basis: 100%; text-align: center; }
+  .btn-sauvegarder-catalogue,
+  .btn-vider-catalogue { flex: 1; text-align: center; }
 
   /* Layout */
   .layout { grid-template-columns: 1fr; }
