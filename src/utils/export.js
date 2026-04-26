@@ -8,6 +8,11 @@ function telecharger(contenu, nomFichier, typeMime) {
   URL.revokeObjectURL(url);
 }
 
+export function exportCatalogue(activites) {
+  const date = new Date().toLocaleDateString("fr-FR").replace(/\//g, "-");
+  telecharger(JSON.stringify(activites, null, 2), `catalogue-sequencia-${date}.json`, "application/json");
+}
+
 export function exportJSON(activites, titre = "") {
   const data = {
     export: titre.trim() || "Catalogue IA — Panier de séance",

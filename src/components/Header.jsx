@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/global.css";
 import LogoBrand from "./LogoBrand";
-export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue }) {
+export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue }) {
   return (
     <header className="header">
       <div className="header-inner">
@@ -24,6 +24,11 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
           <button className="btn-nouvelle-activite" onClick={onNouvelleActivite}>
             ✚ Nouvelle activité
           </button>
+          {totalActivites > 0 && (
+            <button className="btn-sauvegarder-catalogue" onClick={onSauvegarderCatalogue} title="Télécharger tout le catalogue en JSON">
+              ⬇ Sauvegarder
+            </button>
+          )}
           {totalActivites > 0 && (
             <button className="btn-vider-catalogue" onClick={onViderCatalogue}>
               Vider le catalogue

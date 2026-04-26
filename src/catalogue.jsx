@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 
 import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
+import { exportCatalogue } from "./utils/export";
 import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
 import Header from "./components/Header";
 import FilterPanel from "./components/FilterPanel";
@@ -222,6 +223,10 @@ export default function Catalogue() {
     setCorbeille([]);
   }
 
+  function handleSauvegarderCatalogue() {
+    exportCatalogue(activites);
+  }
+
   function handleViderCatalogue() {
     if (!window.confirm(
       `Vider le catalogue ?\n\nLes ${activites.length} activité${activites.length > 1 ? "s" : ""} seront supprimées. Le panier sera également vidé.`
@@ -239,6 +244,7 @@ export default function Catalogue() {
         totalActivites={activites.length}
         filteredCount={activitesFiltrees.length}
         onNouvelleActivite={() => setShowChoixImport(true)}
+        onSauvegarderCatalogue={handleSauvegarderCatalogue}
         onViderCatalogue={handleViderCatalogue}
       />
       {mobilePanelOpen && (

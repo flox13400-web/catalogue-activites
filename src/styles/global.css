@@ -102,6 +102,25 @@ body, .app {
   margin-top: 6px;
 }
 
+/* BOUTON SAUVEGARDER CATALOGUE */
+.btn-sauvegarder-catalogue {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--accent);
+  background: none;
+  color: var(--accent-deep);
+  cursor: var(--cursor-hand);
+  white-space: nowrap;
+  align-self: center;
+  transition: background 150ms ease, color 150ms ease;
+}
+.btn-sauvegarder-catalogue:hover {
+  background: var(--accent-soft);
+}
+
 /* BOUTON VIDER CATALOGUE */
 .btn-vider-catalogue {
   font-family: var(--sans);
