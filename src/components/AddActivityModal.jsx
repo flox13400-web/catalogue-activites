@@ -120,6 +120,85 @@ function parserMarkdown(texte) {
   return activites;
 }
 
+function parserCSV(texte) {
+  const contenu = texte.replace(/^﻿/, "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const lignes = contenu.split("\n").filter(l => l.trim());
+  if (lignes.length < 2) throw new Error("Le fichier CSV doit contenir une ligne d'en-têtes et au moins une ligne de données.");
+
+  function parseLigne(ligne, sep) {
+    const champs = [];
+    let courant = "", guillemets = false;
+    for (let i = 0; i < ligne.length; i++) {
+      const c = ligne[i];
+      if (c === '"') {
+        if (guillemets && ligne[i + 1] === '"') { courant += '"'; i++; }
+        else guillemets = !guillemets;
+      } else if (c === sep && !guillemets) {
+        champs.push(courant.trim()); courant = "";
+      } else {
+        courant += c;
+      }
+    }
+    champs.push(courant.trim());
+    return champs;
+  }
+
+  const sep = (lignes[0].split(";").length >= lignes[0].split(",").length) ? ";" : ",";
+  const entetes = parseLigne(lignes[0], sep).map(h => h.toLowerCase().trim());
+  const obligatoires = ["titre", "duree", "description_courte", "description", "apprentissage_cle"];
+  const manquantes = obligatoires.filter(c => !entetes.includes(c));
+  if (manquantes.length > 0) throw new Error(`Colonnes manquantes : ${manquantes.join(", ")}. Téléchargez le modèle pour avoir la bonne structure.`);
+
+  const idx = (nom) => entetes.indexOf(nom);
+  const get = (champs, nom) => idx(nom) >= 0 ? (champs[idx(nom)] || "").trim() : "";
+  const split = (s) => s ? s.split(/\s*\|\s*/).map(x => x.trim()).filter(Boolean) : [];
+  const DUREES_OK = ["<30min", "30-60min", "1-2h", "2-4h", "Projet"];
+
+  const activites = lignes.slice(1).map(ligne => {
+    const c = parseLigne(ligne, sep);
+    const titre = get(c, "titre");
+    if (!titre) return null;
+    const dureeStr = get(c, "duree");
+    const duree = DUREES_OK.includes(dureeStr) ? dureeStr : (DUREES_OK.find(d => dureeStr.includes(d)) || "<30min");
+    return {
+      id: get(c, "id") || null,
+      titre,
+      public: split(get(c, "public")),
+      duree,
+      duree_detail: get(c, "duree_detail") || null,
+      groupe: split(get(c, "groupe")),
+      themes: split(get(c, "themes")),
+      contexte: split(get(c, "contexte")),
+      description_courte: get(c, "description_courte"),
+      description: get(c, "description"),
+      apprentissage_cle: get(c, "apprentissage_cle"),
+    };
+  }).filter(Boolean);
+
+  if (activites.length === 0) throw new Error("Aucune activité reconnue. Vérifiez que le fichier n'est pas vide et que les colonnes correspondent au modèle.");
+  return activites;
+}
+
+function telechargerModeleCSV() {
+  const entetes = "titre;public;duree;duree_detail;groupe;themes;description_courte;description;apprentissage_cle";
+  const valeurs = [
+    "Mon activité pédagogique",
+    "11-15 | 16-20",
+    "30-60min",
+    "45min",
+    "Moyen",
+    "Mon thème",
+    "Résumé en 1-2 phrases visible sur la carte.",
+    "Déroulé complet de l'activité. Détaillez les étapes, le matériel, les consignes...",
+    "Ce que les participants retiennent à l'issue de cette activité.",
+  ];
+  const exemple = valeurs.map(v => `"${v.replace(/"/g, '""')}"`).join(";");
+  const blob = new Blob(["﻿" + entetes + "\n" + exemple], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = "modele-activites-sequencia.csv"; a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ── ChoixImportModal ───────────────────────────────────────────
 
 export function ChoixImportModal({ onClose, onManuel, onImport }) {
@@ -130,7 +209,7 @@ export function ChoixImportModal({ onClose, onManuel, onImport }) {
         <div className="modal-eyebrow">Nouvelle activité</div>
         <h2 className="modal-title">Comment voulez-vous ajouter ?</h2>
         <p className="modal-choix-desc">
-          Créez une activité en la saisissant manuellement, ou importez un fichier JSON ou Markdown contenant plusieurs activités à la fois.
+          Créez une activité en la saisissant manuellement, ou importez un fichier CSV, JSON ou Markdown pour en charger plusieurs d'un coup.
         </p>
         <div className="choix-import-grid">
           <button className="choix-import-card" onClick={onManuel}>
@@ -141,7 +220,7 @@ export function ChoixImportModal({ onClose, onManuel, onImport }) {
           <button className="choix-import-card" onClick={onImport}>
             <span className="choix-import-icon">📂</span>
             <span className="choix-import-label">Importer un fichier</span>
-            <span className="choix-import-desc">Charger un fichier .json ou .md avec plusieurs activités</span>
+            <span className="choix-import-desc">Charger un fichier .csv, .json ou .md avec plusieurs activités</span>
           </button>
         </div>
       </div>
@@ -161,8 +240,8 @@ export function ImportFichierModal({ onClose, onImport }) {
   function lireFichier(fichier) {
     if (!fichier) return;
     const ext = fichier.name.split(".").pop().toLowerCase();
-    if (!["json", "md", "markdown"].includes(ext)) {
-      setErreur(`Format non supporté : .${ext}. Utilisez .json ou .md`);
+    if (!["json", "md", "markdown", "csv"].includes(ext)) {
+      setErreur(`Format non supporté : .${ext}. Utilisez .csv, .json ou .md`);
       setEtat("erreur");
       return;
     }
@@ -172,7 +251,7 @@ export function ImportFichierModal({ onClose, onImport }) {
     reader.onload = (e) => {
       try {
         const texte = e.target.result;
-        const activites = ext === "json" ? parserJSON(texte) : parserMarkdown(texte);
+        const activites = ext === "json" ? parserJSON(texte) : ext === "csv" ? parserCSV(texte) : parserMarkdown(texte);
         setPreview(activites);
         setEtat("preview");
       } catch (err) {
@@ -207,7 +286,7 @@ export function ImportFichierModal({ onClose, onImport }) {
       <div className="modal modal-import" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>×</button>
         <div className="modal-eyebrow">Importer des activités</div>
-        <h2 className="modal-title">Import JSON ou Markdown</h2>
+        <h2 className="modal-title">Import CSV, JSON ou Markdown</h2>
 
         {etat === "idle" && (
           <>
@@ -220,14 +299,20 @@ export function ImportFichierModal({ onClose, onImport }) {
             >
               <span className="import-dropzone-icon">📂</span>
               <span className="import-dropzone-label">Glissez un fichier ici ou cliquez pour parcourir</span>
-              <span className="import-dropzone-hint">.json ou .md acceptés</span>
+              <span className="import-dropzone-hint">.csv, .json ou .md acceptés</span>
               <input
                 ref={inputRef}
                 type="file"
-                accept=".json,.md,.markdown"
+                accept=".json,.md,.markdown,.csv"
                 className="import-file-hidden"
                 onChange={handleChange}
               />
+            </div>
+            <div className="import-modele-csv">
+              <span className="import-modele-csv-label">Vous n'avez pas encore de fichier ?</span>
+              <button className="btn-modele-csv" onClick={telechargerModeleCSV} type="button">
+                Télécharger le modèle CSV
+              </button>
             </div>
             <div className="import-formats">
               <div className="import-format-block">
