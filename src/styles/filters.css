@@ -39,6 +39,7 @@
 
 /* FILTRES */
 .filter-group { margin-bottom: 22px; }
+.filter-chip-favoris { width: 100%; text-align: center; }
 .filter-label {
   font-size: 10px;
   text-transform: uppercase;

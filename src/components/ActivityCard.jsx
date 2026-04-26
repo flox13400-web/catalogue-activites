@@ -10,7 +10,7 @@ function MetaItem({ label, value }) {
   );
 }
 
-export function ActivityCard({ activite, onClick, estEpingle }) {
+export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggleFavori }) {
   function handleDragStart(e) {
     e.dataTransfer.setData("text/activity-id", activite.id);
     e.dataTransfer.effectAllowed = "copy";
@@ -25,7 +25,16 @@ export function ActivityCard({ activite, onClick, estEpingle }) {
     >
       <div className="card-top">
         <span className="card-id">{activite.id}</span>
-        {estEpingle && <span className="card-epingle-badge" title="Dans le panier">📌</span>}
+        <div className="card-top-actions">
+          {estEpingle && <span className="card-epingle-badge" title="Dans le panier">📌</span>}
+          <button
+            className={`btn-favori${estFavori ? " btn-favori-active" : ""}`}
+            onClick={(e) => { e.stopPropagation(); onToggleFavori(activite.id); }}
+            title={estFavori ? "Retirer des favoris" : "Ajouter aux favoris"}
+          >
+            {estFavori ? "♥" : "♡"}
+          </button>
+        </div>
       </div>
       <h3 className="card-title">{activite.titre}</h3>
       <p className="card-desc">{activite.description_courte}</p>
@@ -40,11 +49,8 @@ export function ActivityCard({ activite, onClick, estEpingle }) {
           ))}
         </div>
         <div className="card-tags-row">
-          {activite.themes.map((c) => (
-            <span key={c} className="tag tag-theme">{c}</span>
-          ))}
-          {activite.contexte.map((c) => (
-            <span key={c} className="tag tag-contexte">{c}</span>
+          {activite.themes.map((t) => (
+            <span key={t} className="tag tag-theme">{t}</span>
           ))}
         </div>
       </div>

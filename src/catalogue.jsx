@@ -58,10 +58,16 @@ export default function Catalogue() {
     loadJSON(KEYS.titreSeance, "") ?? ""
   );
 
+  const [favoris, setFavoris] = useState(() => {
+    const data = loadJSON(KEYS.favoris, []);
+    return new Set(Array.isArray(data) ? data : []);
+  });
+
   useEffect(() => { saveJSON(KEYS.panier, panierOrdre); }, [panierOrdre]);
   useEffect(() => { saveJSON(KEYS.activites, activites); }, [activites]);
   useEffect(() => { saveJSON(KEYS.corbeille, corbeille); }, [corbeille]);
   useEffect(() => { saveJSON(KEYS.titreSeance, titreSeance); }, [titreSeance]);
+  useEffect(() => { saveJSON(KEYS.favoris, [...favoris]); }, [favoris]);
 
   const tousThemes = useMemo(() => {
     const set = new Set();
@@ -72,9 +78,18 @@ export default function Catalogue() {
   }, [activites]);
 
   const activitesFiltrees = useMemo(
-    () => applyFilters(activites, filtres),
-    [filtres, activites]
+    () => applyFilters(activites, filtres, favoris),
+    [filtres, activites, favoris]
   );
+
+  function toggleFavori(id) {
+    setFavoris((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   const panierAffichage = panierOrdre
     .map(item => {
@@ -259,6 +274,8 @@ export default function Catalogue() {
                   activite={a}
                   onClick={setSelected}
                   estEpingle={panier.has(a.id)}
+                  estFavori={favoris.has(a.id)}
+                  onToggleFavori={toggleFavori}
                 />
               ))}
             </div>
@@ -288,9 +305,9 @@ export default function Catalogue() {
           onClick={() => setMobilePanelOpen(mobilePanelOpen === "filters" ? null : "filters")}
         >
           ⚙ Filtres
-          {(Object.entries(filtres).filter(([k]) => k !== "search").some(([, a]) => a.length > 0) || filtres.search.trim()) && (
+          {(Object.entries(filtres).filter(([k]) => k !== "search" && k !== "favorisOnly").some(([, a]) => a.length > 0) || filtres.search.trim() || filtres.favorisOnly) && (
             <span className="mobile-toolbar-badge">
-              {Object.entries(filtres).filter(([k]) => k !== "search").reduce((n, [, a]) => n + a.length, 0) + (filtres.search.trim() ? 1 : 0)}
+              {Object.entries(filtres).filter(([k]) => k !== "search" && k !== "favorisOnly").reduce((n, [, a]) => n + a.length, 0) + (filtres.search.trim() ? 1 : 0) + (filtres.favorisOnly ? 1 : 0)}
             </span>
           )}
         </button>

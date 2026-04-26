@@ -85,8 +85,10 @@ export default function FilterPanel({ filtres, setFiltres, filteredCount, totalA
 
   const hasActive =
     Object.entries(filtres)
-      .filter(([k]) => k !== "search")
-      .some(([, arr]) => arr.length > 0) || filtres.search.trim() !== "";
+      .filter(([k]) => k !== "search" && k !== "favorisOnly")
+      .some(([, arr]) => arr.length > 0) ||
+    filtres.search.trim() !== "" ||
+    filtres.favorisOnly;
 
   return (
     <aside className={`panel panel-filters${mobileOpen ? " panel-open" : ""}`}>
@@ -108,6 +110,15 @@ export default function FilterPanel({ filtres, setFiltres, filteredCount, totalA
           {filtres.search && (
             <button className="search-clear" onClick={() => setFiltres((prev) => ({ ...prev, search: "" }))}>×</button>
           )}
+        </div>
+
+        <div className="filter-group">
+          <button
+            className={`filter-chip filter-chip-favoris${filtres.favorisOnly ? " filter-chip-active" : ""}`}
+            onClick={() => setFiltres((prev) => ({ ...prev, favorisOnly: !prev.favorisOnly }))}
+          >
+            {filtres.favorisOnly ? "♥" : "♡"} Favoris uniquement
+          </button>
         </div>
 
         <FilterGroup
@@ -133,13 +144,6 @@ export default function FilterPanel({ filtres, setFiltres, filteredCount, totalA
           tousThemes={tousThemes}
           onToggle={(v) => toggle("themes", v)}
           onClear={() => setFiltres((prev) => ({ ...prev, themes: [] }))}
-        />
-
-        <FilterGroup
-          label="Contexte"
-          values={["Scolaire", "Études sup.", "Entreprise"]}
-          active={filtres.contexte}
-          onToggle={(v) => toggle("contexte", v)}
         />
       </div>
       <div className="panel-footer">
