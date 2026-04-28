@@ -6,11 +6,11 @@ function qrSrc(url, size = 160) {
 }
 
 const DUREE_PLAGES = {
-  "<30min":   { min: 10, max: 30 },
-  "30-60min": { min: 30, max: 60 },
-  "1-2h":     { min: 60, max: 120 },
-  "2-4h":     { min: 120, max: 240 },
-  "Projet":   null,
+  "0-15min":  { min: 0,  max: 15  },
+  "15-30min": { min: 15, max: 30  },
+  "30-45min": { min: 30, max: 45  },
+  "45-60min": { min: 45, max: 60  },
+  ">60min":   null,
 };
 
 function parseDureeStr(str) {
@@ -37,12 +37,12 @@ function fmtMin(m) {
 }
 
 function getDureeStr(items) {
-  let min = 0, max = 0, hasProjet = false;
+  let min = 0, max = 0, hasVarible = false;
   for (const item of items) {
     if (item.type === "activite" && item.activite) {
       const a = item.activite;
       const plage = DUREE_PLAGES[a.duree];
-      if (plage === null) { hasProjet = true; continue; }
+      if (plage === null) { hasVarible = true; continue; }
       if (plage) { min += plage.min; max += plage.max; continue; }
       const mn = parseDureeStr(a.duree_detail || a.duree);
       if (mn !== null) { min += mn; max += mn; }
@@ -51,9 +51,9 @@ function getDureeStr(items) {
       max += item.duree;
     }
   }
-  if (min === 0 && max === 0 && !hasProjet) return null;
+  if (min === 0 && max === 0 && !hasVarible) return null;
   const range = min === max ? fmtMin(min) : `${fmtMin(min)} – ${fmtMin(max)}`;
-  return hasProjet ? `${range} + projet` : range;
+  return hasVarible ? `${range} + variable` : range;
 }
 
 export default function PrintView({ panierAffichage, titreSeance = "" }) {
@@ -144,6 +144,9 @@ export default function PrintView({ panierAffichage, titreSeance = "" }) {
         }
 
         const a = item.activite;
+        const agePublic = a.age_public || a.public || [];
+        const tailleGroupe = a.taille_groupe || a.groupe || [];
+
         return (
           <div key={item.id} className="print-fiche">
             <div className="print-fiche-header">
@@ -161,29 +164,65 @@ export default function PrintView({ panierAffichage, titreSeance = "" }) {
                 <div className="print-fiche-meta-label">Durée</div>
                 <div className="print-fiche-meta-value">{a.duree_detail || a.duree}</div>
               </div>
-              <div className="print-fiche-meta-item">
-                <div className="print-fiche-meta-label">Public</div>
-                <div className="print-fiche-meta-value">{a.public.join(", ")}</div>
-              </div>
-              <div className="print-fiche-meta-item">
-                <div className="print-fiche-meta-label">Taille groupe</div>
-                <div className="print-fiche-meta-value">{a.groupe.join(", ")}</div>
-              </div>
-              <div className="print-fiche-meta-item">
-                <div className="print-fiche-meta-label">Thèmes</div>
-                <div className="print-fiche-meta-value">{a.themes.join(", ")}</div>
-              </div>
+              {agePublic.length > 0 && (
+                <div className="print-fiche-meta-item">
+                  <div className="print-fiche-meta-label">Âge du public</div>
+                  <div className="print-fiche-meta-value">{agePublic.join(", ")}</div>
+                </div>
+              )}
+              {tailleGroupe.length > 0 && (
+                <div className="print-fiche-meta-item">
+                  <div className="print-fiche-meta-label">Taille groupe</div>
+                  <div className="print-fiche-meta-value">{tailleGroupe.join(", ")}</div>
+                </div>
+              )}
+              {(a.themes || []).length > 0 && (
+                <div className="print-fiche-meta-item">
+                  <div className="print-fiche-meta-label">Thèmes</div>
+                  <div className="print-fiche-meta-value">{(a.themes || []).join(", ")}</div>
+                </div>
+              )}
+              {(a.materiels || []).length > 0 && (
+                <div className="print-fiche-meta-item">
+                  <div className="print-fiche-meta-label">Matériels</div>
+                  <div className="print-fiche-meta-value">{(a.materiels || []).join(", ")}</div>
+                </div>
+              )}
+              {(a.modalite || []).length > 0 && (
+                <div className="print-fiche-meta-item">
+                  <div className="print-fiche-meta-label">Modalité</div>
+                  <div className="print-fiche-meta-value">{(a.modalite || []).join(", ")}</div>
+                </div>
+              )}
             </div>
 
-            <div className="print-fiche-section">
-              <div className="print-fiche-section-label">Description</div>
-              <p className="print-fiche-body">{a.description}</p>
-            </div>
+            {a.description && (
+              <div className="print-fiche-section">
+                <div className="print-fiche-section-label">Description</div>
+                <p className="print-fiche-body">{a.description}</p>
+              </div>
+            )}
 
-            <div className="print-fiche-apprentissage">
-              <div className="print-fiche-section-label">Apprentissage clé</div>
-              <p className="print-fiche-apprentissage-text">« {a.apprentissage_cle} »</p>
-            </div>
+            {a.apprentissage_cle && (
+              <div className="print-fiche-apprentissage">
+                <div className="print-fiche-section-label">Apprentissage clé</div>
+                <p className="print-fiche-apprentissage-text">« {a.apprentissage_cle} »</p>
+              </div>
+            )}
+
+            {a.problematique && (
+              <div className="print-fiche-section">
+                <div className="print-fiche-section-label">Problématique possible</div>
+                <p className="print-fiche-body">{a.problematique}</p>
+              </div>
+            )}
+
+            {a.remediation && (
+              <div className="print-fiche-section">
+                <div className="print-fiche-section-label">Remédiation</div>
+                <p className="print-fiche-body">{a.remediation}</p>
+              </div>
+            )}
           </div>
         );
       })}

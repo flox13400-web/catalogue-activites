@@ -25,7 +25,7 @@ export function exportJSON(activites, titre = "") {
 
 export function exportMarkdown(activites, titre = "") {
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
-  const titreAffiche = titre.trim() || "Fiche de séance — IA générative";
+  const titreAffiche = titre.trim() || "Fiche de séance";
   const lignes = [
     `# ${titreAffiche}`,
     ``,
@@ -38,20 +38,44 @@ export function exportMarkdown(activites, titre = "") {
   activites.forEach((a, i) => {
     lignes.push(`## ${i + 1}. ${a.titre} \`${a.id}\``);
     lignes.push(``);
-    lignes.push(`**Public :** ${a.public.join(", ")}  `);
+    if ((a.age_public || a.public || []).length > 0)
+      lignes.push(`**Âge du public :** ${(a.age_public || a.public || []).join(", ")}  `);
     lignes.push(`**Durée :** ${a.duree_detail || a.duree}  `);
-    lignes.push(`**Groupe :** ${a.groupe.join(", ")}  `);
-    lignes.push(`**Thèmes :** ${a.themes.join(", ")}  `);
-    lignes.push(`**Contexte :** ${a.contexte.join(", ")}`);
+    if ((a.taille_groupe || a.groupe || []).length > 0)
+      lignes.push(`**Taille de groupe :** ${(a.taille_groupe || a.groupe || []).join(", ")}  `);
+    if ((a.themes || []).length > 0)
+      lignes.push(`**Thèmes :** ${(a.themes || []).join(", ")}  `);
+    if ((a.materiels || []).length > 0)
+      lignes.push(`**Matériels :** ${(a.materiels || []).join(", ")}  `);
+    if ((a.contexte || []).length > 0)
+      lignes.push(`**Contexte :** ${(a.contexte || []).join(", ")}  `);
+    if ((a.modalite || []).length > 0)
+      lignes.push(`**Modalité :** ${(a.modalite || []).join(", ")}`);
     lignes.push(``);
-    lignes.push(`### Description`);
-    lignes.push(``);
-    lignes.push(a.description);
-    lignes.push(``);
-    lignes.push(`### Apprentissage clé`);
-    lignes.push(``);
-    lignes.push(`> ${a.apprentissage_cle}`);
-    lignes.push(``);
+    if (a.description) {
+      lignes.push(`### Description`);
+      lignes.push(``);
+      lignes.push(a.description);
+      lignes.push(``);
+    }
+    if (a.apprentissage_cle) {
+      lignes.push(`### Apprentissage clé`);
+      lignes.push(``);
+      lignes.push(`> ${a.apprentissage_cle}`);
+      lignes.push(``);
+    }
+    if (a.problematique) {
+      lignes.push(`### Problématique`);
+      lignes.push(``);
+      lignes.push(a.problematique);
+      lignes.push(``);
+    }
+    if (a.remediation) {
+      lignes.push(`### Remédiation`);
+      lignes.push(``);
+      lignes.push(a.remediation);
+      lignes.push(``);
+    }
     lignes.push(`---`);
     lignes.push(``);
   });
@@ -60,8 +84,8 @@ export function exportMarkdown(activites, titre = "") {
 }
 
 export function exportCSV(activites, _titre = "") {
-  const entetes = ["id", "titre", "public", "duree", "duree_detail", "groupe", "themes", "contexte", "description_courte", "apprentissage_cle"];
-  const echapper = (v) => `"${String(v).replace(/"/g, '""')}"`;
+  const entetes = ["id", "titre", "age_public", "duree", "duree_detail", "taille_groupe", "themes", "materiels", "contexte", "modalite", "description_courte", "description", "apprentissage_cle", "problematique", "remediation"];
+  const echapper = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 
   const lignes = [
     entetes.join(";"),
@@ -69,14 +93,19 @@ export function exportCSV(activites, _titre = "") {
       [
         a.id,
         a.titre,
-        a.public.join(" | "),
+        (a.age_public || a.public || []).join(" | "),
         a.duree,
         a.duree_detail || "",
-        a.groupe.join(" | "),
-        a.themes.join(" | "),
-        a.contexte.join(" | "),
-        a.description_courte,
-        a.apprentissage_cle,
+        (a.taille_groupe || a.groupe || []).join(" | "),
+        (a.themes || []).join(" | "),
+        (a.materiels || []).join(" | "),
+        (a.contexte || []).join(" | "),
+        (a.modalite || []).join(" | "),
+        a.description_courte || "",
+        a.description || "",
+        a.apprentissage_cle || "",
+        a.problematique || "",
+        a.remediation || "",
       ]
         .map(echapper)
         .join(";")

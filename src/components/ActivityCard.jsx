@@ -16,6 +16,9 @@ export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggl
     e.dataTransfer.effectAllowed = "copy";
   }
 
+  const agePublic = activite.age_public || activite.public || [];
+  const tailleGroupe = activite.taille_groupe || activite.groupe || [];
+
   return (
     <article
       className={`card ${estEpingle ? "card-epingle" : ""}`}
@@ -40,19 +43,25 @@ export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggl
       <p className="card-desc">{activite.description_courte}</p>
       <div className="card-meta">
         <MetaItem label="Durée" value={activite.duree_detail || activite.duree} />
-        <MetaItem label="Groupe" value={activite.groupe.join(" · ")} />
+        {tailleGroupe.length > 0 && (
+          <MetaItem label="Groupe" value={tailleGroupe.join(" · ")} />
+        )}
       </div>
       <div className="card-tags">
-        <div className="card-tags-row">
-          {activite.public.map((p) => (
-            <span key={p} className="tag tag-public">{p}</span>
-          ))}
-        </div>
-        <div className="card-tags-row">
-          {activite.themes.map((t) => (
-            <span key={t} className="tag tag-theme">{t}</span>
-          ))}
-        </div>
+        {agePublic.length > 0 && (
+          <div className="card-tags-row">
+            {agePublic.map((p) => (
+              <span key={p} className="tag tag-public">{p}</span>
+            ))}
+          </div>
+        )}
+        {(activite.themes || []).length > 0 && (
+          <div className="card-tags-row">
+            {(activite.themes || []).map((t) => (
+              <span key={t} className="tag tag-theme">{t}</span>
+            ))}
+          </div>
+        )}
       </div>
     </article>
   );

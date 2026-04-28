@@ -21,35 +21,28 @@ function FilterGroup({ label, values, active, onToggle }) {
   );
 }
 
-function ThemeFilterGroup({ active, tousThemes, onToggle, onClear }) {
-  const themesTriés = [...tousThemes].sort((a, b) => {
-    if (a === "IA déconnecté") return -1;
-    if (b === "IA déconnecté") return 1;
-    return a.localeCompare(b, "fr");
-  });
-
+function KeywordFilterGroup({ label, active, tousMotsCles, onToggle, onClear }) {
+  const tries = [...tousMotsCles].sort((a, b) => a.localeCompare(b, "fr"));
   return (
     <div className="filter-group">
       <div className="filter-label filter-label-row">
-        <span>Thèmes</span>
+        <span>{label}</span>
         {active.length > 0 && (
           <button className="theme-filter-clear" onClick={onClear}>× effacer</button>
         )}
       </div>
-
       <select
         className="theme-filter-select"
         value=""
         onChange={(e) => { if (e.target.value) onToggle(e.target.value); }}
       >
-        <option value="">— Sélectionner un thème —</option>
-        {themesTriés.map((t) => (
+        <option value="">— Sélectionner —</option>
+        {tries.map((t) => (
           <option key={t} value={t} disabled={active.includes(t)}>
             {active.includes(t) ? `✓ ${t}` : t}
           </option>
         ))}
       </select>
-
       {active.length > 0 && (
         <div className="theme-filter-active">
           {active.map((t) => (
@@ -68,7 +61,7 @@ function ThemeFilterGroup({ active, tousThemes, onToggle, onClear }) {
   );
 }
 
-export default function FilterPanel({ filtres, setFiltres, filteredCount, totalActivites, tousThemes, mobileOpen, onMobileClose }) {
+export default function FilterPanel({ filtres, setFiltres, filteredCount, totalActivites, tousThemes, tousMaterialels, mobileOpen, onMobileClose }) {
   function toggle(key, value) {
     setFiltres((prev) => {
       const arr = prev[key];
@@ -122,28 +115,48 @@ export default function FilterPanel({ filtres, setFiltres, filteredCount, totalA
         </div>
 
         <FilterGroup
-          label="Public"
-          values={["7-10", "11-15", "16-20", "Post-bac", "Adultes"]}
-          active={filtres.public}
-          onToggle={(v) => toggle("public", v)}
+          label="Âge du public"
+          values={["Primaire", "Collège", "Lycée", "Post-bac", "Adultes"]}
+          active={filtres.age_public}
+          onToggle={(v) => toggle("age_public", v)}
         />
         <FilterGroup
           label="Durée"
-          values={["<30min", "30-60min", "1-2h", "2-4h", "Projet"]}
+          values={["0-15min", "15-30min", "30-45min", "45-60min", ">60min"]}
           active={filtres.duree}
           onToggle={(v) => toggle("duree", v)}
         />
         <FilterGroup
-          label="Taille du groupe"
-          values={["Petit", "Moyen", "Grand"]}
-          active={filtres.groupe}
-          onToggle={(v) => toggle("groupe", v)}
+          label="Taille de groupe"
+          values={["1", "2-6", "7-12", ">12"]}
+          active={filtres.taille_groupe}
+          onToggle={(v) => toggle("taille_groupe", v)}
         />
-        <ThemeFilterGroup
+        <FilterGroup
+          label="Contexte"
+          values={["Scolaire", "Entreprise", "Montée en compétence", "Diplomant"]}
+          active={filtres.contexte}
+          onToggle={(v) => toggle("contexte", v)}
+        />
+        <FilterGroup
+          label="Modalité"
+          values={["Présentielle", "Distanciel", "Synchrone", "Asynchrone"]}
+          active={filtres.modalite}
+          onToggle={(v) => toggle("modalite", v)}
+        />
+        <KeywordFilterGroup
+          label="Thèmes"
           active={filtres.themes}
-          tousThemes={tousThemes}
+          tousMotsCles={tousThemes}
           onToggle={(v) => toggle("themes", v)}
           onClear={() => setFiltres((prev) => ({ ...prev, themes: [] }))}
+        />
+        <KeywordFilterGroup
+          label="Matériels"
+          active={filtres.materiels}
+          tousMotsCles={tousMaterialels}
+          onToggle={(v) => toggle("materiels", v)}
+          onClear={() => setFiltres((prev) => ({ ...prev, materiels: [] }))}
         />
       </div>
       <div className="panel-footer">

@@ -3,10 +3,12 @@ import "../styles/modal.css";
 
 // ── Constantes formulaire ──────────────────────────────────────
 
-const PUBLICS_DISPONIBLES = ["7-10", "11-15", "16-20", "Post-bac", "Adultes"];
-const DUREES_DISPONIBLES = ["<30min", "30-60min", "1-2h", "2-4h", "Projet"];
-const GROUPES_DISPONIBLES = ["Petit", "Moyen", "Grand"];
-const CONTEXTES_DISPONIBLES = ["Scolaire", "Études sup.", "Entreprise"];
+const AGES_DISPONIBLES = ["Primaire", "Collège", "Lycée", "Post-bac", "Adultes"];
+const DUREES_DISPONIBLES = ["0-15min", "15-30min", "30-45min", "45-60min", ">60min"];
+const DUREES_OK = new Set(DUREES_DISPONIBLES);
+const TAILLES_GROUPE_DISPONIBLES = ["1", "2-6", "7-12", ">12"];
+const CONTEXTES_DISPONIBLES = ["Scolaire", "Entreprise", "Montée en compétence", "Diplomant"];
+const MODALITES_DISPONIBLES = ["Présentielle", "Distanciel", "Synchrone", "Asynchrone"];
 
 // ── Utilitaire ID ──────────────────────────────────────────────
 
@@ -28,24 +30,28 @@ export function parserJSON(texte) {
   const liste = Array.isArray(data) ? data : (Array.isArray(data.activites) ? data.activites : null);
   if (!liste) throw new Error("Format JSON non reconnu. Attendu : un tableau ou { activites: [...] }");
 
-  const CHAMPS_REQUIS = ["titre", "public", "duree", "groupe", "themes", "contexte", "description_courte", "description", "apprentissage_cle"];
+  const CHAMPS_REQUIS = ["titre", "duree"];
   return liste.map((a, i) => {
     for (const c of CHAMPS_REQUIS) {
       if (a[c] === undefined || a[c] === null) throw new Error(`Activité ${i + 1} : champ manquant « ${c} »`);
     }
-    const normaliserTableau = (v) => Array.isArray(v) ? v : (v ? [v] : []);
+    const norm = (v) => Array.isArray(v) ? v : (v ? String(v).split(/\s*[,|]\s*/).map(x => x.trim()).filter(Boolean) : []);
     return {
       id: a.id || null,
       titre: String(a.titre).trim(),
-      public: normaliserTableau(a.public),
+      age_public: norm(a.age_public ?? a.public),
       duree: String(a.duree).trim(),
       duree_detail: a.duree_detail || null,
-      groupe: normaliserTableau(a.groupe),
-      themes: normaliserTableau(a.themes),
-      contexte: normaliserTableau(a.contexte),
-      description_courte: String(a.description_courte).trim(),
-      description: String(a.description).trim(),
-      apprentissage_cle: String(a.apprentissage_cle).trim(),
+      taille_groupe: norm(a.taille_groupe ?? a.groupe),
+      themes: norm(a.themes),
+      materiels: norm(a.materiels),
+      contexte: norm(a.contexte),
+      modalite: norm(a.modalite),
+      description_courte: String(a.description_courte || "").trim(),
+      description: String(a.description || "").trim(),
+      apprentissage_cle: String(a.apprentissage_cle || "").trim(),
+      problematique: a.problematique ? String(a.problematique).trim() : null,
+      remediation: a.remediation ? String(a.remediation).trim() : null,
     };
   });
 }
@@ -72,31 +78,18 @@ export function parserMarkdown(texte) {
       return l ? l.match(re)[1].trim() : "";
     }
 
-    const publicStr = extraireChamp("Public");
-    const dureeStr = extraireChamp("Durée");
-    const groupeStr = extraireChamp("Groupe");
-    const themesStr = extraireChamp("Thèmes");
-    const contexteStr = extraireChamp("Contexte");
-
-    const idxDesc = lignes.findIndex((l) => /^###\s+Description/.test(l));
-    const idxApp = lignes.findIndex((l) => /^###\s+Apprentissage/.test(l));
-    let description = "";
-    if (idxDesc !== -1 && idxApp !== -1) {
-      description = lignes.slice(idxDesc + 1, idxApp).join("\n").trim();
-    }
-
-    let apprentissage_cle = "";
-    if (idxApp !== -1) {
-      apprentissage_cle = lignes.slice(idxApp + 1)
-        .map((l) => l.replace(/^>\s*/, "").trim())
-        .filter(Boolean)
-        .join(" ");
+    function extraireSection(label) {
+      const idx = lignes.findIndex((l) => new RegExp(`^###\\s+${label}`).test(l));
+      if (idx === -1) return "";
+      const fin = lignes.findIndex((l, i) => i > idx && /^###/.test(l));
+      const bloc = lignes.slice(idx + 1, fin === -1 ? undefined : fin);
+      return bloc.map(l => l.replace(/^>\s*/, "").trim()).filter(Boolean).join("\n");
     }
 
     const splitter = (s) => s ? s.split(/\s*[,|]\s*/).map((x) => x.trim()).filter(Boolean) : [];
 
-    const DUREES_OK = ["<30min", "30-60min", "1-2h", "2-4h", "Projet"];
-    const duree = DUREES_OK.includes(dureeStr) ? dureeStr : (DUREES_OK.find((d) => dureeStr.includes(d)) || "<30min");
+    const dureeStr = extraireChamp("Durée");
+    const duree = [...DUREES_OK].find(d => dureeStr.includes(d)) || dureeStr || "30-45min";
     const duree_detail = dureeStr !== duree ? dureeStr : null;
 
     if (!titre) continue;
@@ -104,15 +97,19 @@ export function parserMarkdown(texte) {
     activites.push({
       id,
       titre,
-      public: splitter(publicStr),
+      age_public: splitter(extraireChamp("Âge du public") || extraireChamp("Public")),
       duree,
       duree_detail,
-      groupe: splitter(groupeStr),
-      themes: splitter(themesStr),
-      contexte: splitter(contexteStr),
-      description_courte: description.split(".")[0]?.trim() || description.slice(0, 100),
-      description,
-      apprentissage_cle,
+      taille_groupe: splitter(extraireChamp("Taille de groupe") || extraireChamp("Groupe")),
+      themes: splitter(extraireChamp("Thèmes")),
+      materiels: splitter(extraireChamp("Matériels")),
+      contexte: splitter(extraireChamp("Contexte")),
+      modalite: splitter(extraireChamp("Modalité")),
+      description_courte: "",
+      description: extraireSection("Description"),
+      apprentissage_cle: extraireSection("Apprentissage clé"),
+      problematique: extraireSection("Problématique") || null,
+      remediation: extraireSection("Remédiation") || null,
     });
   }
 
@@ -145,33 +142,38 @@ export function parserCSV(texte) {
 
   const sep = (lignes[0].split(";").length >= lignes[0].split(",").length) ? ";" : ",";
   const entetes = parseLigne(lignes[0], sep).map(h => h.toLowerCase().trim());
-  const obligatoires = ["titre", "duree", "description_courte", "description", "apprentissage_cle"];
+  const obligatoires = ["titre", "duree"];
   const manquantes = obligatoires.filter(c => !entetes.includes(c));
   if (manquantes.length > 0) throw new Error(`Colonnes manquantes : ${manquantes.join(", ")}. Téléchargez le modèle pour avoir la bonne structure.`);
 
   const idx = (nom) => entetes.indexOf(nom);
   const get = (champs, nom) => idx(nom) >= 0 ? (champs[idx(nom)] || "").trim() : "";
   const split = (s) => s ? s.split(/\s*\|\s*/).map(x => x.trim()).filter(Boolean) : [];
-  const DUREES_OK = ["<30min", "30-60min", "1-2h", "2-4h", "Projet"];
 
   const activites = lignes.slice(1).map(ligne => {
     const c = parseLigne(ligne, sep);
     const titre = get(c, "titre");
     if (!titre) return null;
     const dureeStr = get(c, "duree");
-    const duree = DUREES_OK.includes(dureeStr) ? dureeStr : (DUREES_OK.find(d => dureeStr.includes(d)) || "<30min");
+    const duree = [...DUREES_OK].find(d => dureeStr.includes(d)) || dureeStr || "30-45min";
+    const problematique = get(c, "problematique") || null;
+    const remediation = get(c, "remediation") || null;
     return {
       id: get(c, "id") || null,
       titre,
-      public: split(get(c, "public")),
+      age_public: split(get(c, "age_public") || get(c, "public")),
       duree,
       duree_detail: get(c, "duree_detail") || null,
-      groupe: split(get(c, "groupe")),
+      taille_groupe: split(get(c, "taille_groupe") || get(c, "groupe")),
       themes: split(get(c, "themes")),
+      materiels: split(get(c, "materiels")),
       contexte: split(get(c, "contexte")),
+      modalite: split(get(c, "modalite")),
       description_courte: get(c, "description_courte"),
       description: get(c, "description"),
       apprentissage_cle: get(c, "apprentissage_cle"),
+      problematique,
+      remediation,
     };
   }).filter(Boolean);
 
@@ -180,17 +182,22 @@ export function parserCSV(texte) {
 }
 
 function telechargerModeleCSV() {
-  const entetes = "titre;public;duree;duree_detail;groupe;themes;description_courte;description;apprentissage_cle";
+  const entetes = "titre;age_public;duree;duree_detail;taille_groupe;themes;materiels;contexte;modalite;description_courte;description;apprentissage_cle;problematique;remediation";
   const valeurs = [
     "Mon activité pédagogique",
-    "11-15 | 16-20",
-    "30-60min",
-    "45min",
-    "Moyen",
+    "Collège | Lycée",
+    "30-45min",
+    "",
+    "7-12",
     "Mon thème",
+    "Cartes | Tableau",
+    "Scolaire",
+    "Présentielle",
     "Résumé en 1-2 phrases visible sur la carte.",
     "Déroulé complet de l'activité. Détaillez les étapes, le matériel, les consignes...",
     "Ce que les participants retiennent à l'issue de cette activité.",
+    "",
+    "",
   ];
   const exemple = valeurs.map(v => `"${v.replace(/"/g, '""')}"`).join(";");
   const blob = new Blob(["﻿" + entetes + "\n" + exemple], { type: "text/csv;charset=utf-8" });
@@ -233,24 +240,30 @@ export function ChoixImportModal({ onClose, onManuel, onImport }) {
 const EXEMPLE_JSON = `[
   {
     "titre": "Nom de l'activité",
-    "public": ["11-15", "16-20"],
-    "duree": "30-60min",
-    "groupe": ["Moyen"],
-    "themes": ["IA déconnecté"],
+    "age_public": ["Collège", "Lycée"],
+    "duree": "30-45min",
+    "taille_groupe": ["7-12"],
+    "themes": ["Mon thème"],
+    "materiels": ["Cartes", "Tableau"],
     "contexte": ["Scolaire"],
+    "modalite": ["Présentielle"],
     "description_courte": "...",
     "description": "...",
-    "apprentissage_cle": "..."
+    "apprentissage_cle": "...",
+    "problematique": null,
+    "remediation": null
   }
 ]`;
 
 const EXEMPLE_MD = `## 1. Titre de l'activité \`ID\`
 
-**Public :** 11-15, 16-20
-**Durée :** 30-60min
-**Groupe :** Moyen
-**Thèmes :** IA déconnecté
+**Âge du public :** Collège, Lycée
+**Durée :** 30-45min
+**Taille de groupe :** 7-12
+**Thèmes :** Mon thème
+**Matériels :** Cartes, Tableau
 **Contexte :** Scolaire
+**Modalité :** Présentielle
 
 ### Description
 
@@ -412,7 +425,7 @@ export function ImportFichierModal({ onClose, onImport }) {
                   <div className="import-preview-info">
                     <div className="import-preview-titre">{a.titre}</div>
                     <div className="import-preview-meta">
-                      {a.public.join(", ")} · {a.duree}
+                      {(a.age_public || []).join(", ")} · {a.duree}
                     </div>
                   </div>
                 </div>
@@ -431,46 +444,99 @@ export function ImportFichierModal({ onClose, onImport }) {
   );
 }
 
+// ── Sélecteur de mots-clés (thèmes, matériels) ────────────────
+
+function KeywordSelector({ label, valeurs, existants, nouveauVal, setNouveauVal, onToggle, onAjouter }) {
+  const tries = [...existants].sort((a, b) => a.localeCompare(b, "fr"));
+  return (
+    <div className="form-group">
+      <label className="form-label">{label}</label>
+      {tries.length > 0 && (
+        <div className="form-chips form-chips-mb">
+          {tries.map((t) => (
+            <button
+              key={t}
+              className={`form-chip ${valeurs.includes(t) ? "form-chip-active" : ""}`}
+              onClick={() => onToggle(t)}
+              type="button"
+            >{t}</button>
+          ))}
+        </div>
+      )}
+      {valeurs.length > 0 && (
+        <div className="form-themes-selected">
+          {valeurs.map((t) => (
+            <span key={t} className="form-theme-chip">
+              {t}
+              <button onClick={() => onToggle(t)} className="form-theme-chip-remove">×</button>
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="form-new-theme">
+        <input
+          className="form-input"
+          type="text"
+          placeholder={`Ajouter un mot-clé…`}
+          value={nouveauVal}
+          onChange={(e) => setNouveauVal(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); onAjouter(); } }}
+        />
+        <button
+          className="btn-add-theme"
+          onClick={onAjouter}
+          type="button"
+          disabled={!nouveauVal.trim()}
+        >Ajouter</button>
+      </div>
+    </div>
+  );
+}
+
 // ── ActivityFormModal ──────────────────────────────────────────
 
-export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) {
+export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels, initialData }) {
   const modeEdition = !!initialData;
   const [form, setForm] = React.useState(() => {
     if (initialData) {
       return {
         titre: initialData.titre || "",
-        public: initialData.public || [],
-        duree: initialData.duree || "<30min",
+        age_public: initialData.age_public || initialData.public || [],
+        duree: initialData.duree || "30-45min",
         duree_detail: initialData.duree_detail || "",
-        groupe: initialData.groupe || ["Moyen"],
+        taille_groupe: initialData.taille_groupe || initialData.groupe || [],
         themes: initialData.themes || [],
+        materiels: initialData.materiels || [],
         contexte: initialData.contexte || [],
+        modalite: initialData.modalite || [],
         description_courte: initialData.description_courte || "",
         description: initialData.description || "",
         apprentissage_cle: initialData.apprentissage_cle || "",
+        problematique: initialData.problematique || "",
+        remediation: initialData.remediation || "",
       };
     }
     return {
       titre: "",
-      public: [],
-      duree: "<30min",
+      age_public: [],
+      duree: "30-45min",
       duree_detail: "",
-      groupe: ["Moyen"],
+      taille_groupe: [],
       themes: [],
+      materiels: [],
       contexte: [],
+      modalite: [],
       description_courte: "",
       description: "",
       apprentissage_cle: "",
+      problematique: "",
+      remediation: "",
     };
   });
-  const [nouveauTheme, setNouveauTheme] = React.useState("");
-  const [erreurs, setErreurs] = React.useState({});
 
-  const themesTriés = [...tousThemes].sort((a, b) => {
-    if (a === "IA déconnecté") return -1;
-    if (b === "IA déconnecté") return 1;
-    return a.localeCompare(b, "fr");
-  });
+  const [nouveauTheme, setNouveauTheme] = React.useState("");
+  const [nouveauMateriel, setNouveauMateriel] = React.useState("");
+  const [erreurs, setErreurs] = React.useState({});
 
   function setField(key, value) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -485,39 +551,30 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
         [key]: arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value],
       };
     });
-    setErreurs((prev) => ({ ...prev, [key]: undefined }));
   }
 
-  function toggleTheme(theme) {
+  function toggleKeyword(key, value) {
     setForm((prev) => {
-      const arr = prev.themes;
+      const arr = prev[key];
       return {
         ...prev,
-        themes: arr.includes(theme) ? arr.filter((t) => t !== theme) : [...arr, theme],
+        [key]: arr.includes(value) ? arr.filter((t) => t !== value) : [...arr, value],
       };
     });
-    setErreurs((prev) => ({ ...prev, themes: undefined }));
   }
 
-  function ajouterNouveauTheme() {
-    const t = nouveauTheme.trim();
+  function ajouterKeyword(key, valeur, setValeur) {
+    const t = valeur.trim();
     if (!t) return;
-    if (!form.themes.includes(t)) {
-      setForm((prev) => ({ ...prev, themes: [...prev.themes, t] }));
+    if (!form[key].includes(t)) {
+      setForm((prev) => ({ ...prev, [key]: [...prev[key], t] }));
     }
-    setNouveauTheme("");
-    setErreurs((prev) => ({ ...prev, themes: undefined }));
+    setValeur("");
   }
 
   function valider() {
     const e = {};
     if (!form.titre.trim()) e.titre = "Le titre est obligatoire.";
-    if (form.public.length === 0) e.public = "Sélectionnez au moins un public.";
-    if (form.themes.length === 0) e.themes = "Sélectionnez ou créez au moins un thème.";
-    if (form.contexte.length === 0) e.contexte = "Sélectionnez au moins un contexte.";
-    if (!form.description_courte.trim()) e.description_courte = "La description courte est obligatoire.";
-    if (!form.description.trim()) e.description = "La description est obligatoire.";
-    if (!form.apprentissage_cle.trim()) e.apprentissage_cle = "L'apprentissage clé est obligatoire.";
     setErreurs(e);
     return Object.keys(e).length === 0;
   }
@@ -547,23 +604,22 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
         </div>
 
         <div className="form-group">
-          <label className="form-label">Public <span className="form-required">*</span></label>
+          <label className="form-label">Âge du public</label>
           <div className="form-chips">
-            {PUBLICS_DISPONIBLES.map((p) => (
+            {AGES_DISPONIBLES.map((p) => (
               <button
                 key={p}
-                className={`form-chip ${form.public.includes(p) ? "form-chip-active" : ""}`}
-                onClick={() => toggleMulti("public", p)}
+                className={`form-chip ${form.age_public.includes(p) ? "form-chip-active" : ""}`}
+                onClick={() => toggleMulti("age_public", p)}
                 type="button"
               >{p}</button>
             ))}
           </div>
-          {erreurs.public && <div className="form-error">{erreurs.public}</div>}
         </div>
 
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">Durée</label>
+            <label className="form-label">Durée <span className="form-required">*</span></label>
             <div className="form-chips">
               {DUREES_DISPONIBLES.map((d) => (
                 <button
@@ -580,7 +636,7 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
             <input
               className="form-input"
               type="text"
-              placeholder="ex : 30min (enfants) / 1h (adultes)"
+              placeholder="ex : 20min (enfants) / 40min (adultes)"
               value={form.duree_detail}
               onChange={(e) => setField("duree_detail", e.target.value)}
             />
@@ -589,68 +645,35 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
 
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">Taille du groupe</label>
+            <label className="form-label">Taille de groupe</label>
             <div className="form-chips">
-              {GROUPES_DISPONIBLES.map((g) => (
+              {TAILLES_GROUPE_DISPONIBLES.map((g) => (
                 <button
                   key={g}
-                  className={`form-chip ${form.groupe.includes(g) ? "form-chip-active" : ""}`}
-                  onClick={() => toggleMulti("groupe", g)}
+                  className={`form-chip ${form.taille_groupe.includes(g) ? "form-chip-active" : ""}`}
+                  onClick={() => toggleMulti("taille_groupe", g)}
                   type="button"
                 >{g}</button>
               ))}
             </div>
           </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Thèmes <span className="form-required">*</span></label>
-
-          {themesTriés.length > 0 && (
-            <div className="form-chips form-chips-mb">
-              {themesTriés.map((t) => (
+          <div className="form-group">
+            <label className="form-label">Modalité</label>
+            <div className="form-chips">
+              {MODALITES_DISPONIBLES.map((m) => (
                 <button
-                  key={t}
-                  className={`form-chip ${form.themes.includes(t) ? "form-chip-active" : ""}`}
-                  onClick={() => toggleTheme(t)}
+                  key={m}
+                  className={`form-chip ${form.modalite.includes(m) ? "form-chip-active" : ""}`}
+                  onClick={() => toggleMulti("modalite", m)}
                   type="button"
-                >{t}</button>
+                >{m}</button>
               ))}
             </div>
-          )}
-
-          {form.themes.length > 0 && (
-            <div className="form-themes-selected">
-              {form.themes.map((t) => (
-                <span key={t} className="form-theme-chip">
-                  {t}
-                  <button onClick={() => toggleTheme(t)} className="form-theme-chip-remove">×</button>
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div className="form-new-theme">
-            <input
-              className="form-input"
-              type="text"
-              placeholder="Créer un nouveau thème…"
-              value={nouveauTheme}
-              onChange={(e) => setNouveauTheme(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); ajouterNouveauTheme(); } }}
-            />
-            <button
-              className="btn-add-theme"
-              onClick={ajouterNouveauTheme}
-              type="button"
-              disabled={!nouveauTheme.trim()}
-            >Ajouter</button>
           </div>
-          {erreurs.themes && <div className="form-error">{erreurs.themes}</div>}
         </div>
 
         <div className="form-group">
-          <label className="form-label">Contexte <span className="form-required">*</span></label>
+          <label className="form-label">Contexte</label>
           <div className="form-chips">
             {CONTEXTES_DISPONIBLES.map((c) => (
               <button
@@ -661,43 +684,81 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, initialData }) 
               >{c}</button>
             ))}
           </div>
-          {erreurs.contexte && <div className="form-error">{erreurs.contexte}</div>}
         </div>
 
+        <KeywordSelector
+          label="Thèmes"
+          valeurs={form.themes}
+          existants={tousThemes}
+          nouveauVal={nouveauTheme}
+          setNouveauVal={setNouveauTheme}
+          onToggle={(t) => toggleKeyword("themes", t)}
+          onAjouter={() => ajouterKeyword("themes", nouveauTheme, setNouveauTheme)}
+        />
+
+        <KeywordSelector
+          label="Matériels nécessaires"
+          valeurs={form.materiels}
+          existants={tousMaterialels}
+          nouveauVal={nouveauMateriel}
+          setNouveauVal={setNouveauMateriel}
+          onToggle={(t) => toggleKeyword("materiels", t)}
+          onAjouter={() => ajouterKeyword("materiels", nouveauMateriel, setNouveauMateriel)}
+        />
+
         <div className="form-group">
-          <label className="form-label">Description courte <span className="form-required">*</span></label>
+          <label className="form-label">Description courte</label>
           <input
-            className={`form-input ${erreurs.description_courte ? "form-input-error" : ""}`}
+            className="form-input"
             type="text"
             placeholder="1-2 phrases pour la carte"
             value={form.description_courte}
             onChange={(e) => setField("description_courte", e.target.value)}
           />
-          {erreurs.description_courte && <div className="form-error">{erreurs.description_courte}</div>}
         </div>
 
         <div className="form-group">
-          <label className="form-label">Description complète <span className="form-required">*</span></label>
+          <label className="form-label">Description complète</label>
           <textarea
-            className={`form-textarea ${erreurs.description ? "form-input-error" : ""}`}
+            className="form-textarea"
             placeholder="Déroulé détaillé de l'activité"
             rows={4}
             value={form.description}
             onChange={(e) => setField("description", e.target.value)}
           />
-          {erreurs.description && <div className="form-error">{erreurs.description}</div>}
         </div>
 
         <div className="form-group">
-          <label className="form-label">Apprentissage clé <span className="form-required">*</span></label>
+          <label className="form-label">Apprentissage clé</label>
           <textarea
-            className={`form-textarea ${erreurs.apprentissage_cle ? "form-input-error" : ""}`}
+            className="form-textarea"
             placeholder="Ce que les participants retiennent"
             rows={2}
             value={form.apprentissage_cle}
             onChange={(e) => setField("apprentissage_cle", e.target.value)}
           />
-          {erreurs.apprentissage_cle && <div className="form-error">{erreurs.apprentissage_cle}</div>}
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Problématique possible</label>
+          <textarea
+            className="form-textarea"
+            placeholder="Difficultés ou obstacles fréquents rencontrés lors de cette activité"
+            rows={2}
+            value={form.problematique}
+            onChange={(e) => setField("problematique", e.target.value)}
+          />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Remédiation</label>
+          <textarea
+            className="form-textarea"
+            placeholder="Pistes pour surmonter les difficultés identifiées"
+            rows={2}
+            value={form.remediation}
+            onChange={(e) => setField("remediation", e.target.value)}
+          />
         </div>
 
         <div className="modal-footer">

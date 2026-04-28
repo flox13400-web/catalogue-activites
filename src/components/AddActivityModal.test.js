@@ -30,11 +30,13 @@ describe("genererIdActivite", () => {
 
 const ACT_BASE = {
   titre: "Mon activité",
-  public: ["11-15"],
-  duree: "30-60min",
-  groupe: ["Moyen"],
+  age_public: ["Collège"],
+  duree: "30-45min",
+  taille_groupe: ["7-12"],
   themes: ["IA déconnecté"],
   contexte: ["Scolaire"],
+  modalite: ["Présentielle"],
+  materiels: ["Cartes"],
   description_courte: "Résumé",
   description: "Description complète",
   apprentissage_cle: "Ce que l'on retient",
@@ -53,10 +55,17 @@ describe("parserJSON — structure valide", () => {
   });
 
   it("normalise les tableaux encodés en string", () => {
-    const act = { ...ACT_BASE, public: "11-15", groupe: "Moyen", themes: "IA déconnecté", contexte: "Scolaire" };
+    const act = { ...ACT_BASE, age_public: "Collège", taille_groupe: "7-12", themes: "IA déconnecté" };
     const res = parserJSON(JSON.stringify([act]));
-    expect(res[0].public).toEqual(["11-15"]);
-    expect(res[0].groupe).toEqual(["Moyen"]);
+    expect(res[0].age_public).toEqual(["Collège"]);
+    expect(res[0].taille_groupe).toEqual(["7-12"]);
+  });
+
+  it("accepte les anciens noms de champs (public, groupe)", () => {
+    const act = { titre: "Test", duree: "30-45min", public: ["Lycée"], groupe: ["Moyen"] };
+    const res = parserJSON(JSON.stringify([act]));
+    expect(res[0].age_public).toEqual(["Lycée"]);
+    expect(res[0].taille_groupe).toEqual(["Moyen"]);
   });
 
   it("préserve l'ID si présent", () => {
@@ -68,6 +77,14 @@ describe("parserJSON — structure valide", () => {
   it("laisse id null si absent", () => {
     const res = parserJSON(JSON.stringify([ACT_BASE]));
     expect(res[0].id).toBeNull();
+  });
+
+  it("accepte une activité avec seulement titre et duree", () => {
+    const res = parserJSON(JSON.stringify([{ titre: "Minimal", duree: "0-15min" }]));
+    expect(res).toHaveLength(1);
+    expect(res[0].titre).toBe("Minimal");
+    expect(res[0].age_public).toEqual([]);
+    expect(res[0].themes).toEqual([]);
   });
 
   it("accepte plusieurs activités", () => {
@@ -85,45 +102,45 @@ describe("parserJSON — erreurs", () => {
     expect(() => parserJSON(JSON.stringify({ foo: "bar" }))).toThrow();
   });
 
-  it("lève une erreur si un champ obligatoire manque", () => {
-    const actSansDescription = { ...ACT_BASE };
-    delete actSansDescription.description;
-    expect(() => parserJSON(JSON.stringify([actSansDescription]))).toThrow(/description/);
-  });
-
   it("lève une erreur si titre manque", () => {
     const actSansTitre = { ...ACT_BASE };
     delete actSansTitre.titre;
     expect(() => parserJSON(JSON.stringify([actSansTitre]))).toThrow(/titre/);
   });
+
+  it("lève une erreur si duree manque", () => {
+    const actSansDuree = { ...ACT_BASE };
+    delete actSansDuree.duree;
+    expect(() => parserJSON(JSON.stringify([actSansDuree]))).toThrow(/duree/);
+  });
 });
 
 // ── parserCSV ─────────────────────────────────────────────────
 
-const ENTETES = "titre;public;duree;duree_detail;groupe;themes;description_courte;description;apprentissage_cle";
+const ENTETES = "titre;age_public;duree;duree_detail;taille_groupe;themes;materiels;contexte;modalite;description_courte;description;apprentissage_cle";
 
 function csv(...lignes) {
   return [ENTETES, ...lignes].join("\n");
 }
 
-const LIGNE_BASE = '"Mon activité";"11-15 | 16-20";"30-60min";"";"Moyen";"IA déconnecté";"Résumé";"Description complète";"Ce que l\'on retient"';
+const LIGNE_BASE = '"Mon activité";"Collège | Lycée";"30-45min";"";"7-12";"IA déconnecté";"Cartes";"Scolaire";"Présentielle";"Résumé";"Description complète";"Ce que l\'on retient"';
 
 describe("parserCSV — structure valide", () => {
   it("parse une ligne basique (séparateur ;)", () => {
     const res = parserCSV(csv(LIGNE_BASE));
     expect(res).toHaveLength(1);
     expect(res[0].titre).toBe("Mon activité");
-    expect(res[0].duree).toBe("30-60min");
+    expect(res[0].duree).toBe("30-45min");
   });
 
   it("parse les valeurs multi (| comme séparateur)", () => {
     const res = parserCSV(csv(LIGNE_BASE));
-    expect(res[0].public).toEqual(["11-15", "16-20"]);
+    expect(res[0].age_public).toEqual(["Collège", "Lycée"]);
   });
 
   it("détecte le séparateur virgule automatiquement", () => {
-    const entetes = "titre,public,duree,duree_detail,groupe,themes,description_courte,description,apprentissage_cle";
-    const ligne = '"Activité A","Adultes","1-2h","","Grand","Éthique","Résumé","Desc","Apprentissage"';
+    const entetes = "titre,age_public,duree,duree_detail,taille_groupe,themes,materiels,contexte,modalite,description_courte,description,apprentissage_cle";
+    const ligne = '"Activité A","Adultes","45-60min","",">12","Éthique","","Entreprise","Distanciel","Résumé","Desc","Apprentissage"';
     const res = parserCSV(`${entetes}\n${ligne}`);
     expect(res).toHaveLength(1);
     expect(res[0].titre).toBe("Activité A");
@@ -140,19 +157,13 @@ describe("parserCSV — structure valide", () => {
   });
 
   it("parse les guillemets doubles échappés dans un champ", () => {
-    const ligne = '"L\'activité ""spéciale""";"Adultes";"<30min";"";"Petit";"Test";"Résumé";"Desc";"App"';
+    const ligne = '"L\'activité ""spéciale""";"Adultes";"15-30min";"";"2-6";"Test";"";"";"Présentielle";"Résumé";"Desc";"App"';
     const res = parserCSV(csv(ligne));
     expect(res[0].titre).toBe('L\'activité "spéciale"');
   });
 
-  it("normalise une durée invalide en <30min", () => {
-    const ligne = '"Test";"11-15";"durée-inconnue";"";"Moyen";"IA";"Résumé";"Desc";"App"';
-    const res = parserCSV(csv(ligne));
-    expect(res[0].duree).toBe("<30min");
-  });
-
   it("ignore les lignes sans titre", () => {
-    const ligneVide = '"";"11-15";"30-60min";"";"Moyen";"IA";"Résumé";"Desc";"App"';
+    const ligneVide = '"";"Collège";"30-45min";"";"7-12";"IA";"";"";"Présentielle";"Résumé";"Desc";"App"';
     const res = parserCSV(csv(LIGNE_BASE, ligneVide));
     expect(res).toHaveLength(1);
   });
@@ -161,13 +172,20 @@ describe("parserCSV — structure valide", () => {
     const res = parserCSV(csv(LIGNE_BASE, LIGNE_BASE, LIGNE_BASE));
     expect(res).toHaveLength(3);
   });
+
+  it("accepte un fichier avec seulement titre et duree", () => {
+    const res = parserCSV("titre;duree\n\"Simple\";\"0-15min\"");
+    expect(res).toHaveLength(1);
+    expect(res[0].titre).toBe("Simple");
+    expect(res[0].age_public).toEqual([]);
+  });
 });
 
 describe("parserCSV — colonnes reconnues", () => {
   it("accepte toutes les valeurs de durée valides", () => {
-    const durees = ["<30min", "30-60min", "1-2h", "2-4h", "Projet"];
+    const durees = ["0-15min", "15-30min", "30-45min", "45-60min", ">60min"];
     for (const d of durees) {
-      const ligne = `"Test";"11-15";"${d}";"";"Moyen";"IA";"R";"D";"A"`;
+      const ligne = `"Test";"Collège";"${d}";"";"7-12";"IA";"";"";"Présentielle";"R";"D";"A"`;
       const res = parserCSV(csv(ligne));
       expect(res[0].duree).toBe(d);
     }
@@ -180,12 +198,12 @@ describe("parserCSV — erreurs", () => {
   });
 
   it("lève une erreur si colonnes obligatoires manquantes", () => {
-    const mauvaisEntetes = "titre;public;duree\n\"Test\";\"11-15\";\"30-60min\"";
-    expect(() => parserCSV(mauvaisEntetes)).toThrow(/description_courte/);
+    const mauvaisEntetes = "titre\n\"Test\"";
+    expect(() => parserCSV(mauvaisEntetes)).toThrow(/duree/);
   });
 
   it("lève une erreur si toutes les lignes ont un titre vide", () => {
-    const ligneVide = '"";"11-15";"30-60min";"";"Moyen";"IA";"R";"D";"A"';
+    const ligneVide = '"";"Collège";"30-45min";"";"7-12";"IA";"";"";"Présentielle";"R";"D";"A"';
     expect(() => parserCSV(csv(ligneVide))).toThrow(/Aucune activité/);
   });
 });
@@ -196,11 +214,13 @@ describe("parserMarkdown", () => {
   const MD_VALIDE = `
 ## 1. Mon activité \`A01\`
 
-**Public :** 11-15, 16-20
-**Durée :** 30-60min
-**Groupe :** Moyen
+**Âge du public :** Collège, Lycée
+**Durée :** 30-45min
+**Taille de groupe :** 7-12
 **Thèmes :** IA déconnecté
+**Matériels :** Cartes, Tableau
 **Contexte :** Scolaire
+**Modalité :** Présentielle
 
 ### Description
 
@@ -222,20 +242,41 @@ Déroulé de l'activité en détail.
 
   it("extrait la durée", () => {
     const res = parserMarkdown(MD_VALIDE);
-    expect(res[0].duree).toBe("30-60min");
+    expect(res[0].duree).toBe("30-45min");
   });
 
-  it("extrait les tableaux (public, groupe, thèmes)", () => {
+  it("extrait les tableaux (âge, taille, matériels)", () => {
     const res = parserMarkdown(MD_VALIDE);
-    expect(res[0].public).toContain("11-15");
-    expect(res[0].public).toContain("16-20");
-    expect(res[0].groupe).toContain("Moyen");
+    expect(res[0].age_public).toContain("Collège");
+    expect(res[0].age_public).toContain("Lycée");
+    expect(res[0].taille_groupe).toContain("7-12");
+    expect(res[0].materiels).toContain("Cartes");
+    expect(res[0].materiels).toContain("Tableau");
   });
 
   it("extrait la description et l'apprentissage clé", () => {
     const res = parserMarkdown(MD_VALIDE);
     expect(res[0].description).toContain("Déroulé");
     expect(res[0].apprentissage_cle).toContain("participants");
+  });
+
+  it("accepte les anciens labels (Public, Groupe) pour la compatibilité", () => {
+    const mdAncien = `
+## 1. Ancienne activité \`A99\`
+
+**Public :** Adultes
+**Durée :** 30-45min
+**Groupe :** Moyen
+
+### Description
+
+Texte.
+
+---
+`.trim();
+    const res = parserMarkdown(mdAncien);
+    expect(res[0].age_public).toContain("Adultes");
+    expect(res[0].taille_groupe).toContain("Moyen");
   });
 
   it("parse plusieurs sections séparées par ---", () => {

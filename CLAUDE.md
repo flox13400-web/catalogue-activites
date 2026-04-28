@@ -67,26 +67,38 @@ src/
   "id": "A01",
   "titre": "...",
   "phase": "Avant",
-  "public": ["7-10", "11-15"],
-  "duree": "<30min",
+  "age_public": ["Collège", "Lycée"],
+  "duree": "30-45min",
   "duree_detail": null,
-  "groupe": ["Moyen"],
+  "taille_groupe": ["7-12"],
   "themes": ["IA déconnecté"],
+  "materiels": ["Cartes", "Tableau"],
   "contexte": ["Scolaire"],
+  "modalite": ["Présentielle"],
   "description_courte": "...",
   "description": "...",
-  "apprentissage_cle": "..."
+  "apprentissage_cle": "...",
+  "problematique": null,
+  "remediation": null
 }
 ```
 
 ## Valeurs de référence
 
-- **Phases** : Avant, Demander, Produire, Évaluer, Sécuriser, Piloter, Construire, Contribuer
-- **Public** : 7-10, 11-15, 16-20, Post-bac, Adultes
-- **Durée** : <30min, 30-60min, 1-2h, 2-4h, Projet
-- **Groupe** : Petit, Moyen, Grand
-- **Contexte** : Scolaire, Études sup., Entreprise
+- **Âge du public** : Primaire, Collège, Lycée, Post-bac, Adultes
+- **Durée** : 0-15min, 15-30min, 30-45min, 45-60min, >60min
+- **Taille de groupe** : 1, 2-6, 7-12, >12
+- **Contexte** : Scolaire, Entreprise, Montée en compétence, Diplomant
+- **Modalité** : Présentielle, Distanciel, Synchrone, Asynchrone
+- **Thèmes** : mots-clés libres (liste déroulante alimentée par le catalogue)
+- **Matériels** : mots-clés libres (liste déroulante alimentée par le catalogue)
 - **IDs créés via formulaire** : format `CUS-001`, `CUS-002`, …
+- **Champs obligatoires** (formulaire) : titre, durée uniquement
+
+## Filtres — logique de combinaison
+
+- **Au sein d'une même catégorie** : OR — sélectionner Collège + Lycée affiche les activités pour l'un OU l'autre
+- **Entre catégories** : AND — l'activité doit satisfaire tous les filtres actifs simultanément
 
 ## Commandes
 
@@ -94,4 +106,24 @@ src/
 npm run dev      # Dev server
 npm run build    # Build production (doit passer sans erreur)
 npm run preview  # Prévisualiser le build
+npm test         # Lance les 82 tests unitaires (toujours avant git push)
 ```
+
+## Règles de collaboration
+
+### Communication
+
+- L'utilisateur n'est pas développeur. Chaque action doit être accompagnée d'une explication courte en français : **ce qu'on fait**, **pourquoi**, et **comment on pourrait le refaire manuellement** si besoin. Pas de long monologue — une à deux phrases suffisent.
+- Éviter le jargon technique sans explication. Si un terme technique est inévitable, le définir brièvement entre parenthèses juste après.
+
+### Avant chaque `git push`
+
+- Toujours exécuter `npm test` avant de pousser.
+- Afficher le résultat sous la forme "X/X tests passés".
+- Si un ou plusieurs tests échouent : **ne pas pousser**, expliquer le problème simplement et le corriger d'abord.
+
+### Économie de ressources
+
+- Toujours préférer l'approche la plus simple quand elle ne comporte aucun risque pour les fonctionnalités existantes.
+- Pas de refactoring, d'abstraction ou de complexité supplémentaire non demandés.
+- Si deux solutions donnent le même résultat, choisir la plus courte et la plus lisible.

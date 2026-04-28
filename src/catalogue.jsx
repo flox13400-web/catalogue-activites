@@ -78,6 +78,14 @@ export default function Catalogue() {
     return [...set];
   }, [activites]);
 
+  const tousMaterialels = useMemo(() => {
+    const set = new Set();
+    for (const a of activites) {
+      if (Array.isArray(a.materiels)) a.materiels.forEach(m => set.add(m));
+    }
+    return [...set];
+  }, [activites]);
+
   const activitesFiltrees = useMemo(
     () => applyFilters(activites, filtres, favoris),
     [filtres, activites, favoris]
@@ -107,15 +115,19 @@ export default function Catalogue() {
     const nouvelleActivite = {
       id,
       titre: formData.titre.trim(),
-      public: formData.public,
+      age_public: formData.age_public,
       duree: formData.duree,
       duree_detail: formData.duree_detail.trim() || null,
-      groupe: formData.groupe,
+      taille_groupe: formData.taille_groupe,
       themes: formData.themes,
+      materiels: formData.materiels,
       contexte: formData.contexte,
+      modalite: formData.modalite,
       description_courte: formData.description_courte.trim(),
       description: formData.description.trim(),
       apprentissage_cle: formData.apprentissage_cle.trim(),
+      problematique: formData.problematique.trim() || null,
+      remediation: formData.remediation.trim() || null,
     };
     setActivites(prev => [...prev, nouvelleActivite]);
     setShowAddModal(false);
@@ -161,15 +173,19 @@ export default function Catalogue() {
     const activiteMiseAJour = {
       id,
       titre: formData.titre.trim(),
-      public: formData.public,
+      age_public: formData.age_public,
       duree: formData.duree,
       duree_detail: formData.duree_detail.trim() || null,
-      groupe: formData.groupe,
+      taille_groupe: formData.taille_groupe,
       themes: formData.themes,
+      materiels: formData.materiels,
       contexte: formData.contexte,
+      modalite: formData.modalite,
       description_courte: formData.description_courte.trim(),
       description: formData.description.trim(),
       apprentissage_cle: formData.apprentissage_cle.trim(),
+      problematique: formData.problematique.trim() || null,
+      remediation: formData.remediation.trim() || null,
     };
     setActivites(prev => prev.map(a => a.id === id ? activiteMiseAJour : a));
     setEditingActivite(null);
@@ -257,6 +273,7 @@ export default function Catalogue() {
           filteredCount={activitesFiltrees.length}
           totalActivites={activites.length}
           tousThemes={tousThemes}
+          tousMaterialels={tousMaterialels}
           mobileOpen={mobilePanelOpen === "filters"}
           onMobileClose={() => setMobilePanelOpen(null)}
         />
@@ -366,6 +383,7 @@ export default function Catalogue() {
           onClose={() => { setShowAddModal(false); setEditingActivite(null); }}
           onSave={editingActivite ? handleUpdateActivite : handleSaveActivite}
           tousThemes={tousThemes}
+          tousMaterialels={tousMaterialels}
           initialData={editingActivite}
         />
       )}

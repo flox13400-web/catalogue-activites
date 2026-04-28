@@ -1,8 +1,11 @@
 export const FILTRES_INIT = {
-  public: [],
+  age_public: [],
   duree: [],
-  groupe: [],
+  taille_groupe: [],
   themes: [],
+  materiels: [],
+  contexte: [],
+  modalite: [],
   favorisOnly: false,
   search: "",
 };
@@ -16,10 +19,15 @@ export function applyFilters(activites, filtres, favorisIds = new Set()) {
         .join(" ").toLowerCase();
       if (!haystack.includes(q)) return false;
     }
-    if (filtres.public.length > 0 && !filtres.public.some((v) => a.public.includes(v))) return false;
+    const agePublic = a.age_public || a.public || [];
+    if (filtres.age_public.length > 0 && !filtres.age_public.some((v) => agePublic.includes(v))) return false;
     if (filtres.duree.length > 0 && !filtres.duree.includes(a.duree)) return false;
-    if (filtres.groupe.length > 0 && !filtres.groupe.some((v) => a.groupe.includes(v))) return false;
-    if (filtres.themes.length > 0 && !filtres.themes.some((v) => a.themes.includes(v))) return false;
+    const tailleGroupe = a.taille_groupe || a.groupe || [];
+    if (filtres.taille_groupe.length > 0 && !filtres.taille_groupe.some((v) => tailleGroupe.includes(v))) return false;
+    if (filtres.contexte.length > 0 && !filtres.contexte.some((v) => (a.contexte || []).includes(v))) return false;
+    if (filtres.modalite.length > 0 && !filtres.modalite.some((v) => (a.modalite || []).includes(v))) return false;
+    if (filtres.themes.length > 0 && !filtres.themes.some((v) => (a.themes || []).includes(v))) return false;
+    if (filtres.materiels.length > 0 && !filtres.materiels.some((v) => (a.materiels || []).includes(v))) return false;
     return true;
   });
 }
