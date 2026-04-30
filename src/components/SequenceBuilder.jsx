@@ -316,7 +316,7 @@ export default function SequenceBuilder({
                 value={programme.objectif_bloom || ""}
                 onChange={e => updateProgrammeField("objectif_bloom", e.target.value)}
               >
-                <option value="">— Bloom —</option>
+                <option value="">— Verbe d'action —</option>
                 {VERBES_BLOOM_GROUPED.map(g => (
                   <optgroup key={g.niveau} label={g.niveau}>
                     {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
