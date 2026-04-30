@@ -2,6 +2,15 @@ import React, { useState, useMemo } from "react";
 import { verifierAlignementPedagogique } from "../utils/alignmentChecker.js";
 import "../styles/cart.css";
 
+const VERBES_BLOOM_GROUPED = [
+  { niveau: "Mémoriser",  verbes: ["Définir", "Lister", "Nommer", "Rappeler", "Reconnaître", "Reproduire"] },
+  { niveau: "Comprendre", verbes: ["Expliquer", "Résumer", "Interpréter", "Classer", "Comparer", "Décrire"] },
+  { niveau: "Appliquer",  verbes: ["Utiliser", "Exécuter", "Résoudre", "Illustrer", "Calculer", "Mettre en œuvre"] },
+  { niveau: "Analyser",   verbes: ["Distinguer", "Organiser", "Décomposer", "Différencier", "Examiner", "Attribuer"] },
+  { niveau: "Évaluer",    verbes: ["Vérifier", "Critiquer", "Juger", "Argumenter", "Justifier", "Apprécier"] },
+  { niveau: "Créer",      verbes: ["Concevoir", "Construire", "Planifier", "Produire", "Générer", "Inventer"] },
+];
+
 const DUREE_PLAGES = {
   "0-15min":  { min: 0,  max: 15 },
   "15-30min": { min: 15, max: 30 },
@@ -157,7 +166,7 @@ export default function SequenceBuilder({
           ...seq,
           seances: [
             ...seq.seances,
-            { id, titre: "Nouvelle séance", opo_verbe: "", opo_type: "Savoir", parent_id: seqId, fiches: [] },
+            { id, titre: "Nouvelle séance", opo_verbe: "", opo_bloom: "", opo_type: "Savoir", parent_id: seqId, fiches: [] },
           ],
         }
       ),
@@ -284,13 +293,16 @@ export default function SequenceBuilder({
       <div className="panel-body seq-builder-body">
         <div className="seq-programme-header">
           {renderTitre(programme.id, programme.titre, "seq-programme-titre")}
-          <textarea
-            className="seq-objectif-input"
-            defaultValue={programme.objectif_final}
-            placeholder="Objectif final du programme..."
-            onBlur={e => updateObjectifProgramme(e.target.value)}
-            rows={2}
-          />
+          <div className="seq-madlibs-simple">
+            <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
+            <textarea
+              className="seq-objectif-input"
+              defaultValue={programme.objectif_final}
+              placeholder="Décrire les critères d'acquisition..."
+              onBlur={e => updateObjectifProgramme(e.target.value)}
+              rows={2}
+            />
+          </div>
         </div>
 
         <div className="seq-tree">
@@ -314,12 +326,15 @@ export default function SequenceBuilder({
 
                 {!seqCollapsed && (
                   <div className="seq-sequence-body">
-                    <input
-                      className="seq-objectif-input"
-                      defaultValue={seq.objectif_competence}
-                      placeholder="Objectif de compétence visé..."
-                      onBlur={e => updateObjectifSequence(seq.id, e.target.value)}
-                    />
+                    <div className="seq-madlibs-simple">
+                      <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
+                      <input
+                        className="seq-objectif-input"
+                        defaultValue={seq.objectif_competence}
+                        placeholder="Décrire les critères..."
+                        onBlur={e => updateObjectifSequence(seq.id, e.target.value)}
+                      />
+                    </div>
                     {seq.seances.map(sea => {
                       const seaCollapsed = collapsed.has(sea.id);
                       const ficheAvecActivite = sea.fiches.map(f => ({
@@ -340,6 +355,7 @@ export default function SequenceBuilder({
                           {!seaCollapsed && (
                             <div className="seq-fiches">
                               <div className="seq-opo-row">
+                                <span className="seq-opo-type-label">Type :</span>
                                 <select
                                   className="seq-opo-select"
                                   value={sea.opo_type}
@@ -349,12 +365,29 @@ export default function SequenceBuilder({
                                   <option value="Savoir-faire">Savoir-faire</option>
                                   <option value="Savoir-être">Savoir-être</option>
                                 </select>
-                                <input
-                                  className="seq-objectif-input"
-                                  defaultValue={sea.opo_verbe}
-                                  placeholder="Description de l'OPO..."
-                                  onBlur={e => updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value)}
-                                />
+                              </div>
+                              <div className="seq-madlibs">
+                                <span className="seq-madlibs-prefix">À l'issue de cette séance, l'apprenant sera capable de :</span>
+                                <div className="seq-madlibs-inputs">
+                                  <select
+                                    className="seq-opo-select"
+                                    value={sea.opo_bloom || ""}
+                                    onChange={e => updateOpoSeance(seq.id, sea.id, "opo_bloom", e.target.value)}
+                                  >
+                                    <option value="">— Bloom —</option>
+                                    {VERBES_BLOOM_GROUPED.map(g => (
+                                      <optgroup key={g.niveau} label={g.niveau}>
+                                        {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
+                                      </optgroup>
+                                    ))}
+                                  </select>
+                                  <input
+                                    className="seq-objectif-input"
+                                    defaultValue={sea.opo_verbe}
+                                    placeholder="…"
+                                    onBlur={e => updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value)}
+                                  />
+                                </div>
                               </div>
                               {ficheAvecActivite.length === 0 ? (
                                 <p className="seq-fiche-empty">Aucune activité assignée</p>

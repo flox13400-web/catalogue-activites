@@ -137,6 +137,11 @@ export default function Catalogue() {
       remediation: formData.remediation.trim() || null,
       type_fiche: formData.type_fiche || "Activite_Apprentissage",
       verbe_action_bloom: formData.verbe_action_bloom || "",
+      opo_activite: formData.opo_activite || "",
+      eval_type: formData.eval_type || "",
+      eval_modalite: formData.eval_modalite || "",
+      eval_conditions: formData.eval_conditions || "",
+      eval_criteres: formData.eval_criteres || "",
     };
     setActivites(prev => [...prev, nouvelleActivite]);
     setShowAddModal(false);
@@ -197,6 +202,11 @@ export default function Catalogue() {
       remediation: formData.remediation.trim() || null,
       type_fiche: formData.type_fiche || "Activite_Apprentissage",
       verbe_action_bloom: formData.verbe_action_bloom || "",
+      opo_activite: formData.opo_activite || "",
+      eval_type: formData.eval_type || "",
+      eval_modalite: formData.eval_modalite || "",
+      eval_conditions: formData.eval_conditions || "",
+      eval_criteres: formData.eval_criteres || "",
     };
     setActivites(prev => prev.map(a => a.id === id ? activiteMiseAJour : a));
     setEditingActivite(null);

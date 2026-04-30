@@ -5,7 +5,14 @@ import "../styles/modal.css";
 
 const AGES_DISPONIBLES = ["Primaire", "Collège", "Lycée", "Post-bac", "Adultes"];
 const DUREES_DISPONIBLES = ["0-15min", "15-30min", "30-45min", "45-60min", ">60min"];
-const VERBES_BLOOM = ["Mémoriser", "Comprendre", "Appliquer", "Analyser", "Évaluer", "Créer"];
+const VERBES_BLOOM_GROUPED = [
+  { niveau: "Mémoriser",  verbes: ["Définir", "Lister", "Nommer", "Rappeler", "Reconnaître", "Reproduire"] },
+  { niveau: "Comprendre", verbes: ["Expliquer", "Résumer", "Interpréter", "Classer", "Comparer", "Décrire"] },
+  { niveau: "Appliquer",  verbes: ["Utiliser", "Exécuter", "Résoudre", "Illustrer", "Calculer", "Mettre en œuvre"] },
+  { niveau: "Analyser",   verbes: ["Distinguer", "Organiser", "Décomposer", "Différencier", "Examiner", "Attribuer"] },
+  { niveau: "Évaluer",    verbes: ["Vérifier", "Critiquer", "Juger", "Argumenter", "Justifier", "Apprécier"] },
+  { niveau: "Créer",      verbes: ["Concevoir", "Construire", "Planifier", "Produire", "Générer", "Inventer"] },
+];
 const DUREES_OK = new Set(DUREES_DISPONIBLES);
 const TAILLES_GROUPE_DISPONIBLES = ["1", "2-6", "7-12", ">12"];
 const CONTEXTES_DISPONIBLES = ["Scolaire", "Entreprise", "Montée en compétence", "Diplomant"];
@@ -512,9 +519,14 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
         modalite: initialData.modalite || [],
         type_fiche: initialData.type_fiche || "Activite_Apprentissage",
         verbe_action_bloom: initialData.verbe_action_bloom || "",
+        opo_activite: initialData.opo_activite || "",
         description_courte: initialData.description_courte || "",
         description: initialData.description || "",
         apprentissage_cle: initialData.apprentissage_cle || "",
+        eval_type: initialData.eval_type || "Formative",
+        eval_modalite: initialData.eval_modalite || "",
+        eval_conditions: initialData.eval_conditions || "",
+        eval_criteres: initialData.eval_criteres || "",
         problematique: initialData.problematique || "",
         remediation: initialData.remediation || "",
       };
@@ -531,9 +543,14 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
       modalite: [],
       type_fiche: "Activite_Apprentissage",
       verbe_action_bloom: "",
+      opo_activite: "",
       description_courte: "",
       description: "",
       apprentissage_cle: "",
+      eval_type: "Formative",
+      eval_modalite: "",
+      eval_conditions: "",
+      eval_criteres: "",
       problematique: "",
       remediation: "",
     };
@@ -711,86 +728,122 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
           onAjouter={() => ajouterKeyword("materiels", nouveauMateriel, setNouveauMateriel)}
         />
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="form-label">Type de fiche</label>
-            <select
-              className="form-input"
-              value={form.type_fiche}
-              onChange={(e) => setField("type_fiche", e.target.value)}
-            >
-              <option value="Activite_Apprentissage">Activité d'apprentissage</option>
-              <option value="Activite_Evaluation">Activité d'évaluation</option>
-            </select>
+        <div className="form-group">
+          <label className="form-label">Type de fiche</label>
+          <div className="form-toggle">
+            <button type="button"
+              className={`form-toggle-btn${form.type_fiche === "Activite_Apprentissage" ? " form-toggle-btn-active" : ""}`}
+              onClick={() => setField("type_fiche", "Activite_Apprentissage")}
+            >Apprentissage</button>
+            <button type="button"
+              className={`form-toggle-btn${form.type_fiche === "Activite_Evaluation" ? " form-toggle-btn-active" : ""}`}
+              onClick={() => setField("type_fiche", "Activite_Evaluation")}
+            >Évaluation</button>
           </div>
-          <div className="form-group">
-            <label className="form-label">Verbe de Bloom</label>
-            <select
-              className="form-input"
+        </div>
+
+        <div className="form-madlibs">
+          <span className="form-madlibs-label">À l'issue de cette activité, l'apprenant sera capable de :</span>
+          <div className="form-madlibs-row">
+            <select className="form-bloom-select"
               value={form.verbe_action_bloom}
               onChange={(e) => setField("verbe_action_bloom", e.target.value)}
             >
-              <option value="">— Non défini —</option>
-              {VERBES_BLOOM.map(v => (
-                <option key={v} value={v}>{v}</option>
+              <option value="">— Niveau Bloom —</option>
+              {VERBES_BLOOM_GROUPED.map(g => (
+                <optgroup key={g.niveau} label={g.niveau}>
+                  {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
+                </optgroup>
               ))}
             </select>
+            <input className="form-input" type="text"
+              placeholder="décrire l'action attendue..."
+              value={form.opo_activite}
+              onChange={(e) => setField("opo_activite", e.target.value)} />
           </div>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Description courte</label>
-          <input
-            className="form-input"
-            type="text"
-            placeholder="1-2 phrases pour la carte"
-            value={form.description_courte}
-            onChange={(e) => setField("description_courte", e.target.value)}
-          />
-        </div>
+        {form.type_fiche === "Activite_Apprentissage" && (
+          <>
+            <div className="form-group">
+              <label className="form-label">Description courte</label>
+              <input className="form-input" type="text"
+                placeholder="1-2 phrases pour la carte"
+                value={form.description_courte}
+                onChange={(e) => setField("description_courte", e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Description complète</label>
+              <textarea className="form-textarea" placeholder="Déroulé détaillé de l'activité"
+                rows={4} value={form.description}
+                onChange={(e) => setField("description", e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Apprentissage clé</label>
+              <textarea className="form-textarea" placeholder="Ce que les participants retiennent"
+                rows={2} value={form.apprentissage_cle}
+                onChange={(e) => setField("apprentissage_cle", e.target.value)} />
+            </div>
+          </>
+        )}
 
-        <div className="form-group">
-          <label className="form-label">Description complète</label>
-          <textarea
-            className="form-textarea"
-            placeholder="Déroulé détaillé de l'activité"
-            rows={4}
-            value={form.description}
-            onChange={(e) => setField("description", e.target.value)}
-          />
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Apprentissage clé</label>
-          <textarea
-            className="form-textarea"
-            placeholder="Ce que les participants retiennent"
-            rows={2}
-            value={form.apprentissage_cle}
-            onChange={(e) => setField("apprentissage_cle", e.target.value)}
-          />
-        </div>
+        {form.type_fiche === "Activite_Evaluation" && (
+          <div className="form-eval-section">
+            <div className="form-eval-section-title">Paramètres de l'évaluation</div>
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">Type</label>
+                <select className="form-input" value={form.eval_type}
+                  onChange={(e) => setField("eval_type", e.target.value)}>
+                  <option value="Formative">Formative</option>
+                  <option value="Sommative">Sommative</option>
+                  <option value="Diagnostique">Diagnostique</option>
+                  <option value="Certificative">Certificative</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Modalité</label>
+                <select className="form-input" value={form.eval_modalite}
+                  onChange={(e) => setField("eval_modalite", e.target.value)}>
+                  <option value="">— Choisir —</option>
+                  <option value="QCM">QCM</option>
+                  <option value="Mise en situation">Mise en situation</option>
+                  <option value="Livrable">Livrable</option>
+                  <option value="Soutenance">Soutenance</option>
+                  <option value="Observation">Observation</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Conditions <span className="form-hint">(temps, matériel…)</span></label>
+              <input className="form-input" type="text"
+                placeholder="ex : 30min, papier-crayon uniquement"
+                value={form.eval_conditions}
+                onChange={(e) => setField("eval_conditions", e.target.value)} />
+            </div>
+            <div className="form-group form-group-last">
+              <label className="form-label">Critères de réussite</label>
+              <textarea className="form-textarea" placeholder="Qu'est-ce qui démontre la maîtrise ?"
+                rows={3} value={form.eval_criteres}
+                onChange={(e) => setField("eval_criteres", e.target.value)} />
+            </div>
+          </div>
+        )}
 
         <div className="form-group">
           <label className="form-label">Problématique possible</label>
-          <textarea
-            className="form-textarea"
+          <textarea className="form-textarea"
             placeholder="Difficultés ou obstacles fréquents rencontrés lors de cette activité"
-            rows={2}
-            value={form.problematique}
-            onChange={(e) => setField("problematique", e.target.value)}
-          />
+            rows={2} value={form.problematique}
+            onChange={(e) => setField("problematique", e.target.value)} />
         </div>
 
         <div className="form-group">
           <label className="form-label">Remédiation</label>
-          <textarea
-            className="form-textarea"
+          <textarea className="form-textarea"
             placeholder="Pistes pour surmonter les difficultés identifiées"
-            rows={2}
-            value={form.remediation}
-            onChange={(e) => setField("remediation", e.target.value)}
-          />
+            rows={2} value={form.remediation}
+            onChange={(e) => setField("remediation", e.target.value)} />
         </div>
 
         <div className="modal-footer">
