@@ -293,7 +293,7 @@ export default function Catalogue() {
 
   return (
     <div className="app">
-      <PrintView panierAffichage={panierAffichage} titreSeance={programme.titre} />
+      <PrintView programme={programme} activites={activites} />
       <Header
         totalActivites={activites.length}
         filteredCount={activitesFiltrees.length}

@@ -442,4 +442,142 @@
     color: #aaa;
     font-family: Arial, sans-serif;
   }
+
+  /* HIÉRARCHIE PROGRAMME → SÉQUENCE → SÉANCE */
+  .print-hier-label {
+    font-size: 6.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #999;
+    font-family: Arial, sans-serif;
+    margin-bottom: 3pt;
+  }
+  .print-hier-value {
+    font-size: 9.5pt;
+    color: #333;
+    line-height: 1.5;
+    margin: 0;
+  }
+  .print-hier-duree {
+    font-size: 8pt;
+    color: #888;
+    font-family: Arial, sans-serif;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+  .print-blank-line {
+    display: block;
+    width: 200pt;
+    height: 1pt;
+    border-bottom: 0.5pt solid #ccc;
+    margin-top: 4pt;
+  }
+
+  /* Objectif final du programme */
+  .print-programme-objectif {
+    background: #f7f5f0;
+    border-left: 3pt solid #D46A54;
+    padding: 8pt 12pt;
+    margin-bottom: 22pt;
+    border-radius: 0 3pt 3pt 0;
+    page-break-inside: avoid;
+  }
+
+  /* Séquence */
+  .print-sequence-section {
+    margin-bottom: 22pt;
+  }
+  .print-sequence-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8pt;
+    margin-bottom: 8pt;
+    padding-bottom: 5pt;
+    border-bottom: 1.5pt solid #1a1a1a;
+  }
+  .print-sequence-eyebrow {
+    font-size: 7.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #D46A54;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .print-sequence-titre {
+    font-family: Georgia, serif;
+    font-size: 15pt;
+    font-weight: normal;
+    font-style: italic;
+    flex: 1;
+    margin: 0;
+  }
+  .print-sequence-objectif {
+    background: #f7f5f0;
+    padding: 7pt 10pt;
+    border-radius: 3pt;
+    margin-bottom: 12pt;
+  }
+
+  /* Séance */
+  .print-seance-section {
+    margin-left: 14pt;
+    margin-bottom: 18pt;
+  }
+  .print-seance-header {
+    display: flex;
+    align-items: baseline;
+    gap: 6pt;
+    margin-bottom: 5pt;
+    padding-bottom: 4pt;
+    border-bottom: 0.5pt solid #ccc;
+  }
+  .print-seance-num {
+    font-family: 'Courier New', monospace;
+    font-size: 8pt;
+    color: #aaa;
+    min-width: 18pt;
+  }
+  .print-seance-titre {
+    font-family: Georgia, serif;
+    font-size: 12pt;
+    font-weight: normal;
+    flex: 1;
+    margin: 0;
+  }
+  .print-seance-opo {
+    display: flex;
+    align-items: center;
+    gap: 6pt;
+    margin-bottom: 10pt;
+  }
+  .print-seance-opo-type {
+    font-size: 6.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: #5b7ec8;
+    padding: 2pt 5pt;
+    border-radius: 2pt;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  .print-seance-opo-verbe {
+    font-size: 9pt;
+    color: #333;
+  }
+  .print-seance-opo-vide {
+    color: #bbb;
+    font-style: italic;
+  }
+  .print-seance-fiches {
+    padding-left: 8pt;
+  }
+  .print-seance-vide {
+    font-size: 9pt;
+    color: #aaa;
+    font-style: italic;
+    margin: 0 0 8pt 0;
+  }
 }

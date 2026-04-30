@@ -1,10 +1,6 @@
 import React from "react";
 import "../styles/card.css";
 
-function qrSrc(url, size = 160) {
-  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`;
-}
-
 const DUREE_PLAGES = {
   "0-15min":  { min: 0,  max: 15  },
   "15-30min": { min: 15, max: 30  },
@@ -36,199 +32,213 @@ function fmtMin(m) {
   return `${h}h${String(min).padStart(2, "0")}`;
 }
 
-function getDureeStr(items) {
-  let min = 0, max = 0, hasVarible = false;
-  for (const item of items) {
-    if (item.type === "activite" && item.activite) {
-      const a = item.activite;
-      const plage = DUREE_PLAGES[a.duree];
-      if (plage === null) { hasVarible = true; continue; }
-      if (plage) { min += plage.min; max += plage.max; continue; }
-      const mn = parseDureeStr(a.duree_detail || a.duree);
-      if (mn !== null) { min += mn; max += mn; }
-    } else if ((item.duree ?? 0) > 0) {
-      min += item.duree;
-      max += item.duree;
-    }
-  }
-  if (min === 0 && max === 0 && !hasVarible) return null;
-  const range = min === max ? fmtMin(min) : `${fmtMin(min)} – ${fmtMin(max)}`;
-  return hasVarible ? `${range} + variable` : range;
+function dureeActivite(a) {
+  const plage = DUREE_PLAGES[a.duree];
+  if (plage === null) return { min: 0, max: 0, open: true };
+  if (plage) return { min: plage.min, max: plage.max, open: false };
+  const mn = parseDureeStr(a.duree_detail || a.duree);
+  if (mn !== null) return { min: mn, max: mn, open: false };
+  return { min: 0, max: 0, open: false };
 }
 
-export default function PrintView({ panierAffichage, titreSeance = "" }) {
+function sumDuree(liste) {
+  let min = 0, max = 0, open = false;
+  for (const a of liste) {
+    const d = dureeActivite(a);
+    min += d.min; max += d.max;
+    if (d.open) open = true;
+  }
+  return { min, max, open };
+}
+
+function formatDuree({ min, max, open }) {
+  if (min === 0 && max === 0 && !open) return null;
+  const range = min === max ? fmtMin(min) : `${fmtMin(min)} – ${fmtMin(max)}`;
+  return open ? `${range} + variable` : range;
+}
+
+function FicheActivite({ activite, num }) {
+  const a = activite;
+  const agePublic = a.age_public || a.public || [];
+  const tailleGroupe = a.taille_groupe || a.groupe || [];
+  return (
+    <div className="print-fiche">
+      <div className="print-fiche-header">
+        <div className="print-fiche-header-left">
+          <span className="print-fiche-num">{num}</span>
+          <div>
+            <h2 className="print-fiche-titre">{a.titre}</h2>
+            <span className="print-fiche-id">{a.id}</span>
+          </div>
+        </div>
+      </div>
+      <div className="print-fiche-meta-grid">
+        <div className="print-fiche-meta-item">
+          <div className="print-fiche-meta-label">Durée</div>
+          <div className="print-fiche-meta-value">{a.duree_detail || a.duree}</div>
+        </div>
+        {agePublic.length > 0 && (
+          <div className="print-fiche-meta-item">
+            <div className="print-fiche-meta-label">Âge du public</div>
+            <div className="print-fiche-meta-value">{agePublic.join(", ")}</div>
+          </div>
+        )}
+        {tailleGroupe.length > 0 && (
+          <div className="print-fiche-meta-item">
+            <div className="print-fiche-meta-label">Taille groupe</div>
+            <div className="print-fiche-meta-value">{tailleGroupe.join(", ")}</div>
+          </div>
+        )}
+        {(a.themes || []).length > 0 && (
+          <div className="print-fiche-meta-item">
+            <div className="print-fiche-meta-label">Thèmes</div>
+            <div className="print-fiche-meta-value">{(a.themes || []).join(", ")}</div>
+          </div>
+        )}
+        {(a.materiels || []).length > 0 && (
+          <div className="print-fiche-meta-item">
+            <div className="print-fiche-meta-label">Matériels</div>
+            <div className="print-fiche-meta-value">{(a.materiels || []).join(", ")}</div>
+          </div>
+        )}
+        {(a.modalite || []).length > 0 && (
+          <div className="print-fiche-meta-item">
+            <div className="print-fiche-meta-label">Modalité</div>
+            <div className="print-fiche-meta-value">{(a.modalite || []).join(", ")}</div>
+          </div>
+        )}
+      </div>
+      {a.description && (
+        <div className="print-fiche-section">
+          <div className="print-fiche-section-label">Description</div>
+          <p className="print-fiche-body">{a.description}</p>
+        </div>
+      )}
+      {a.apprentissage_cle && (
+        <div className="print-fiche-apprentissage">
+          <div className="print-fiche-section-label">Apprentissage clé</div>
+          <p className="print-fiche-apprentissage-text">« {a.apprentissage_cle} »</p>
+        </div>
+      )}
+      {a.problematique && (
+        <div className="print-fiche-section">
+          <div className="print-fiche-section-label">Problématique possible</div>
+          <p className="print-fiche-body">{a.problematique}</p>
+        </div>
+      )}
+      {a.remediation && (
+        <div className="print-fiche-section">
+          <div className="print-fiche-section-label">Remédiation</div>
+          <p className="print-fiche-body">{a.remediation}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function PrintView({ programme, activites }) {
+  if (!programme || (programme.sequences ?? []).length === 0) return null;
+
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
-  const titreDoc = titreSeance.trim() || "Fiche de séance";
-  const dureeStr = getDureeStr(panierAffichage);
 
-  const activites = panierAffichage.filter(i => i.type === "activite");
-  if (activites.length === 0) return null;
-
-  let actNum = 0;
-  const itemsNumerotes = panierAffichage.map(item => {
-    if (item.type === "activite") return { ...item, num: ++actNum };
-    return item;
-  });
+  const toutesAct = [];
+  for (const seq of programme.sequences) {
+    for (const sea of seq.seances ?? []) {
+      for (const fiche of sea.fiches ?? []) {
+        const a = activites.find(x => x.id === fiche.activite_id);
+        if (a) toutesAct.push(a);
+      }
+    }
+  }
+  const dureeTotal = formatDuree(sumDuree(toutesAct));
 
   return (
     <div className="print-view">
       <div className="print-doc-header">
         <div className="print-doc-eyebrow">SEQUENCIA</div>
-        <h1 className="print-doc-title">{titreDoc}</h1>
+        <h1 className="print-doc-title">{programme.titre || "Mon programme"}</h1>
         <div className="print-doc-meta">
           <span>Exporté le {date}</span>
-          {dureeStr && (
+          {dureeTotal && (
             <>
               <span className="print-doc-meta-sep">·</span>
-              <span>{dureeStr}</span>
+              <span>{dureeTotal}</span>
             </>
           )}
         </div>
       </div>
 
-      {activites.length > 1 && (
-        <div className="print-toc">
-          <div className="print-toc-title">Sommaire</div>
-          <ol className="print-toc-list">
-            {activites.map((item, i) => (
-              <li key={item.id} className="print-toc-item">
-                <span className="print-toc-num">{i + 1}.</span>
-                <span className="print-toc-name">{item.activite.titre}</span>
-                <span className="print-toc-id">{item.activite.id}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
+      <div className="print-programme-objectif">
+        <div className="print-hier-label">Objectif final du programme</div>
+        {programme.objectif_final?.trim()
+          ? <p className="print-hier-value">{programme.objectif_final}</p>
+          : <span className="print-blank-line" />}
+      </div>
 
-      {itemsNumerotes.map(item => {
-        if (item.type === "texte") {
-          if (!item.contenu.trim()) return null;
-          return (
-            <div key={item.id} className="print-texte-libre">
-              <p>{item.contenu}</p>
-            </div>
-          );
+      {programme.sequences.map((seq, seqIdx) => {
+        const seqAct = [];
+        for (const sea of seq.seances ?? []) {
+          for (const fiche of sea.fiches ?? []) {
+            const a = activites.find(x => x.id === fiche.activite_id);
+            if (a) seqAct.push(a);
+          }
         }
-
-        if (item.type === "qrcode") {
-          if (!item.url?.trim() && !item.legende?.trim()) return null;
-          return (
-            <div key={item.id} className="print-qrcode">
-              {item.url?.trim() && (
-                <img
-                  src={qrSrc(item.url.trim(), 160)}
-                  alt="QR Code"
-                  className="print-qrcode-img"
-                  width="160"
-                  height="160"
-                />
-              )}
-              {item.legende?.trim() && (
-                <p className="print-qrcode-legende">{item.legende}</p>
-              )}
-            </div>
-          );
-        }
-
-        if (item.type === "objectif") {
-          const blank = <span className="print-objectif-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>;
-          const c1 = item.champ1?.trim() ? <strong>{item.champ1}</strong> : blank;
-          const c2 = item.champ2?.trim() ? <strong>{item.champ2}</strong> : blank;
-          const c3 = item.champ3?.trim() ? <strong>{item.champ3}</strong> : blank;
-          return (
-            <div key={item.id} className="print-objectif">
-              <p>A l'issue de {c1}, l'apprenant sera capable de {c2}. La compétence sera acquise si {c3}.</p>
-            </div>
-          );
-        }
-
-        const a = item.activite;
-        const agePublic = a.age_public || a.public || [];
-        const tailleGroupe = a.taille_groupe || a.groupe || [];
+        const dureeSeq = formatDuree(sumDuree(seqAct));
 
         return (
-          <div key={item.id} className="print-fiche">
-            <div className="print-fiche-header">
-              <div className="print-fiche-header-left">
-                <span className="print-fiche-num">{item.num}</span>
-                <div>
-                  <h2 className="print-fiche-titre">{a.titre}</h2>
-                  <span className="print-fiche-id">{a.id}</span>
-                </div>
-              </div>
+          <div key={seq.id} className="print-sequence-section">
+            <div className="print-sequence-header">
+              <span className="print-sequence-eyebrow">Séquence {seqIdx + 1}</span>
+              <h2 className="print-sequence-titre">{seq.titre}</h2>
+              {dureeSeq && <span className="print-hier-duree">{dureeSeq}</span>}
             </div>
 
-            <div className="print-fiche-meta-grid">
-              <div className="print-fiche-meta-item">
-                <div className="print-fiche-meta-label">Durée</div>
-                <div className="print-fiche-meta-value">{a.duree_detail || a.duree}</div>
-              </div>
-              {agePublic.length > 0 && (
-                <div className="print-fiche-meta-item">
-                  <div className="print-fiche-meta-label">Âge du public</div>
-                  <div className="print-fiche-meta-value">{agePublic.join(", ")}</div>
-                </div>
-              )}
-              {tailleGroupe.length > 0 && (
-                <div className="print-fiche-meta-item">
-                  <div className="print-fiche-meta-label">Taille groupe</div>
-                  <div className="print-fiche-meta-value">{tailleGroupe.join(", ")}</div>
-                </div>
-              )}
-              {(a.themes || []).length > 0 && (
-                <div className="print-fiche-meta-item">
-                  <div className="print-fiche-meta-label">Thèmes</div>
-                  <div className="print-fiche-meta-value">{(a.themes || []).join(", ")}</div>
-                </div>
-              )}
-              {(a.materiels || []).length > 0 && (
-                <div className="print-fiche-meta-item">
-                  <div className="print-fiche-meta-label">Matériels</div>
-                  <div className="print-fiche-meta-value">{(a.materiels || []).join(", ")}</div>
-                </div>
-              )}
-              {(a.modalite || []).length > 0 && (
-                <div className="print-fiche-meta-item">
-                  <div className="print-fiche-meta-label">Modalité</div>
-                  <div className="print-fiche-meta-value">{(a.modalite || []).join(", ")}</div>
-                </div>
-              )}
+            <div className="print-sequence-objectif">
+              <div className="print-hier-label">Objectif de compétence</div>
+              {seq.objectif_competence?.trim()
+                ? <p className="print-hier-value">{seq.objectif_competence}</p>
+                : <span className="print-blank-line" />}
             </div>
 
-            {a.description && (
-              <div className="print-fiche-section">
-                <div className="print-fiche-section-label">Description</div>
-                <p className="print-fiche-body">{a.description}</p>
-              </div>
-            )}
+            {(seq.seances ?? []).map((sea, seaIdx) => {
+              const seaAct = (sea.fiches ?? [])
+                .map(f => activites.find(a => a.id === f.activite_id))
+                .filter(Boolean);
+              const dureeSea = formatDuree(sumDuree(seaAct));
 
-            {a.apprentissage_cle && (
-              <div className="print-fiche-apprentissage">
-                <div className="print-fiche-section-label">Apprentissage clé</div>
-                <p className="print-fiche-apprentissage-text">« {a.apprentissage_cle} »</p>
-              </div>
-            )}
+              return (
+                <div key={sea.id} className="print-seance-section">
+                  <div className="print-seance-header">
+                    <span className="print-seance-num">{seqIdx + 1}.{seaIdx + 1}</span>
+                    <h3 className="print-seance-titre">{sea.titre}</h3>
+                    {dureeSea && <span className="print-hier-duree">{dureeSea}</span>}
+                  </div>
 
-            {a.problematique && (
-              <div className="print-fiche-section">
-                <div className="print-fiche-section-label">Problématique possible</div>
-                <p className="print-fiche-body">{a.problematique}</p>
-              </div>
-            )}
+                  <div className="print-seance-opo">
+                    <span className="print-seance-opo-type">{sea.opo_type || "Savoir"}</span>
+                    {sea.opo_verbe?.trim()
+                      ? <span className="print-seance-opo-verbe">{sea.opo_verbe}</span>
+                      : <span className="print-seance-opo-verbe print-seance-opo-vide">— À définir —</span>}
+                  </div>
 
-            {a.remediation && (
-              <div className="print-fiche-section">
-                <div className="print-fiche-section-label">Remédiation</div>
-                <p className="print-fiche-body">{a.remediation}</p>
-              </div>
-            )}
+                  <div className="print-seance-fiches">
+                    {seaAct.length === 0 ? (
+                      <p className="print-seance-vide">Aucune activité assignée à cette séance.</p>
+                    ) : (
+                      seaAct.map((a, i) => (
+                        <FicheActivite key={a.id} activite={a} num={i + 1} />
+                      ))
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         );
       })}
 
       <div className="print-doc-footer">
-        {titreDoc}{dureeStr ? ` · ${dureeStr}` : ""}
+        {programme.titre || "Mon programme"}{dureeTotal ? ` · ${dureeTotal}` : ""}
       </div>
     </div>
   );
