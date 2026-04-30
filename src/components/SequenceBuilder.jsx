@@ -54,6 +54,8 @@ function formatMinutes(m) {
 export const PROGRAMME_INIT = {
   id: "prog-1",
   titre: "Mon programme",
+  objectif_bloom: "",
+  objectif_action: "",
   objectif_final: "",
   sequences: [],
 };
@@ -150,7 +152,7 @@ export default function SequenceBuilder({
       ...prev,
       sequences: [
         ...prev.sequences,
-        { id, titre: "Nouvelle séquence", objectif_competence: "", parent_id: prev.id, seances: [] },
+        { id, titre: "Nouvelle séquence", objectif_bloom: "", objectif_action: "", objectif_competence: "", parent_id: prev.id, seances: [] },
       ],
     }));
     setCollapsed(prev => { const next = new Set(prev); next.delete(id); return next; });
@@ -210,11 +212,24 @@ export default function SequenceBuilder({
     setProgramme(prev => ({ ...prev, objectif_final: value }));
   }
 
+  function updateProgrammeField(field, value) {
+    setProgramme(prev => ({ ...prev, [field]: value }));
+  }
+
   function updateObjectifSequence(seqId, value) {
     setProgramme(prev => ({
       ...prev,
       sequences: prev.sequences.map(seq =>
         seq.id !== seqId ? seq : { ...seq, objectif_competence: value }
+      ),
+    }));
+  }
+
+  function updateSeqField(seqId, field, value) {
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq =>
+        seq.id !== seqId ? seq : { ...seq, [field]: value }
       ),
     }));
   }
@@ -293,6 +308,29 @@ export default function SequenceBuilder({
       <div className="panel-body seq-builder-body">
         <div className="seq-programme-header">
           {renderTitre(programme.id, programme.titre, "seq-programme-titre")}
+          <div className="seq-madlibs">
+            <span className="seq-madlibs-prefix">À l'issue de cette formation, l'apprenant sera capable de :</span>
+            <div className="seq-madlibs-inputs">
+              <select
+                className="seq-opo-select"
+                value={programme.objectif_bloom || ""}
+                onChange={e => updateProgrammeField("objectif_bloom", e.target.value)}
+              >
+                <option value="">— Bloom —</option>
+                {VERBES_BLOOM_GROUPED.map(g => (
+                  <optgroup key={g.niveau} label={g.niveau}>
+                    {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
+                  </optgroup>
+                ))}
+              </select>
+              <input
+                className="seq-objectif-input"
+                defaultValue={programme.objectif_action || ""}
+                placeholder="…"
+                onBlur={e => updateProgrammeField("objectif_action", e.target.value)}
+              />
+            </div>
+          </div>
           <div className="seq-madlibs-simple">
             <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
             <textarea
@@ -326,6 +364,29 @@ export default function SequenceBuilder({
 
                 {!seqCollapsed && (
                   <div className="seq-sequence-body">
+                    <div className="seq-madlibs">
+                      <span className="seq-madlibs-prefix">À l'issue de cette séquence, l'apprenant sera capable de :</span>
+                      <div className="seq-madlibs-inputs">
+                        <select
+                          className="seq-opo-select"
+                          value={seq.objectif_bloom || ""}
+                          onChange={e => updateSeqField(seq.id, "objectif_bloom", e.target.value)}
+                        >
+                          <option value="">— Bloom —</option>
+                          {VERBES_BLOOM_GROUPED.map(g => (
+                            <optgroup key={g.niveau} label={g.niveau}>
+                              {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
+                            </optgroup>
+                          ))}
+                        </select>
+                        <input
+                          className="seq-objectif-input"
+                          defaultValue={seq.objectif_action || ""}
+                          placeholder="…"
+                          onBlur={e => updateSeqField(seq.id, "objectif_action", e.target.value)}
+                        />
+                      </div>
+                    </div>
                     <div className="seq-madlibs-simple">
                       <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
                       <input
