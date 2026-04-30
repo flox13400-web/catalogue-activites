@@ -238,7 +238,7 @@ body, .app {
 .layout {
   flex: 1;
   display: grid;
-  grid-template-columns: 280px 1fr clamp(400px, 42vw, 640px);
+  grid-template-columns: 280px 1fr clamp(440px, 46vw, 704px);
   gap: 0;
   width: 100%;
   overflow: hidden;
@@ -247,7 +247,7 @@ body, .app {
 
 /* SIDEBAR RÉTRACTABLE */
 .layout--sidebar-closed {
-  grid-template-columns: 0px 1fr clamp(400px, 42vw, 640px);
+  grid-template-columns: 0px 1fr clamp(440px, 46vw, 704px);
 }
 .layout--sidebar-closed .panel-filters {
   min-width: 0;
@@ -459,8 +459,8 @@ body, .app {
 
 /* TABLETTE */
 @media (max-width: 1200px) {
-  .layout { grid-template-columns: 240px 1fr clamp(340px, 38vw, 520px); }
-  .layout--sidebar-closed { grid-template-columns: 0px 1fr clamp(340px, 38vw, 520px); }
+  .layout { grid-template-columns: 240px 1fr clamp(374px, 42vw, 572px); }
+  .layout--sidebar-closed { grid-template-columns: 0px 1fr clamp(374px, 42vw, 572px); }
   .header { padding: 40px 32px 28px; }
   .main { padding: 28px 32px 60px; }
 }
