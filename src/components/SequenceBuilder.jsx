@@ -372,7 +372,7 @@ export default function SequenceBuilder({
                           value={seq.objectif_bloom || ""}
                           onChange={e => updateSeqField(seq.id, "objectif_bloom", e.target.value)}
                         >
-                          <option value="">— Bloom —</option>
+                          <option value="">— Verbe d'action —</option>
                           {VERBES_BLOOM_GROUPED.map(g => (
                             <optgroup key={g.niveau} label={g.niveau}>
                               {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
@@ -435,7 +435,7 @@ export default function SequenceBuilder({
                                     value={sea.opo_bloom || ""}
                                     onChange={e => updateOpoSeance(seq.id, sea.id, "opo_bloom", e.target.value)}
                                   >
-                                    <option value="">— Bloom —</option>
+                                    <option value="">— Verbe d'action —</option>
                                     {VERBES_BLOOM_GROUPED.map(g => (
                                       <optgroup key={g.niveau} label={g.niveau}>
                                         {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
