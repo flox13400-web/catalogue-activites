@@ -45,8 +45,6 @@ body, .app {
   padding: 56px 48px 40px;
 }
 .header-inner {
-  max-width: 1600px;
-  margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 64px;
@@ -214,10 +212,21 @@ body, .app {
   display: grid;
   grid-template-columns: 280px 1fr 320px;
   gap: 0;
-  max-width: 1600px;
   width: 100%;
-  margin: 0 auto;
   align-items: start;
+  transition: grid-template-columns 240ms ease;
+}
+
+/* SIDEBAR RÉTRACTABLE */
+.layout--sidebar-closed {
+  grid-template-columns: 0px 1fr 320px;
+}
+.layout--sidebar-closed .panel-filters {
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  border-right: none;
+  pointer-events: none;
 }
 
 /* PANELS LATÉRAUX */
@@ -231,6 +240,7 @@ body, .app {
 }
 .panel-filters {
   border-right: 1px solid var(--border);
+  transition: opacity 200ms ease;
 }
 .panel-cart {
   border-left: 1px solid var(--border);
@@ -332,6 +342,38 @@ body, .app {
   padding: 32px 48px 80px;
 }
 
+/* BARRE SUPÉRIEURE DU MAIN (toggle sidebar + badges filtres) */
+.main-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.sidebar-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  cursor: var(--cursor-hand);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.sidebar-toggle-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+  background: var(--accent-soft);
+}
+
 /* FOOTER APPLI */
 .app-footer {
   margin-top: 64px;
@@ -389,6 +431,7 @@ body, .app {
 /* TABLETTE */
 @media (max-width: 1200px) {
   .layout { grid-template-columns: 240px 1fr 280px; }
+  .layout--sidebar-closed { grid-template-columns: 0px 1fr 280px; }
   .header { padding: 40px 32px 28px; }
   .main { padding: 28px 32px 60px; }
 }
@@ -465,6 +508,10 @@ body, .app {
     animation: fadeIn 180ms ease;
     cursor: var(--cursor-hand);
   }
+
+  /* Cacher le toggle sidebar sur mobile (géré par la barre du bas) */
+  .sidebar-toggle-btn { display: none; }
+  .main-topbar { margin-bottom: 12px; }
 
   /* Barre de navigation mobile */
   .mobile-toolbar {

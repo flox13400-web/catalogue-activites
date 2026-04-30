@@ -134,3 +134,37 @@
   transition: background 120ms ease;
 }
 .theme-filter-chip:hover { background: var(--accent-deep); color: #fff; }
+
+/* BADGES FILTRES ACTIFS (affichés au-dessus du catalogue) */
+.active-filter-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.active-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 6px 3px 9px;
+  border-radius: 3px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--accent-deep);
+  white-space: nowrap;
+}
+.active-filter-badge-remove {
+  background: none;
+  border: none;
+  color: var(--accent-deep);
+  cursor: var(--cursor-hand);
+  font-size: 15px;
+  line-height: 1;
+  padding: 0 1px;
+  opacity: 0.6;
+  transition: opacity 120ms ease;
+}
+.active-filter-badge-remove:hover { opacity: 1; }

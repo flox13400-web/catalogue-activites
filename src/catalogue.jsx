@@ -11,6 +11,7 @@ import DetailModal from "./components/DetailModal";
 import PrintView from "./components/PrintView";
 import CorbeillModal from "./components/CorbeillModal";
 import { ActivityCard } from "./components/ActivityCard";
+import ActiveFilterBadges from "./components/ActiveFilterBadges";
 
 import "./styles/global.css";
 
@@ -18,6 +19,7 @@ export default function Catalogue() {
   const [selected, setSelected] = useState(null);
   const [filtres, setFiltres] = useState(FILTRES_INIT);
   const [mobilePanelOpen, setMobilePanelOpen] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showChoixImport, setShowChoixImport] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -266,7 +268,7 @@ export default function Catalogue() {
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}
-      <div className="layout">
+      <div className={`layout${sidebarOpen ? "" : " layout--sidebar-closed"}`}>
         <FilterPanel
           filtres={filtres}
           setFiltres={setFiltres}
@@ -278,6 +280,16 @@ export default function Catalogue() {
           onMobileClose={() => setMobilePanelOpen(null)}
         />
         <main className="main">
+          <div className="main-topbar">
+            <button
+              className="sidebar-toggle-btn"
+              onClick={() => setSidebarOpen(o => !o)}
+              title={sidebarOpen ? "Masquer le panneau filtres" : "Afficher le panneau filtres"}
+            >
+              {sidebarOpen ? "« Filtres" : "Filtres »"}
+            </button>
+            <ActiveFilterBadges filtres={filtres} setFiltres={setFiltres} />
+          </div>
           {activites.length === 0 ? (
             <div className="empty-catalogue">
               <p className="empty-catalogue-title">Votre catalogue est vide</p>

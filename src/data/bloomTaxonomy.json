@@ -1,0 +1,38 @@
+[
+  {
+    "niveau": 1,
+    "nom": "Mémoriser",
+    "code": "memoriser",
+    "verbes": ["Définir", "Lister", "Nommer", "Identifier", "Répéter", "Reconnaître", "Citer"]
+  },
+  {
+    "niveau": 2,
+    "nom": "Comprendre",
+    "code": "comprendre",
+    "verbes": ["Expliquer", "Résumer", "Décrire", "Classifier", "Discuter", "Traduire", "Illustrer"]
+  },
+  {
+    "niveau": 3,
+    "nom": "Appliquer",
+    "code": "appliquer",
+    "verbes": ["Démontrer", "Utiliser", "Résoudre", "Calculer", "Expérimenter", "Appliquer", "Modifier"]
+  },
+  {
+    "niveau": 4,
+    "nom": "Analyser",
+    "code": "analyser",
+    "verbes": ["Comparer", "Catégoriser", "Examiner", "Contraster", "Différencier", "Déduire", "Structurer"]
+  },
+  {
+    "niveau": 5,
+    "nom": "Évaluer",
+    "code": "evaluer",
+    "verbes": ["Juger", "Défendre", "Justifier", "Critiquer", "Estimer", "Évaluer", "Argumenter"]
+  },
+  {
+    "niveau": 6,
+    "nom": "Créer",
+    "code": "creer",
+    "verbes": ["Concevoir", "Construire", "Planifier", "Inventer", "Formuler", "Produire", "Élaborer"]
+  }
+]
