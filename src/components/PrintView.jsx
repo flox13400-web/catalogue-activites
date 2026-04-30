@@ -59,55 +59,28 @@ function formatDuree({ min, max, open }) {
 
 function FicheActivite({ activite, num }) {
   const a = activite;
-  const agePublic = a.age_public || a.public || [];
-  const tailleGroupe = a.taille_groupe || a.groupe || [];
   return (
     <div className="print-fiche">
       <div className="print-fiche-header">
         <div className="print-fiche-header-left">
           <span className="print-fiche-num">{num}</span>
-          <div>
-            <h2 className="print-fiche-titre">{a.titre}</h2>
-            <span className="print-fiche-id">{a.id}</span>
-          </div>
+          <h2 className="print-fiche-titre">{a.titre}</h2>
+        </div>
+        <div className="print-fiche-header-right">
+          {(a.modalite || []).length > 0 && (
+            <span className="print-fiche-modalite">{(a.modalite || []).join(" · ")}</span>
+          )}
+          <span className="print-fiche-duree">{a.duree_detail || a.duree}</span>
         </div>
       </div>
-      <div className="print-fiche-meta-grid">
-        <div className="print-fiche-meta-item">
-          <div className="print-fiche-meta-label">Durée</div>
-          <div className="print-fiche-meta-value">{a.duree_detail || a.duree}</div>
-        </div>
-        {agePublic.length > 0 && (
-          <div className="print-fiche-meta-item">
-            <div className="print-fiche-meta-label">Âge du public</div>
-            <div className="print-fiche-meta-value">{agePublic.join(", ")}</div>
-          </div>
-        )}
-        {tailleGroupe.length > 0 && (
-          <div className="print-fiche-meta-item">
-            <div className="print-fiche-meta-label">Taille groupe</div>
-            <div className="print-fiche-meta-value">{tailleGroupe.join(", ")}</div>
-          </div>
-        )}
-        {(a.themes || []).length > 0 && (
-          <div className="print-fiche-meta-item">
-            <div className="print-fiche-meta-label">Thèmes</div>
-            <div className="print-fiche-meta-value">{(a.themes || []).join(", ")}</div>
-          </div>
-        )}
-        {(a.materiels || []).length > 0 && (
+      {(a.materiels || []).length > 0 && (
+        <div className="print-fiche-meta-grid">
           <div className="print-fiche-meta-item">
             <div className="print-fiche-meta-label">Matériels</div>
             <div className="print-fiche-meta-value">{(a.materiels || []).join(", ")}</div>
           </div>
-        )}
-        {(a.modalite || []).length > 0 && (
-          <div className="print-fiche-meta-item">
-            <div className="print-fiche-meta-label">Modalité</div>
-            <div className="print-fiche-meta-value">{(a.modalite || []).join(", ")}</div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
       {a.description && (
         <div className="print-fiche-section">
           <div className="print-fiche-section-label">Description</div>
