@@ -749,7 +749,7 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
               value={form.verbe_action_bloom}
               onChange={(e) => setField("verbe_action_bloom", e.target.value)}
             >
-              <option value="">— Niveau Bloom —</option>
+              <option value="">— Verbe d'action —</option>
               {VERBES_BLOOM_GROUPED.map(g => (
                 <optgroup key={g.niveau} label={g.niveau}>
                   {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
