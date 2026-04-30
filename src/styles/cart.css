@@ -692,3 +692,56 @@
   font-size: 12px;
   padding: 7px 10px;
 }
+
+/* CHAMPS OBJECTIFS PÉDAGOGIQUES */
+.seq-objectif-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 11px;
+  line-height: 1.45;
+  padding: 4px 2px;
+  resize: none;
+  outline: none;
+  display: block;
+  margin-bottom: 8px;
+}
+.seq-objectif-input:focus {
+  border-bottom-color: var(--accent);
+  color: var(--text);
+}
+.seq-objectif-input::placeholder {
+  color: var(--text-faint);
+  font-style: italic;
+}
+.seq-opo-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.seq-opo-row .seq-objectif-input {
+  margin-bottom: 0;
+  flex: 1;
+}
+.seq-opo-select {
+  flex-shrink: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 11px;
+  padding: 3px 5px;
+  cursor: var(--cursor-hand);
+  outline: none;
+}
+.seq-opo-select:focus {
+  border-color: var(--accent);
+  color: var(--text);
+}

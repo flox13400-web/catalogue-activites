@@ -194,6 +194,35 @@ export default function SequenceBuilder({
     }));
   }
 
+  // ── Objectifs pédagogiques ────────────────────────────────────
+
+  function updateObjectifProgramme(value) {
+    setProgramme(prev => ({ ...prev, objectif_final: value }));
+  }
+
+  function updateObjectifSequence(seqId, value) {
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq =>
+        seq.id !== seqId ? seq : { ...seq, objectif_competence: value }
+      ),
+    }));
+  }
+
+  function updateOpoSeance(seqId, seaId, field, value) {
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq =>
+        seq.id !== seqId ? seq : {
+          ...seq,
+          seances: seq.seances.map(sea =>
+            sea.id !== seaId ? sea : { ...sea, [field]: value }
+          ),
+        }
+      ),
+    }));
+  }
+
   // ── Titre éditable ────────────────────────────────────────────
 
   function renderTitre(id, titre, className) {
@@ -239,6 +268,13 @@ export default function SequenceBuilder({
       <div className="panel-body seq-builder-body">
         <div className="seq-programme-header">
           {renderTitre(programme.id, programme.titre, "seq-programme-titre")}
+          <textarea
+            className="seq-objectif-input"
+            defaultValue={programme.objectif_final}
+            placeholder="Objectif final du programme..."
+            onBlur={e => updateObjectifProgramme(e.target.value)}
+            rows={2}
+          />
         </div>
 
         <div className="seq-tree">
@@ -262,6 +298,12 @@ export default function SequenceBuilder({
 
                 {!seqCollapsed && (
                   <div className="seq-sequence-body">
+                    <input
+                      className="seq-objectif-input"
+                      defaultValue={seq.objectif_competence}
+                      placeholder="Objectif de compétence visé..."
+                      onBlur={e => updateObjectifSequence(seq.id, e.target.value)}
+                    />
                     {seq.seances.map(sea => {
                       const seaCollapsed = collapsed.has(sea.id);
                       const ficheAvecActivite = sea.fiches.map(f => ({
@@ -281,6 +323,23 @@ export default function SequenceBuilder({
 
                           {!seaCollapsed && (
                             <div className="seq-fiches">
+                              <div className="seq-opo-row">
+                                <select
+                                  className="seq-opo-select"
+                                  value={sea.opo_type}
+                                  onChange={e => updateOpoSeance(seq.id, sea.id, "opo_type", e.target.value)}
+                                >
+                                  <option value="Savoir">Savoir</option>
+                                  <option value="Savoir-faire">Savoir-faire</option>
+                                  <option value="Savoir-être">Savoir-être</option>
+                                </select>
+                                <input
+                                  className="seq-objectif-input"
+                                  defaultValue={sea.opo_verbe}
+                                  placeholder="Description de l'OPO..."
+                                  onBlur={e => updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value)}
+                                />
+                              </div>
                               {ficheAvecActivite.length === 0 ? (
                                 <p className="seq-fiche-empty">Aucune activité assignée</p>
                               ) : (
