@@ -1,5 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "../styles/cart.css";
+
+const DUREE_PLAGES = {
+  "0-15min":  { min: 0,  max: 15 },
+  "15-30min": { min: 15, max: 30 },
+  "30-45min": { min: 30, max: 45 },
+  "45-60min": { min: 45, max: 60 },
+  ">60min":   null,
+};
+
+function parseDureeString(str) {
+  if (!str) return null;
+  str = str.trim();
+  let m = str.match(/^(\d+)\s*min$/i);
+  if (m) return parseInt(m[1], 10);
+  m = str.match(/^(\d+)\s*h\s*(\d+)\s*(?:min)?$/i);
+  if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+  m = str.match(/^(\d+)\s*h$/i);
+  if (m) return parseInt(m[1], 10) * 60;
+  m = str.match(/^(\d+)$/);
+  if (m) return parseInt(m[1], 10);
+  return null;
+}
+
+function parseDureeActivite(activite) {
+  const plage = DUREE_PLAGES[activite.duree];
+  if (plage === null) return { min: 0, max: 0, hasProjet: true };
+  if (plage) return { min: plage.min, max: plage.max, hasProjet: false };
+  const minutes = parseDureeString(activite.duree_detail || activite.duree);
+  if (minutes !== null) return { min: minutes, max: minutes, hasProjet: false };
+  return { min: 0, max: 0, hasProjet: false };
+}
+
+function formatMinutes(m) {
+  if (m === 0) return "0min";
+  const h = Math.floor(m / 60);
+  const min = m % 60;
+  if (h === 0) return `${min}min`;
+  if (min === 0) return `${h}h`;
+  return `${h}h${String(min).padStart(2, "0")}`;
+}
 
 export const PROGRAMME_INIT = {
   id: "prog-1",
@@ -25,6 +65,29 @@ export default function SequenceBuilder({
     (acc, seq) => acc + seq.seances.reduce((a, sea) => a + sea.fiches.length, 0),
     0
   );
+
+  const dureeTotal = useMemo(() => {
+    let min = 0, max = 0, hasProjet = false;
+    for (const seq of programme.sequences) {
+      for (const sea of seq.seances) {
+        for (const fiche of sea.fiches) {
+          const activite = toutesActivites.find(a => a.id === fiche.activite_id);
+          if (!activite) continue;
+          const { min: dMin, max: dMax, hasProjet: hp } = parseDureeActivite(activite);
+          min += dMin; max += dMax;
+          if (hp) hasProjet = true;
+        }
+      }
+    }
+    return { min, max, hasProjet };
+  }, [programme, toutesActivites]);
+
+  const dureeStr = (dureeTotal.min > 0 || dureeTotal.max > 0 || dureeTotal.hasProjet)
+    ? (dureeTotal.min === dureeTotal.max
+        ? formatMinutes(dureeTotal.min)
+        : `${formatMinutes(dureeTotal.min)} – ${formatMinutes(dureeTotal.max)}`)
+      + (dureeTotal.hasProjet ? " + projet" : "")
+    : null;
 
   // ── Collapse ──────────────────────────────────────────────────
 
@@ -161,9 +224,12 @@ export default function SequenceBuilder({
         <button className="panel-mobile-close" onClick={onMobileClose}>×</button>
         <h2 className="panel-title">Constructeur</h2>
         <div className="panel-header-end">
-          <span className="panel-subtitle">
-            {totalActivites} activité{totalActivites !== 1 ? "s" : ""}
-          </span>
+          <div className="panel-header-stats">
+            <span className="panel-subtitle">
+              {totalActivites} activité{totalActivites !== 1 ? "s" : ""}
+            </span>
+            {dureeStr && <span className="seq-duree-header">{dureeStr}</span>}
+          </div>
           <button className="cart-panel-corbeille-btn" onClick={onOuvrirCorbeille} title="Corbeille">
             🗑 <span className="cart-panel-corbeille-count">{nbCorbeille}</span>
           </button>
