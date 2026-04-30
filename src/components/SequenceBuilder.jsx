@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { verifierAlignementPedagogique } from "../utils/alignmentChecker.js";
 import "../styles/cart.css";
 
 const DUREE_PLAGES = {
@@ -223,6 +224,21 @@ export default function SequenceBuilder({
     }));
   }
 
+  // ── Export avec validation pédagogique ───────────────────────
+
+  function handleExport() {
+    const { valide, erreurs } = verifierAlignementPedagogique(programme);
+    if (valide) {
+      window.print();
+      return;
+    }
+    const message =
+      "L'alignement pédagogique présente des failles :\n" +
+      erreurs.map(e => `- ${e}`).join("\n") +
+      "\n\nVoulez-vous imprimer quand même ?";
+    if (window.confirm(message)) window.print();
+  }
+
   // ── Titre éditable ────────────────────────────────────────────
 
   function renderTitre(id, titre, className) {
@@ -380,7 +396,7 @@ export default function SequenceBuilder({
         {totalActivites === 0 ? (
           <span className="panel-footnote">Créez des séquences, puis assignez des activités</span>
         ) : (
-          <button className="btn btn-print" onClick={() => window.print()}>
+          <button className="btn btn-print" onClick={handleExport}>
             &#128438; Imprimer / PDF
           </button>
         )}
