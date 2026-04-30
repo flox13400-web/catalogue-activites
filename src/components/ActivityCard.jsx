@@ -10,26 +10,26 @@ function MetaItem({ label, value }) {
   );
 }
 
-export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggleFavori }) {
-  function handleDragStart(e) {
-    e.dataTransfer.setData("text/activity-id", activite.id);
-    e.dataTransfer.effectAllowed = "copy";
-  }
-
+export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggleFavori, onAssigner }) {
   const agePublic = activite.age_public || activite.public || [];
   const tailleGroupe = activite.taille_groupe || activite.groupe || [];
 
   return (
     <article
       className={`card ${estEpingle ? "card-epingle" : ""}`}
-      draggable
-      onDragStart={handleDragStart}
       onClick={() => onClick(activite)}
     >
       <div className="card-top">
         <span className="card-id">{activite.id}</span>
         <div className="card-top-actions">
-          {estEpingle && <span className="card-epingle-badge" title="Dans le panier">📌</span>}
+          {estEpingle && <span className="card-epingle-badge" title="Dans le constructeur">📌</span>}
+          <button
+            className="btn-assigner"
+            onClick={(e) => { e.stopPropagation(); onAssigner(activite.id); }}
+            title="Assigner à une séance"
+          >
+            +
+          </button>
           <button
             className={`btn-favori${estFavori ? " btn-favori-active" : ""}`}
             onClick={(e) => { e.stopPropagation(); onToggleFavori(activite.id); }}

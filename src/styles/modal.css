@@ -697,3 +697,74 @@
   color: #c0392b;
   background: #fef0f0;
 }
+
+/* ── ASSIGN MODAL ──────────────────────────────────────────────── */
+
+.assign-modal {
+  max-width: 440px;
+}
+.assign-modal-titre {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+.assign-empty-state {
+  text-align: center;
+  padding: 28px 0 16px;
+}
+.assign-empty-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.assign-empty-hint {
+  font-size: 12px;
+  color: var(--text-faint);
+  line-height: 1.5;
+}
+.assign-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.assign-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.assign-sequence-titre {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0 2px;
+  margin-bottom: 2px;
+}
+.assign-seance-btn {
+  text-align: left;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  cursor: var(--cursor-hand);
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.assign-seance-btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+.assign-seance-empty {
+  font-size: 12px;
+  color: var(--text-faint);
+  padding: 4px 14px;
+  font-style: italic;
+}

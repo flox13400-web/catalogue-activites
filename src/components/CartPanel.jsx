@@ -207,12 +207,6 @@ const ENCART_TYPES = [
 export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrdre, toutesActivites, mobileOpen, onMobileClose, nbCorbeille, onOuvrirCorbeille, titreSeance, setTitreSeance }) {
   const [exportOuvert, setExportOuvert] = React.useState(false);
   const [encartMenuOuvert, setEncartMenuOuvert] = React.useState(false);
-  const [dragCartIndex, setDragCartIndex] = React.useState(null);
-  const [dragOverCartIndex, setDragOverCartIndex] = React.useState(null);
-  const [cartDropActive, setCartDropActive] = React.useState(false);
-  const panelRef = React.useRef(null);
-  const cartListRef = React.useRef(null);
-  const touchDragRef = React.useRef({ fromIndex: null });
 
   const panierItems = panierOrdre
     .map(item => {
@@ -245,28 +239,6 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
   })();
 
   const afficherDuree = dureeTotal.min > 0 || dureeTotal.max > 0 || dureeTotal.hasProjet;
-
-  // ── Listener touchmove non-passif (pour preventDefault pendant drag) ──
-  React.useEffect(() => {
-    const list = cartListRef.current;
-    if (!list) return;
-    const handleTouchMove = (e) => {
-      if (touchDragRef.current.fromIndex === null) return;
-      e.preventDefault();
-      const touch = e.touches[0];
-      const itemEls = list.querySelectorAll("[data-cart-idx]");
-      for (const el of itemEls) {
-        const rect = el.getBoundingClientRect();
-        if (touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-          const idx = parseInt(el.dataset.cartIdx, 10);
-          setDragOverCartIndex(idx);
-          break;
-        }
-      }
-    };
-    list.addEventListener("touchmove", handleTouchMove, { passive: false });
-    return () => list.removeEventListener("touchmove", handleTouchMove);
-  }, [panierOrdre.length]);
 
   // ── Actions panier ─────────────────────────────────────────────
 
@@ -318,7 +290,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     setPanierOrdre(prev => prev.filter(item => item.type === "activite" || item.id !== id));
   }
 
-  // ── Impression ─────────────────────────────────────────────────
+  // ── Impression ──────────────────────────────────────────────────
 
   function handlePrint() {
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -339,138 +311,13 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
     }
   }
 
-  // ── Drag depuis le catalogue ───────────────────────────────────
-
-  function handlePanelDragOver(e) {
-    if (e.dataTransfer.types.includes("text/activity-id")) {
-      e.preventDefault();
-      setCartDropActive(true);
-    }
-  }
-
-  function handlePanelDragLeave(e) {
-    if (!panelRef.current?.contains(e.relatedTarget)) {
-      setCartDropActive(false);
-    }
-  }
-
-  function handlePanelDrop(e) {
-    const activityId = e.dataTransfer.getData("text/activity-id");
-    if (activityId && !panier.has(activityId)) {
-      setPanier(prev => new Set([...prev, activityId]));
-      setPanierOrdre(prev => [...prev, { type: "activite", id: activityId }]);
-    }
-    setCartDropActive(false);
-  }
-
-  // ── Drag interne souris (réordonnancement) ────────────────────
-
-  function handleItemDragStart(e, i) {
-    setDragCartIndex(i);
-    e.dataTransfer.setData("text/cart-index", String(i));
-    e.dataTransfer.effectAllowed = "move";
-  }
-
-  function handleItemDragOver(e, i) {
-    e.preventDefault();
-    if (dragOverCartIndex !== i) setDragOverCartIndex(i);
-  }
-
-  function handleItemDrop(e, i) {
-    e.preventDefault();
-    e.stopPropagation();
-    const cartIndexStr = e.dataTransfer.getData("text/cart-index");
-    const activityId = e.dataTransfer.getData("text/activity-id");
-
-    if (cartIndexStr !== "") {
-      const fromIndex = parseInt(cartIndexStr, 10);
-      if (fromIndex !== i) {
-        setPanierOrdre(prev => {
-          const next = [...prev];
-          const [removed] = next.splice(fromIndex, 1);
-          next.splice(i, 0, removed);
-          return next;
-        });
-      }
-    } else if (activityId && !panier.has(activityId)) {
-      setPanier(prev => new Set([...prev, activityId]));
-      setPanierOrdre(prev => {
-        const next = [...prev];
-        next.splice(i, 0, { type: "activite", id: activityId });
-        return next;
-      });
-    }
-
-    setDragCartIndex(null);
-    setDragOverCartIndex(null);
-    setCartDropActive(false);
-  }
-
-  function handleItemDragEnd() {
-    setDragCartIndex(null);
-    setDragOverCartIndex(null);
-  }
-
-  // ── Drag interne tactile (réordonnancement) ───────────────────
-
-  function handleDragHandleTouchStart(e, i) {
-    touchDragRef.current.fromIndex = i;
-    setDragCartIndex(i);
-  }
-
-  function handleCartListTouchEnd(e) {
-    const fromIndex = touchDragRef.current.fromIndex;
-    touchDragRef.current.fromIndex = null;
-    if (fromIndex === null) return;
-
-    const touch = e.changedTouches[0];
-    let toIndex = fromIndex;
-
-    if (cartListRef.current) {
-      const itemEls = cartListRef.current.querySelectorAll("[data-cart-idx]");
-      for (const el of itemEls) {
-        const rect = el.getBoundingClientRect();
-        if (touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
-          toIndex = parseInt(el.dataset.cartIdx, 10);
-          break;
-        }
-      }
-    }
-
-    if (fromIndex !== toIndex) {
-      setPanierOrdre(prev => {
-        const next = [...prev];
-        const [removed] = next.splice(fromIndex, 1);
-        next.splice(toIndex, 0, removed);
-        return next;
-      });
-    }
-
-    setDragCartIndex(null);
-    setDragOverCartIndex(null);
-  }
-
   // ── Render d'un encart (non-activité) ─────────────────────────
 
   function renderEncart(item, i) {
-    const isDragging = dragCartIndex === i;
-    const isDragOver = dragOverCartIndex === i && dragCartIndex !== i;
     const dureeVal = item.duree ?? 0;
-    const dragProps = {
-      draggable: true,
-      onDragStart: (e) => handleItemDragStart(e, i),
-      onDragOver:  (e) => handleItemDragOver(e, i),
-      onDrop:      (e) => handleItemDrop(e, i),
-      onDragEnd:   handleItemDragEnd,
-    };
 
     const controls = (typeLabel) => (
       <div className="cart-texte-controls">
-        <span
-          className="cart-drag-handle"
-          title="Déplacer"
-          onTouchStart={(e) => handleDragHandleTouchStart(e, i)}
-        >⠿</span>
         <div className="cart-item-order">
           <button className="cart-order-btn" onClick={() => monter(i)} disabled={i === 0} title="Monter">↑</button>
           <button className="cart-order-btn" onClick={() => descendre(i)} disabled={i === totalItems - 1} title="Descendre">↓</button>
@@ -503,10 +350,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
 
     if (item.type === "texte") {
       return (
-        <div key={item.id} data-cart-idx={i}
-          className={`cart-texte${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
-          {...dragProps}
-        >
+        <div key={item.id} data-cart-idx={i} className="cart-texte">
           {controls("Texte")}
           <textarea
             className="cart-texte-input"
@@ -522,10 +366,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
 
     if (item.type === "qrcode") {
       return (
-        <div key={item.id} data-cart-idx={i}
-          className={`cart-texte${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
-          {...dragProps}
-        >
+        <div key={item.id} data-cart-idx={i} className="cart-texte">
           {controls("QR code")}
           <input
             type="url"
@@ -563,10 +404,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
 
     if (item.type === "objectif") {
       return (
-        <div key={item.id} data-cart-idx={i}
-          className={`cart-texte${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
-          {...dragProps}
-        >
+        <div key={item.id} data-cart-idx={i} className="cart-texte">
           {controls("Objectif")}
           <div className="cart-objectif-template">
             <span className="cart-objectif-sep">A l'issue de</span>
@@ -601,13 +439,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
   }
 
   return (
-    <aside
-      ref={panelRef}
-      className={`panel panel-cart${mobileOpen ? " panel-open" : ""}${cartDropActive ? " panel-cart-drop-active" : ""}`}
-      onDragOver={handlePanelDragOver}
-      onDragLeave={handlePanelDragLeave}
-      onDrop={handlePanelDrop}
-    >
+    <aside className={`panel panel-cart${mobileOpen ? " panel-open" : ""}`}>
       <div className="panel-header">
         <button className="panel-mobile-close" onClick={onMobileClose}>×</button>
         <h2 className="panel-title">Panier de séance</h2>
@@ -639,34 +471,13 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
           </div>
         ) : (
           <>
-          <div
-            className="cart-list"
-            ref={cartListRef}
-            onTouchEnd={handleCartListTouchEnd}
-          >
+          <div className="cart-list">
             {panierItems.map((item, i) => {
               if (item.type !== "activite") return renderEncart(item, i);
-
-              const isDragging = dragCartIndex === i;
-              const isDragOver = dragOverCartIndex === i && dragCartIndex !== i;
               const a = item.activite;
               return (
-                <div
-                  key={a.id}
-                  data-cart-idx={i}
-                  className={`cart-item${isDragging ? " cart-item-dragging" : ""}${isDragOver ? " cart-item-drag-over" : ""}`}
-                  draggable
-                  onDragStart={(e) => handleItemDragStart(e, i)}
-                  onDragOver={(e) => handleItemDragOver(e, i)}
-                  onDrop={(e) => handleItemDrop(e, i)}
-                  onDragEnd={handleItemDragEnd}
-                >
+                <div key={a.id} data-cart-idx={i} className="cart-item">
                   <div className="cart-item-top">
-                    <span
-                      className="cart-drag-handle"
-                      title="Déplacer"
-                      onTouchStart={(e) => handleDragHandleTouchStart(e, i)}
-                    >⠿</span>
                     <div className="cart-item-order">
                       <button className="cart-order-btn" onClick={() => monter(i)} disabled={i === 0} title="Monter">↑</button>
                       <span className="cart-item-num">{i + 1}</span>
@@ -676,7 +487,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                     <button className="cart-item-remove" onClick={() => retirer(a.id)} title="Retirer">×</button>
                   </div>
                   <div className="cart-item-titre">{a.titre}</div>
-                  <div className="cart-item-meta">{a.duree_detail || a.duree} · {a.groupe.join(", ")}</div>
+                  <div className="cart-item-meta">{a.duree_detail || a.duree}</div>
                 </div>
               );
             })}

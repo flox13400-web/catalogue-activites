@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/modal.css";
 
-export default function DetailModal({ activite, onClose, panier, setPanier, panierOrdre, setPanierOrdre, onEdit, onDelete }) {
+export default function DetailModal({ activite, onClose, estEpingle, onAssigner, onEdit, onDelete }) {
   React.useEffect(() => {
     function handleKey(e) { if (e.key === "Escape") onClose(); }
     document.addEventListener("keydown", handleKey);
@@ -10,27 +10,8 @@ export default function DetailModal({ activite, onClose, panier, setPanier, pani
 
   if (!activite) return null;
 
-  const estEpingle = panier.has(activite.id);
   const agePublic = activite.age_public || activite.public || [];
   const tailleGroupe = activite.taille_groupe || activite.groupe || [];
-
-  function togglePanier() {
-    if (panier.has(activite.id)) {
-      setPanier((prev) => {
-        const next = new Set(prev);
-        next.delete(activite.id);
-        return next;
-      });
-      setPanierOrdre((prev) => prev.filter((x) => !(x.type === "activite" && x.id === activite.id)));
-    } else {
-      setPanier((prev) => {
-        const next = new Set(prev);
-        next.add(activite.id);
-        return next;
-      });
-      setPanierOrdre((prev) => [...prev, { type: "activite", id: activite.id }]);
-    }
-  }
 
   function handleDelete() {
     if (window.confirm(`Supprimer définitivement "${activite.titre}" ?\n\nCette action est irréversible.`)) {
@@ -141,9 +122,11 @@ export default function DetailModal({ activite, onClose, panier, setPanier, pani
         )}
 
         <div className="modal-footer">
-          <button className={`btn ${estEpingle ? "btn-retirer" : ""}`} onClick={togglePanier}>
-            {estEpingle ? "✓ Retirer du panier" : "📌 Épingler au panier de séance"}
-          </button>
+          {onAssigner && (
+            <button className={`btn ${estEpingle ? "btn-retirer" : ""}`} onClick={() => onAssigner(activite.id)}>
+              {estEpingle ? "📌 Déjà assignée — réassigner" : "+ Assigner à une séance"}
+            </button>
+          )}
           <div className="modal-custom-actions">
             <button className="btn-custom-edit" onClick={() => { onClose(); onEdit(activite); }}>
               ✎ Modifier

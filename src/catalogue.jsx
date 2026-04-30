@@ -6,12 +6,13 @@ import { exportCatalogue } from "./utils/export";
 import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
 import Header from "./components/Header";
 import FilterPanel from "./components/FilterPanel";
-import CartPanel from "./components/CartPanel";
+import SequenceBuilder, { PROGRAMME_INIT } from "./components/SequenceBuilder";
 import DetailModal from "./components/DetailModal";
 import PrintView from "./components/PrintView";
 import CorbeillModal from "./components/CorbeillModal";
 import { ActivityCard } from "./components/ActivityCard";
 import ActiveFilterBadges from "./components/ActiveFilterBadges";
+import AssignModal from "./components/AssignModal";
 
 import "./styles/global.css";
 
@@ -25,11 +26,11 @@ export default function Catalogue() {
   const [showImportModal, setShowImportModal] = useState(false);
   const [showCorbeille, setShowCorbeille] = useState(false);
   const [editingActivite, setEditingActivite] = useState(null);
+  const [assignTarget, setAssignTarget] = useState(null);
 
   const [activites, setActivites] = useState(() => {
     const unified = loadJSON(KEYS.activites, null);
     if (Array.isArray(unified)) return unified;
-    // Migration depuis l'ancien format split natives/custom
     const natives = loadJSON("catalogue_activites_natives", []);
     const custom = loadJSON("catalogue_custom_activites", []);
     return [
@@ -38,18 +39,10 @@ export default function Catalogue() {
     ];
   });
 
-  const [panier, setPanier] = useState(() => {
-    const raw = loadJSON(KEYS.panier, []);
-    if (!Array.isArray(raw)) return new Set();
-    const ids = raw
-      .map(item => typeof item === "string" ? item : (item.type === "activite" ? item.id : null))
-      .filter(Boolean);
-    return new Set(ids);
-  });
-  const [panierOrdre, setPanierOrdre] = useState(() => {
-    const raw = loadJSON(KEYS.panier, []);
-    if (!Array.isArray(raw)) return [];
-    return raw.map(item => typeof item === "string" ? { type: "activite", id: item } : item);
+  const [programme, setProgramme] = useState(() => {
+    const saved = loadJSON(KEYS.programme, null);
+    if (saved && Array.isArray(saved.sequences)) return saved;
+    return PROGRAMME_INIT;
   });
 
   const [corbeille, setCorbeille] = useState(() => {
@@ -57,20 +50,42 @@ export default function Catalogue() {
     return Array.isArray(data) ? data : [];
   });
 
-  const [titreSeance, setTitreSeance] = useState(() =>
-    loadJSON(KEYS.titreSeance, "") ?? ""
-  );
-
   const [favoris, setFavoris] = useState(() => {
     const data = loadJSON(KEYS.favoris, []);
     return new Set(Array.isArray(data) ? data : []);
   });
 
-  useEffect(() => { saveJSON(KEYS.panier, panierOrdre); }, [panierOrdre]);
   useEffect(() => { saveJSON(KEYS.activites, activites); }, [activites]);
   useEffect(() => { saveJSON(KEYS.corbeille, corbeille); }, [corbeille]);
-  useEffect(() => { saveJSON(KEYS.titreSeance, titreSeance); }, [titreSeance]);
   useEffect(() => { saveJSON(KEYS.favoris, [...favoris]); }, [favoris]);
+  useEffect(() => { saveJSON(KEYS.programme, programme); }, [programme]);
+
+  // IDs des activités présentes dans le programme (pour badge 📌 sur les cartes)
+  const panier = useMemo(() => {
+    const ids = new Set();
+    for (const seq of programme.sequences ?? []) {
+      for (const sea of seq.seances ?? []) {
+        for (const fiche of sea.fiches ?? []) {
+          if (fiche.activite_id) ids.add(fiche.activite_id);
+        }
+      }
+    }
+    return ids;
+  }, [programme]);
+
+  // Liste plate pour PrintView
+  const panierAffichage = useMemo(() => {
+    const items = [];
+    for (const seq of programme.sequences ?? []) {
+      for (const sea of seq.seances ?? []) {
+        for (const fiche of sea.fiches ?? []) {
+          const activite = activites.find(a => a.id === fiche.activite_id);
+          if (activite) items.push({ type: "activite", id: fiche.activite_id, activite });
+        }
+      }
+    }
+    return items;
+  }, [programme, activites]);
 
   const tousThemes = useMemo(() => {
     const set = new Set();
@@ -101,16 +116,6 @@ export default function Catalogue() {
       return next;
     });
   }
-
-  const panierAffichage = panierOrdre
-    .map(item => {
-      if (item.type === "activite") {
-        const activite = activites.find(a => a.id === item.id);
-        return activite ? { ...item, activite } : null;
-      }
-      return item;
-    })
-    .filter(Boolean);
 
   function handleSaveActivite(formData) {
     const id = genererIdActivite(activites);
@@ -197,8 +202,16 @@ export default function Catalogue() {
     const activite = activites.find(a => a.id === id);
     if (activite) pousserEnCorbeille("suppression", activite);
     setActivites(prev => prev.filter(a => a.id !== id));
-    setPanier(prev => { const next = new Set(prev); next.delete(id); return next; });
-    setPanierOrdre(prev => prev.filter(item => !(item.type === "activite" && item.id === id)));
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq => ({
+        ...seq,
+        seances: seq.seances.map(sea => ({
+          ...sea,
+          fiches: sea.fiches.filter(f => f.activite_id !== id),
+        })),
+      })),
+    }));
   }
 
   function handleRestoreFromCorbeille(trashId) {
@@ -245,19 +258,42 @@ export default function Catalogue() {
     exportCatalogue(activites);
   }
 
-  function handleViderCatalogue() {
-    if (!window.confirm(
-      `Vider le catalogue ?\n\nLes ${activites.length} activité${activites.length > 1 ? "s" : ""} seront supprimées. Le panier sera également vidé.`
-    )) return;
-    setActivites([]);
-    setPanier(new Set());
-    setPanierOrdre([]);
+  function handleAssign(seaId) {
+    if (!assignTarget) return;
+    const ficheId = `fiche-${Date.now()}`;
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq => ({
+        ...seq,
+        seances: seq.seances.map(sea => {
+          if (sea.id !== seaId) return sea;
+          return {
+            ...sea,
+            fiches: [...sea.fiches, {
+              id: ficheId,
+              type_fiche: "Activite_Apprentissage",
+              verbe_action_bloom: "",
+              parent_id: seaId,
+              activite_id: assignTarget,
+            }],
+          };
+        }),
+      })),
+    }));
+    setAssignTarget(null);
   }
 
+  function handleViderCatalogue() {
+    if (!window.confirm(
+      `Vider le catalogue ?\n\nLes ${activites.length} activité${activites.length > 1 ? "s" : ""} seront supprimées. Le constructeur de séquence sera également vidé.`
+    )) return;
+    setActivites([]);
+    setProgramme(prev => ({ ...prev, sequences: [] }));
+  }
 
   return (
     <div className="app">
-      <PrintView panierAffichage={panierAffichage} titreSeance={titreSeance} />
+      <PrintView panierAffichage={panierAffichage} titreSeance={programme.titre} />
       <Header
         totalActivites={activites.length}
         filteredCount={activitesFiltrees.length}
@@ -311,6 +347,7 @@ export default function Catalogue() {
                   estEpingle={panier.has(a.id)}
                   estFavori={favoris.has(a.id)}
                   onToggleFavori={toggleFavori}
+                  onAssigner={setAssignTarget}
                 />
               ))}
             </div>
@@ -319,18 +356,14 @@ export default function Catalogue() {
             <p>Catalogue · {activites.length} activité{activites.length !== 1 ? "s" : ""} · {activitesFiltrees.length} affichées</p>
           </footer>
         </main>
-        <CartPanel
-          panier={panier}
-          setPanier={setPanier}
-          panierOrdre={panierOrdre}
-          setPanierOrdre={setPanierOrdre}
+        <SequenceBuilder
+          programme={programme}
+          setProgramme={setProgramme}
           toutesActivites={activites}
           mobileOpen={mobilePanelOpen === "cart"}
           onMobileClose={() => setMobilePanelOpen(null)}
           nbCorbeille={corbeille.length}
           onOuvrirCorbeille={() => setShowCorbeille(true)}
-          titreSeance={titreSeance}
-          setTitreSeance={setTitreSeance}
         />
       </div>
 
@@ -350,7 +383,7 @@ export default function Catalogue() {
           className={`mobile-toolbar-btn${mobilePanelOpen === "cart" ? " mobile-toolbar-btn-active" : ""}`}
           onClick={() => setMobilePanelOpen(mobilePanelOpen === "cart" ? null : "cart")}
         >
-          📋 Panier
+          📋 Séquence
           {panier.size > 0 && <span className="mobile-toolbar-badge">{panier.size}</span>}
         </button>
         <button
@@ -366,12 +399,20 @@ export default function Catalogue() {
         <DetailModal
           activite={selected}
           onClose={() => setSelected(null)}
-          panier={panier}
-          setPanier={setPanier}
-          panierOrdre={panierOrdre}
-          setPanierOrdre={setPanierOrdre}
+          estEpingle={panier.has(selected.id)}
+          onAssigner={setAssignTarget}
           onEdit={a => { setEditingActivite(a); setShowAddModal(true); }}
           onDelete={handleDeleteActivite}
+        />
+      )}
+
+      {assignTarget && (
+        <AssignModal
+          programme={programme}
+          activiteId={assignTarget}
+          toutesActivites={activites}
+          onAssign={handleAssign}
+          onClose={() => setAssignTarget(null)}
         />
       )}
 

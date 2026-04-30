@@ -4,6 +4,7 @@ export const KEYS = {
   corbeille: "catalogue_corbeille",
   titreSeance: "catalogue_panier_titre",
   favoris: "catalogue_favoris",
+  programme: "catalogue_programme",
 };
 
 export function loadJSON(key, fallback) {
