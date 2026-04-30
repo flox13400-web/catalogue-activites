@@ -5,6 +5,7 @@ import "../styles/modal.css";
 
 const AGES_DISPONIBLES = ["Primaire", "Collège", "Lycée", "Post-bac", "Adultes"];
 const DUREES_DISPONIBLES = ["0-15min", "15-30min", "30-45min", "45-60min", ">60min"];
+const VERBES_BLOOM = ["Mémoriser", "Comprendre", "Appliquer", "Analyser", "Évaluer", "Créer"];
 const DUREES_OK = new Set(DUREES_DISPONIBLES);
 const TAILLES_GROUPE_DISPONIBLES = ["1", "2-6", "7-12", ">12"];
 const CONTEXTES_DISPONIBLES = ["Scolaire", "Entreprise", "Montée en compétence", "Diplomant"];
@@ -509,6 +510,8 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
         materiels: initialData.materiels || [],
         contexte: initialData.contexte || [],
         modalite: initialData.modalite || [],
+        type_fiche: initialData.type_fiche || "Activite_Apprentissage",
+        verbe_action_bloom: initialData.verbe_action_bloom || "",
         description_courte: initialData.description_courte || "",
         description: initialData.description || "",
         apprentissage_cle: initialData.apprentissage_cle || "",
@@ -526,6 +529,8 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
       materiels: [],
       contexte: [],
       modalite: [],
+      type_fiche: "Activite_Apprentissage",
+      verbe_action_bloom: "",
       description_courte: "",
       description: "",
       apprentissage_cle: "",
@@ -705,6 +710,33 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
           onToggle={(t) => toggleKeyword("materiels", t)}
           onAjouter={() => ajouterKeyword("materiels", nouveauMateriel, setNouveauMateriel)}
         />
+
+        <div className="form-row">
+          <div className="form-group">
+            <label className="form-label">Type de fiche</label>
+            <select
+              className="form-input"
+              value={form.type_fiche}
+              onChange={(e) => setField("type_fiche", e.target.value)}
+            >
+              <option value="Activite_Apprentissage">Activité d'apprentissage</option>
+              <option value="Activite_Evaluation">Activité d'évaluation</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Verbe de Bloom</label>
+            <select
+              className="form-input"
+              value={form.verbe_action_bloom}
+              onChange={(e) => setField("verbe_action_bloom", e.target.value)}
+            >
+              <option value="">— Non défini —</option>
+              {VERBES_BLOOM.map(v => (
+                <option key={v} value={v}>{v}</option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         <div className="form-group">
           <label className="form-label">Description courte</label>
