@@ -54,6 +54,7 @@ function formatMinutes(m) {
 export const PROGRAMME_INIT = {
   id: "prog-1",
   titre: "Mon programme",
+  duree_objectif: 0,
   objectif_bloom: "",
   objectif_action: "",
   objectif_final: "",
@@ -66,8 +67,6 @@ export default function SequenceBuilder({
   toutesActivites,
   mobileOpen,
   onMobileClose,
-  nbCorbeille,
-  onOuvrirCorbeille,
 }) {
   const [collapsed, setCollapsed] = useState(new Set());
   const [editingId, setEditingId] = useState(null);
@@ -289,7 +288,7 @@ export default function SequenceBuilder({
 
   return (
     <aside className={`panel panel-cart${mobileOpen ? " panel-open" : ""}`}>
-      <div className="panel-header">
+      <div className="panel-header seq-panel-header">
         <button className="panel-mobile-close" onClick={onMobileClose}>×</button>
         <h2 className="panel-title">Constructeur</h2>
         <div className="panel-header-end">
@@ -299,10 +298,22 @@ export default function SequenceBuilder({
             </span>
             {dureeStr && <span className="seq-duree-header">{dureeStr}</span>}
           </div>
-          <button className="cart-panel-corbeille-btn" onClick={onOuvrirCorbeille} title="Corbeille">
-            🗑 <span className="cart-panel-corbeille-count">{nbCorbeille}</span>
-          </button>
         </div>
+        {programme.duree_objectif > 0 && (
+          <div className="seq-jauge-wrapper">
+            <div className="seq-jauge-meta">
+              <span className="seq-jauge-label">{dureeStr || "0min"} / {programme.duree_objectif}h</span>
+              <span className="seq-jauge-pct">
+                {Math.round(Math.min((dureeTotal.max / (programme.duree_objectif * 60)) * 100, 100))}%
+              </span>
+            </div>
+            <progress
+              className="seq-jauge"
+              value={Math.min(dureeTotal.max, programme.duree_objectif * 60)}
+              max={programme.duree_objectif * 60}
+            />
+          </div>
+        )}
       </div>
 
       <div className="panel-body seq-builder-body">
@@ -330,6 +341,19 @@ export default function SequenceBuilder({
                 onBlur={e => updateProgrammeField("objectif_action", e.target.value)}
               />
             </div>
+          </div>
+          <div className="seq-duree-cible-row">
+            <span className="seq-madlibs-prefix">Durée cible :</span>
+            <input
+              className="seq-duree-cible-input"
+              type="number"
+              min="0"
+              step="0.5"
+              defaultValue={programme.duree_objectif > 0 ? programme.duree_objectif : ""}
+              placeholder="0"
+              onBlur={e => updateProgrammeField("duree_objectif", parseFloat(e.target.value) || 0)}
+            />
+            <span className="seq-duree-cible-unit">h</span>
           </div>
           <div className="seq-madlibs-simple">
             <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>

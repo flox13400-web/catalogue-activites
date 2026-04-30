@@ -314,6 +314,8 @@ export default function Catalogue() {
         onNouvelleActivite={() => setShowChoixImport(true)}
         onSauvegarderCatalogue={handleSauvegarderCatalogue}
         onViderCatalogue={handleViderCatalogue}
+        nbCorbeille={corbeille.length}
+        onOuvrirCorbeille={() => setShowCorbeille(true)}
       />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
@@ -376,8 +378,6 @@ export default function Catalogue() {
           toutesActivites={activites}
           mobileOpen={mobilePanelOpen === "cart"}
           onMobileClose={() => setMobilePanelOpen(null)}
-          nbCorbeille={corbeille.length}
-          onOuvrirCorbeille={() => setShowCorbeille(true)}
         />
       </div>
 

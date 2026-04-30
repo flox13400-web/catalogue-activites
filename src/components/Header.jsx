@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/global.css";
 import LogoBrand from "./LogoBrand";
-export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue }) {
+export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue, nbCorbeille, onOuvrirCorbeille }) {
   return (
     <header className="header">
       <div className="header-inner">
@@ -30,6 +30,9 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
             </button>
             <button className="btn-vider-catalogue" onClick={onViderCatalogue}>
               Vider le catalogue
+            </button>
+            <button className="btn-corbeille-header" onClick={onOuvrirCorbeille} title="Corbeille">
+              🗑 <span className="btn-corbeille-header-count">{nbCorbeille}</span>
             </button>
           </div>
         </div>
