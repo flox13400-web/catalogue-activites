@@ -336,9 +336,9 @@ export default function SequenceBuilder({
               </select>
               <input
                 className="seq-objectif-input"
-                defaultValue={programme.objectif_action || ""}
+                value={programme.objectif_action || ""}
                 placeholder="…"
-                onBlur={e => updateProgrammeField("objectif_action", e.target.value)}
+                onChange={e => updateProgrammeField("objectif_action", e.target.value)}
               />
             </div>
           </div>
@@ -359,9 +359,9 @@ export default function SequenceBuilder({
             <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
             <textarea
               className="seq-objectif-input"
-              defaultValue={programme.objectif_final}
+              value={programme.objectif_final || ""}
               placeholder="Décrire les critères d'acquisition..."
-              onBlur={e => updateObjectifProgramme(e.target.value)}
+              onChange={e => updateObjectifProgramme(e.target.value)}
               rows={2}
             />
           </div>
@@ -405,9 +405,9 @@ export default function SequenceBuilder({
                         </select>
                         <input
                           className="seq-objectif-input"
-                          defaultValue={seq.objectif_action || ""}
+                          value={seq.objectif_action || ""}
                           placeholder="…"
-                          onBlur={e => updateSeqField(seq.id, "objectif_action", e.target.value)}
+                          onChange={e => updateSeqField(seq.id, "objectif_action", e.target.value)}
                         />
                       </div>
                     </div>
@@ -415,9 +415,9 @@ export default function SequenceBuilder({
                       <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
                       <input
                         className="seq-objectif-input"
-                        defaultValue={seq.objectif_competence}
+                        value={seq.objectif_competence || ""}
                         placeholder="Décrire les critères..."
-                        onBlur={e => updateObjectifSequence(seq.id, e.target.value)}
+                        onChange={e => updateObjectifSequence(seq.id, e.target.value)}
                       />
                     </div>
                     {seq.seances.map(sea => {
@@ -443,7 +443,7 @@ export default function SequenceBuilder({
                                 <span className="seq-opo-type-label">Type :</span>
                                 <select
                                   className="seq-opo-select"
-                                  value={sea.opo_type}
+                                  value={sea.opo_type || "Savoir"}
                                   onChange={e => updateOpoSeance(seq.id, sea.id, "opo_type", e.target.value)}
                                 >
                                   <option value="Savoir">Savoir</option>
@@ -468,9 +468,9 @@ export default function SequenceBuilder({
                                   </select>
                                   <input
                                     className="seq-objectif-input"
-                                    defaultValue={sea.opo_verbe}
+                                    value={sea.opo_verbe || ""}
                                     placeholder="…"
-                                    onBlur={e => updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value)}
+                                    onChange={e => updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value)}
                                   />
                                 </div>
                               </div>

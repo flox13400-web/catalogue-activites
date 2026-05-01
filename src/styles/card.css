@@ -176,6 +176,13 @@
 
 /* @media print */
 @media print {
+  html, body, #root, .app, .layout {
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+    position: static !important;
+  }
+
   .header,
   .layout,
   .modal-backdrop,
@@ -544,6 +551,8 @@
   .print-seance-section {
     margin-left: 14pt;
     margin-bottom: 18pt;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
   .print-seance-header {
     display: flex;
@@ -600,5 +609,38 @@
     color: #aaa;
     font-style: italic;
     margin: 0 0 8pt 0;
+  }
+
+  /* Critères d'acquisition (programme & séquence) */
+  .print-criteres-bloc {
+    margin-top: 7pt;
+    padding-top: 7pt;
+    border-top: 0.5pt solid #ddd;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Badge "Évaluation" dans l'en-tête de fiche */
+  .print-fiche-badge-eval {
+    font-size: 6.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: #8a6bc8;
+    padding: 1.5pt 4pt;
+    border-radius: 2pt;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+  }
+
+  /* Bloc critères de réussite (fiche Évaluation) */
+  .print-fiche-eval-criteres {
+    background: #f4f0fa;
+    border-left: 3pt solid #8a6bc8;
+    padding: 7pt 10pt;
+    border-radius: 0 3pt 3pt 0;
+    margin-top: 8pt;
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }

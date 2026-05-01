@@ -59,6 +59,7 @@ function formatDuree({ min, max, open }) {
 
 function FicheActivite({ activite, num }) {
   const a = activite;
+  const isEval = a.type_fiche === "Évaluation" || a.type_fiche === "Evaluation";
   return (
     <div className="print-fiche">
       <div className="print-fiche-header">
@@ -67,6 +68,7 @@ function FicheActivite({ activite, num }) {
           <h2 className="print-fiche-titre">{a.titre}</h2>
         </div>
         <div className="print-fiche-header-right">
+          {isEval && <span className="print-fiche-badge-eval">Évaluation</span>}
           {(a.modalite || []).length > 0 && (
             <span className="print-fiche-modalite">{(a.modalite || []).join(" · ")}</span>
           )}
@@ -81,29 +83,60 @@ function FicheActivite({ activite, num }) {
           </div>
         </div>
       )}
-      {a.description && (
-        <div className="print-fiche-section">
-          <div className="print-fiche-section-label">Description</div>
-          <p className="print-fiche-body">{a.description}</p>
-        </div>
-      )}
-      {a.apprentissage_cle && (
-        <div className="print-fiche-apprentissage">
-          <div className="print-fiche-section-label">Apprentissage clé</div>
-          <p className="print-fiche-apprentissage-text">« {a.apprentissage_cle} »</p>
-        </div>
-      )}
-      {a.problematique && (
-        <div className="print-fiche-section">
-          <div className="print-fiche-section-label">Problématique possible</div>
-          <p className="print-fiche-body">{a.problematique}</p>
-        </div>
-      )}
-      {a.remediation && (
-        <div className="print-fiche-section">
-          <div className="print-fiche-section-label">Remédiation</div>
-          <p className="print-fiche-body">{a.remediation}</p>
-        </div>
+      {isEval ? (
+        <>
+          {a.eval_type && (
+            <div className="print-fiche-section">
+              <div className="print-fiche-section-label">Type d'évaluation</div>
+              <p className="print-fiche-body">{a.eval_type}</p>
+            </div>
+          )}
+          {a.eval_modalite && (
+            <div className="print-fiche-section">
+              <div className="print-fiche-section-label">Modalité</div>
+              <p className="print-fiche-body">{a.eval_modalite}</p>
+            </div>
+          )}
+          {a.eval_conditions && (
+            <div className="print-fiche-section">
+              <div className="print-fiche-section-label">Conditions de réalisation</div>
+              <p className="print-fiche-body">{a.eval_conditions}</p>
+            </div>
+          )}
+          {a.eval_criteres && (
+            <div className="print-fiche-eval-criteres">
+              <div className="print-fiche-section-label">Critères de réussite</div>
+              <p className="print-fiche-body">{a.eval_criteres}</p>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {a.description && (
+            <div className="print-fiche-section">
+              <div className="print-fiche-section-label">Description</div>
+              <p className="print-fiche-body">{a.description}</p>
+            </div>
+          )}
+          {a.apprentissage_cle && (
+            <div className="print-fiche-apprentissage">
+              <div className="print-fiche-section-label">Apprentissage clé</div>
+              <p className="print-fiche-apprentissage-text">« {a.apprentissage_cle} »</p>
+            </div>
+          )}
+          {a.problematique && (
+            <div className="print-fiche-section">
+              <div className="print-fiche-section-label">Problématique possible</div>
+              <p className="print-fiche-body">{a.problematique}</p>
+            </div>
+          )}
+          {a.remediation && (
+            <div className="print-fiche-section">
+              <div className="print-fiche-section-label">Remédiation</div>
+              <p className="print-fiche-body">{a.remediation}</p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -142,10 +175,21 @@ export default function PrintView({ programme, activites }) {
       </div>
 
       <div className="print-programme-objectif">
-        <div className="print-hier-label">Objectif final du programme</div>
-        {programme.objectif_final?.trim()
-          ? <p className="print-hier-value">{programme.objectif_final}</p>
-          : <span className="print-blank-line" />}
+        <div className="print-hier-label">Objectif opérationnel du programme</div>
+        {(programme.objectif_bloom || programme.objectif_action) ? (
+          <p className="print-hier-value">
+            À l'issue de cette formation, l'apprenant sera capable de :{" "}
+            <strong>{[programme.objectif_bloom, programme.objectif_action].filter(Boolean).join(" ")}</strong>
+          </p>
+        ) : (
+          <span className="print-blank-line" />
+        )}
+        {programme.objectif_final?.trim() && (
+          <div className="print-criteres-bloc">
+            <div className="print-hier-label">Critères d'acquisition</div>
+            <p className="print-hier-value">La compétence sera acquise si : {programme.objectif_final}</p>
+          </div>
+        )}
       </div>
 
       {programme.sequences.map((seq, seqIdx) => {
@@ -167,10 +211,21 @@ export default function PrintView({ programme, activites }) {
             </div>
 
             <div className="print-sequence-objectif">
-              <div className="print-hier-label">Objectif de compétence</div>
-              {seq.objectif_competence?.trim()
-                ? <p className="print-hier-value">{seq.objectif_competence}</p>
-                : <span className="print-blank-line" />}
+              <div className="print-hier-label">Objectif opérationnel</div>
+              {(seq.objectif_bloom || seq.objectif_action) ? (
+                <p className="print-hier-value">
+                  À l'issue de cette séquence, l'apprenant sera capable de :{" "}
+                  <strong>{[seq.objectif_bloom, seq.objectif_action].filter(Boolean).join(" ")}</strong>
+                </p>
+              ) : (
+                <span className="print-blank-line" />
+              )}
+              {seq.objectif_competence?.trim() && (
+                <div className="print-criteres-bloc">
+                  <div className="print-hier-label">Critères d'acquisition</div>
+                  <p className="print-hier-value">La compétence sera acquise si : {seq.objectif_competence}</p>
+                </div>
+              )}
             </div>
 
             {(seq.seances ?? []).map((sea, seaIdx) => {
@@ -178,6 +233,8 @@ export default function PrintView({ programme, activites }) {
                 .map(f => activites.find(a => a.id === f.activite_id))
                 .filter(Boolean);
               const dureeSea = formatDuree(sumDuree(seaAct));
+
+              const opoPhrase = [sea.opo_bloom, sea.opo_verbe].filter(Boolean).join(" ");
 
               return (
                 <div key={sea.id} className="print-seance-section">
@@ -189,9 +246,13 @@ export default function PrintView({ programme, activites }) {
 
                   <div className="print-seance-opo">
                     <span className="print-seance-opo-type">{sea.opo_type || "Savoir"}</span>
-                    {sea.opo_verbe?.trim()
-                      ? <span className="print-seance-opo-verbe">{sea.opo_verbe}</span>
-                      : <span className="print-seance-opo-verbe print-seance-opo-vide">— À définir —</span>}
+                    {opoPhrase ? (
+                      <span className="print-seance-opo-verbe">
+                        À l'issue de cette séance, l'apprenant sera capable de : <strong>{opoPhrase}</strong>
+                      </span>
+                    ) : (
+                      <span className="print-seance-opo-verbe print-seance-opo-vide">— À définir —</span>
+                    )}
                   </div>
 
                   <div className="print-seance-fiches">
