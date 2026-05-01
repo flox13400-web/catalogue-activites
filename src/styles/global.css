@@ -641,14 +641,14 @@ body, .app {
 /* --- PHASE 3 : TIROIR ET HEADER --- */
 .filter-handle {
   position: absolute;
-  right: -36px;
-  top: 20px;
-  width: 36px;
-  height: 48px;
+  right: -42px;
+  top: 16px;
+  width: 42px;
+  height: 64px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-left: none;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 10px 10px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -657,8 +657,9 @@ body, .app {
   box-shadow: 4px 0 8px rgba(0,0,0,0.05);
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  font-size: 11px;
-  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 0;
   color: var(--text);
 }
 
@@ -696,9 +697,9 @@ body, .app {
 }
 .btn-header {
   font-weight: bold;
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 13px;
+  border-radius: 24px;
+  padding: 12px 24px;
+  font-size: 15px;
   cursor: var(--cursor-hand);
   border: 1px solid var(--border-strong);
   background: var(--bg-elevated);

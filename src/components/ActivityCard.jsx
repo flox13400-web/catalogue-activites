@@ -20,7 +20,6 @@ export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggl
       onClick={() => onClick(activite)}
     >
       <div className="card-top">
-        <span className="card-id">{activite.id}</span>
         <div className="card-top-actions">
           {estEpingle && <span className="card-epingle-badge" title="Dans le constructeur">📌</span>}
           <button

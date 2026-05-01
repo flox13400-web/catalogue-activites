@@ -4,7 +4,6 @@ import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
 import { exportCatalogue } from "./utils/export";
 import { exportToSQA, importFromSQA } from "./utils/sqaManager";
-import { calculerDureeTotalProgramme } from "./utils/duree";
 import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
 import Header from "./components/Header";
 import FilterPanel from "./components/FilterPanel";
@@ -338,16 +337,10 @@ export default function Catalogue() {
     setProgramme(prev => ({ ...prev, sequences: [] }));
   }
 
-  const dureeTotal = useMemo(() => calculerDureeTotalProgramme(programme, activites), [programme, activites]);
-
   return (
     <div className="app-layout">
       <PrintView programme={programme} activites={activites} />
       <Header
-        programme={programme}
-        dureeTotal={dureeTotal}
-        totalActivites={activites.length}
-        filteredCount={activitesFiltrees.length}
         onNouvelleActivite={() => setShowChoixImport(true)}
         onSauvegarderCatalogue={handleSauvegarderCatalogue}
         onViderCatalogue={handleViderCatalogue}

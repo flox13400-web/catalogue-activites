@@ -1,12 +1,11 @@
 import React, { useRef, useState } from "react";
 import "../styles/global.css";
 import LogoBrand from "./LogoBrand";
-import { formatDureeGlobale } from "../utils/duree";
 
 /**
  * Composant d'en-tête de l'application.
  */
-export default function Header({ programme, dureeTotal, totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue, nbCorbeille, onOuvrirCorbeille, onExportSQA, onImportSQA }) {
+export default function Header({ onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue, nbCorbeille, onOuvrirCorbeille, onExportSQA, onImportSQA }) {
   const fileInputRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -18,10 +17,6 @@ export default function Header({ programme, dureeTotal, totalActivites, filtered
     }
   }
 
-  const dureeStr = formatDureeGlobale(dureeTotal) || "0min";
-  const dureeCible = (programme?.duree_objectif || 0) * 60;
-  const ratio = dureeCible > 0 ? Math.min((dureeTotal?.max || 0) / dureeCible, 1) * 100 : 0;
-
   return (
     <header className="header">
       <div className="header-inner">
@@ -31,24 +26,8 @@ export default function Header({ programme, dureeTotal, totalActivites, filtered
             <LogoBrand className="header-nom" />
             <span className="header-tagline">TICE ton architecture pédagogique</span>
           </div>
-          {dureeCible > 0 && (
-            <div className="header-jauge">
-              <span className="header-jauge-text">{dureeStr} / {programme.duree_objectif}h</span>
-              <div className="header-jauge-bar">
-                <div className="header-jauge-fill" style={{ width: `${ratio}%` }}></div>
-              </div>
-            </div>
-          )}
         </div>
         <div className="header-right">
-          <div className="header-stat">
-            <div className="header-stat-num">{filteredCount}</div>
-            <div className="header-stat-label">affichées</div>
-          </div>
-          <div className="header-stat">
-            <div className="header-stat-num">{totalActivites}</div>
-            <div className="header-stat-label">activités</div>
-          </div>
           <div className="header-actions">
             <button className="btn-header btn-creer" onClick={onNouvelleActivite}>
               Créer +
