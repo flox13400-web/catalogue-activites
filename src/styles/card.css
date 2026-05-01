@@ -10,15 +10,17 @@
 
 /* CARTE */
 .card {
+  position: relative;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 22px 22px 18px;
   cursor: var(--cursor-hand);
   transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 .card:hover {
   border-color: var(--accent);
@@ -31,27 +33,47 @@
 .card[draggable]:active {
   cursor: var(--cursor-hand);
 }
+
+/* Indicateur de type (fine bordure colorée en haut) */
+.card-type-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 8px 8px 0 0;
+}
+.card-apprentissage .card-type-indicator {
+  background: var(--accent);
+}
+.card-eval .card-type-indicator {
+  background: #8a6bc8;
+}
+
+/* Barre supérieure */
 .card-top {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  gap: 6px;
 }
 .card-top-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  margin-left: auto;
 }
 .btn-assigner {
   background: none;
   border: 1px solid var(--border-strong);
-  border-radius: 3px;
+  border-radius: 6px;
   color: var(--text-muted);
   cursor: var(--cursor-hand);
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   line-height: 1;
-  padding: 1px 6px;
+  padding: 4px 10px;
   flex-shrink: 0;
   transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
 }
@@ -64,8 +86,8 @@
 .btn-favori {
   background: none;
   border: none;
-  padding: 0 2px;
-  font-size: 16px;
+  padding: 2px 4px;
+  font-size: 20px;
   line-height: 1;
   color: var(--text-faint);
   cursor: var(--cursor-hand);
@@ -74,13 +96,7 @@
 }
 .btn-favori:hover { color: var(--accent); transform: scale(1.2); }
 .btn-favori-active { color: var(--accent); }
-.card-id {
-  font-family: var(--serif);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--accent-deep);
-  letter-spacing: 0.02em;
-}
+
 .card-title {
   font-family: var(--serif);
   font-size: 19px;
@@ -97,32 +113,36 @@
   margin-bottom: 16px;
   flex: 1;
 }
+
+/* Méta : une ligne horizontale avec icônes */
 .card-meta {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   margin-bottom: 14px;
 }
-.meta-item { min-width: 0; }
-.meta-label {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-faint);
-  margin-bottom: 3px;
-  font-weight: 500;
+.card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.meta-value {
-  font-size: 12px;
+.card-meta-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+.card-meta-value {
+  font-size: 13px;
   color: var(--text);
   font-weight: 500;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
+
+/* Tags */
 .card-tags {
   display: flex;
   flex-direction: column;
@@ -135,8 +155,8 @@
 }
 .tag {
   font-size: 10px;
-  padding: 3px 7px;
-  border-radius: 3px;
+  padding: 3px 8px;
+  border-radius: 10px;
   letter-spacing: 0.02em;
   font-weight: 500;
 }
@@ -145,9 +165,8 @@
   color: var(--accent-deep);
 }
 .tag-theme {
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border-strong);
+  background: #f0e6f6;
+  color: #6b3fa0;
 }
 .tag-contexte {
   background: var(--bg-soft);
@@ -164,9 +183,9 @@
   background: var(--accent-soft);
 }
 .card-epingle-badge {
-  font-size: 12px;
-  margin-left: auto;
+  font-size: 14px;
 }
+
 
 
 /* FICHE IMPRIMABLE — invisible à l'écran */
