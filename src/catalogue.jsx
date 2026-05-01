@@ -338,7 +338,7 @@ export default function Catalogue() {
   }
 
   return (
-    <div className="app">
+    <div className="app-layout">
       <PrintView programme={programme} activites={activites} />
       <Header
         totalActivites={activites.length}
@@ -354,8 +354,8 @@ export default function Catalogue() {
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}
-      <div className="app-layout">
-        <aside className="catalogue-sidebar">
+      <div className="app-body">
+        <aside className="app-sidebar">
           <FilterPanel
             filtres={filtres}
             setFiltres={setFiltres}
@@ -408,13 +408,15 @@ export default function Catalogue() {
             </footer>
           </div>
         </aside>
-        <SequenceBuilder
-          programme={programme}
-          setProgramme={setProgramme}
-          toutesActivites={activites}
-          mobileOpen={mobilePanelOpen === "cart"}
-          onMobileClose={() => setMobilePanelOpen(null)}
-        />
+        <main className="app-main">
+          <SequenceBuilder
+            programme={programme}
+            setProgramme={setProgramme}
+            toutesActivites={activites}
+            mobileOpen={mobilePanelOpen === "cart"}
+            onMobileClose={() => setMobilePanelOpen(null)}
+          />
+        </main>
       </div>
 
       <div className="mobile-toolbar">

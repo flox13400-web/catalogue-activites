@@ -245,37 +245,34 @@ body, .app {
 }
 
 
-/* LAYOUT 2 COLONNES (.app-layout) */
+/* LAYOUT EN T (.app-layout) */
 .app-layout {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Verrouille la hauteur à l'écran */
+  overflow: hidden; /* Empêche le double scroll global */
+}
+
+.app-body {
   display: grid;
-  grid-template-columns: 350px 1fr;
-  height: 100vh;
+  grid-template-columns: 350px 1fr; /* 350px pour le panneau latéral, le reste pour le constructeur */
+  flex: 1; /* Remplit l'espace restant sous le header */
   overflow: hidden;
   width: 100%;
 }
 
+.app-sidebar, .app-main {
+  overflow-y: auto; /* Active le défilement indépendant */
+  height: 100%;
+  padding: 1rem; /* Espace de respiration interne */
+}
+
 @media print {
-  .app-layout {
+  .app-layout, .app-body, .app-sidebar, .app-main {
     display: block !important;
     height: auto !important;
     overflow: visible !important;
   }
-}
-
-.catalogue-sidebar {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow-y: auto;
-  border-right: 1px solid var(--border);
-  background: var(--bg);
-}
-
-.builder-main {
-  height: 100%;
-  overflow-y: auto;
-  background: var(--bg);
 }
 
 /* PANELS LATÉRAUX */
