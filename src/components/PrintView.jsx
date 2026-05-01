@@ -59,7 +59,7 @@ function formatDuree({ min, max, open }) {
 
 function FicheActivite({ activite, num }) {
   const a = activite;
-  const isEval = a.type_fiche === "Évaluation" || a.type_fiche === "Evaluation";
+  const isEval = a.type_fiche === "Activite_Evaluation";
   return (
     <div className="print-fiche">
       <div className="print-fiche-header">

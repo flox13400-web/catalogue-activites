@@ -1,0 +1,29 @@
+# CONTEXTE PROJET : SEQUENCIA
+Application React (Vite) de conception d'architectures pédagogiques structurées.
+
+# STACK TECHNIQUE
+- React (Composants fonctionnels)
+- JavaScript (Vanilla)
+- CSS natif (Pas de frameworks externes)
+
+# ARCHITECTURE DES DONNÉES (ALIGNEMENT PÉDAGOGIQUE)
+Le système repose sur la taxonomie de Bloom avec une structure "Mad Libs" obligatoire :
+
+## Niveaux d'Objectifs
+- Programme : `objectif_bloom` (Verbe) + `objectif_action` (Texte) + `objectif_final` (Critère).
+- Séquence : `objectif_bloom` (Verbe) + `objectif_action` (Texte) + `objectif_competence` (Critère).
+- Séance : `opo_bloom` (Verbe) + `opo_verbe` (Action libre).
+
+## Typage des Fiches d'Activités (Clé `type_fiche`)
+1. Condition "Apprentissage" : Champs requis -> `description_courte`, `description_complete`, `apprentissage_cle`.
+2. Condition "Évaluation" : Champs requis -> `eval_type`, `eval_modalite`, `eval_conditions`, `eval_criteres`.
+
+# DIRECTIVES D'IMPLÉMENTATION
+- Validation : Interdiction de valider une fiche si le verbe d'action Bloom est vide.
+- Export PDF (PrintView.jsx) : Doit impérativement refléter les objectifs scindés (Mad Libs) et gérer le rendu conditionnel des fiches d'évaluation.
+- UI/UX : Remplacer les champs "Thèmes" et "Matériels" par des menus déroulants lors de la croissance du catalogue.
+- Persistance : L'état global est géré via `localStorage` (clés : `catalogue_activites`, `programme_encours`).
+
+# RÈGLES DE COLLABORATION
+- Explication courte en français des modifications effectuées.
+- Priorité à la stabilité du schéma de données avant toute modification esthétique.
