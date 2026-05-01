@@ -3,6 +3,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
 import { exportCatalogue } from "./utils/export";
+import { exportToSQA, importFromSQA } from "./utils/sqaManager";
 import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
 import Header from "./components/Header";
 import FilterPanel from "./components/FilterPanel";
@@ -272,6 +273,28 @@ export default function Catalogue() {
     exportCatalogue(activites);
   }
 
+  /**
+   * Exporte l'état courant de programme vers un fichier .sqa sur le disque local.
+   */
+  function handleExportSQA() {
+    exportToSQA(programme);
+  }
+
+  /**
+   * Importe un fichier .sqa et remplace l'état programme de manière immutable.
+   * Bloque l'import si le fichier est corrompu ou invalide (try/catch + alert).
+   * @param {File} file - Fichier .sqa sélectionné par l'utilisateur.
+   */
+  function handleImportSQA(file) {
+    importFromSQA(file)
+      .then((data) => {
+        setProgramme(data);
+      })
+      .catch(() => {
+        alert("Fichier de parcours invalide");
+      });
+  }
+
   function handleAssign(seaId) {
     if (!assignTarget) return;
     const ficheId = `fiche-${Date.now()}`;
@@ -316,6 +339,8 @@ export default function Catalogue() {
         onViderCatalogue={handleViderCatalogue}
         nbCorbeille={corbeille.length}
         onOuvrirCorbeille={() => setShowCorbeille(true)}
+        onExportSQA={handleExportSQA}
+        onImportSQA={handleImportSQA}
       />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />

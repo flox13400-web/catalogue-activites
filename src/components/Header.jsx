@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useRef } from "react";
 import "../styles/global.css";
 import LogoBrand from "./LogoBrand";
-export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue, nbCorbeille, onOuvrirCorbeille }) {
+
+/**
+ * Composant d'en-tête de l'application.
+ * @param {Function} onExportSQA - Déclenche l'export du programme courant en fichier .sqa.
+ * @param {Function} onImportSQA - Reçoit un objet File .sqa et déclenche le chargement de l'état.
+ */
+export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue, nbCorbeille, onOuvrirCorbeille, onExportSQA, onImportSQA }) {
+  const fileInputRef = useRef(null);
+
+  function handleFileChange(e) {
+    const file = e.target.files[0];
+    if (file) {
+      onImportSQA(file);
+      // Réinitialise l'input pour permettre le rechargement du même fichier
+      e.target.value = "";
+    }
+  }
   return (
     <header className="header">
       <div className="header-inner">
@@ -28,6 +44,20 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
             <button className="btn-sauvegarder-catalogue" onClick={onSauvegarderCatalogue} title="Télécharger tout le catalogue en JSON">
               Sauvegarder
             </button>
+            <button className="btn-sauvegarder-catalogue" onClick={onExportSQA} title="Exporter le parcours en cours au format .sqa">
+              ↓ Exporter (.sqa)
+            </button>
+            <button className="btn-sauvegarder-catalogue" onClick={() => fileInputRef.current?.click()} title="Charger un fichier de parcours .sqa">
+              ↑ Importer (.sqa)
+            </button>
+            <input
+              ref={fileInputRef}
+              id="sqa-file-input"
+              type="file"
+              accept=".sqa"
+              className="sqa-file-input-hidden"
+              onChange={handleFileChange}
+            />
             <button className="btn-vider-catalogue" onClick={onViderCatalogue}>
               Vider le catalogue
             </button>
