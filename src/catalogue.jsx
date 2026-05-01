@@ -275,23 +275,32 @@ export default function Catalogue() {
 
   /**
    * Exporte l'état courant de programme vers un fichier .sqa sur le disque local.
+   * Le dictionnaireActivites embarque les objets complets de toutes les activités
+   * référencées dans le programme pour rendre l'archive autonome.
    */
   function handleExportSQA() {
-    exportToSQA(programme);
+    exportToSQA(programme, activites);
   }
 
   /**
-   * Importe un fichier .sqa et remplace l'état programme de manière immutable.
-   * Bloque l'import si le fichier est corrompu ou invalide (try/catch + alert).
+   * Importe un fichier .sqa et déclenche DEUX mises à jour d'état immutables :
+   * 1. Rechargement du programme dans SequenceBuilder (setProgramme).
+   * 2. Ajout des activités manquantes dans le catalogue (setActivites).
+   * Bloque l'import et affiche une alerte si le fichier est corrompu ou invalide.
    * @param {File} file - Fichier .sqa sélectionné par l'utilisateur.
    */
   function handleImportSQA(file) {
     importFromSQA(file)
-      .then((data) => {
-        setProgramme(data);
+      .then(({ programme: nouveauProgramme, nouvellesActivites }) => {
+        // Mise à jour 1 : rechargement du constructeur de séquence
+        setProgramme(nouveauProgramme);
+        // Mise à jour 2 : ajout immutable des nouvelles activités dans le catalogue
+        if (nouvellesActivites.length > 0) {
+          setActivites((prev) => [...prev, ...nouvellesActivites]);
+        }
       })
       .catch(() => {
-        alert("Fichier de parcours invalide");
+        alert("Fichier .sqa corrompu ou invalide");
       });
   }
 
