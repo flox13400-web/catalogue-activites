@@ -255,21 +255,43 @@ body, .app {
 
 .app-body {
   display: grid;
-  grid-template-columns: 250px 1fr 1fr; /* 3 colonnes: filtres, catalogue, constructeur */
-  flex: 1; /* Remplit l'espace restant sous le header */
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
   overflow: hidden;
+  position: relative;
   width: 100%;
 }
 
-.app-filters, .app-catalogue, .app-main {
-  overflow-y: auto; /* Active le défilement indépendant */
+.app-catalogue, .app-main {
+  overflow-y: auto;
   height: 100%;
-  padding: 1rem; /* Espace de respiration interne */
+  padding: 1rem;
+}
+
+.app-filters {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  z-index: 10;
+  transition: transform 0.3s ease;
+  background: var(--bg);
+  box-shadow: 2px 0 12px rgba(0,0,0,0.1);
+}
+
+.app-filters.closed {
+  transform: translateX(-100%);
+}
+
+.app-filters.open {
+  transform: translateX(0);
 }
 
 @media print {
-  .app-layout, .app-body, .app-filters, .app-catalogue, .app-main {
+  .app-layout, .app-body, .app-catalogue, .app-main, .app-filters {
     display: block !important;
+    position: static !important;
+    transform: none !important;
     height: auto !important;
     overflow: visible !important;
   }

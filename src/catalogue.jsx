@@ -21,7 +21,7 @@ export default function Catalogue() {
   const [selected, setSelected] = useState(null);
   const [filtres, setFiltres] = useState(FILTRES_INIT);
   const [mobilePanelOpen, setMobilePanelOpen] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [showChoixImport, setShowChoixImport] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -355,7 +355,7 @@ export default function Catalogue() {
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}
       <div className="app-body">
-        <aside className="app-filters">
+        <aside className={`app-filters ${isFilterOpen ? 'open' : 'closed'}`}>
           <FilterPanel
             filtres={filtres}
             setFiltres={setFiltres}
@@ -371,10 +371,10 @@ export default function Catalogue() {
           <div className="main-topbar">
               <button
                 className="sidebar-toggle-btn"
-                onClick={() => setSidebarOpen(o => !o)}
-                title={sidebarOpen ? "Masquer le panneau filtres" : "Afficher le panneau filtres"}
+                onClick={() => setIsFilterOpen(o => !o)}
+                title={isFilterOpen ? "Masquer le panneau filtres" : "Afficher le panneau filtres"}
               >
-                {sidebarOpen ? "« Filtres" : "Filtres »"}
+                {isFilterOpen ? "« Filtres" : "Filtres »"}
               </button>
               <ActiveFilterBadges filtres={filtres} setFiltres={setFiltres} />
             </div>
