@@ -355,7 +355,7 @@ export default function Catalogue() {
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}
       <div className="app-body">
-        <aside className="app-sidebar">
+        <aside className="app-filters">
           <FilterPanel
             filtres={filtres}
             setFiltres={setFiltres}
@@ -366,8 +366,9 @@ export default function Catalogue() {
             mobileOpen={mobilePanelOpen === "filters"}
             onMobileClose={() => setMobilePanelOpen(null)}
           />
-          <div className="catalogue-content">
-            <div className="main-topbar">
+        </aside>
+        <section className="app-catalogue">
+          <div className="main-topbar">
               <button
                 className="sidebar-toggle-btn"
                 onClick={() => setSidebarOpen(o => !o)}
@@ -406,8 +407,7 @@ export default function Catalogue() {
             <footer className="app-footer">
               <p>Catalogue · {activites.length} activité{activites.length !== 1 ? "s" : ""} · {activitesFiltrees.length} affichées</p>
             </footer>
-          </div>
-        </aside>
+          </section>
         <main className="app-main">
           <SequenceBuilder
             programme={programme}
