@@ -288,12 +288,25 @@ body, .app {
 }
 
 @media print {
-  .app-layout, .app-body, .app-catalogue, .app-main, .app-filters {
+  /* Masquer tout sauf le document imprimable */
+  .header,
+  .app-filters,
+  .filter-handle,
+  .app-catalogue,
+  .mobile-toolbar,
+  .mobile-backdrop {
+    display: none !important;
+  }
+
+  /* Annuler toutes les contraintes de grille et de défilement */
+  .app-layout, .app-body, .app-main {
     display: block !important;
     position: static !important;
     transform: none !important;
     height: auto !important;
+    width: 100% !important;
     overflow: visible !important;
+    padding: 0 !important;
   }
 }
 
@@ -521,7 +534,29 @@ body, .app {
   .btn-sauvegarder-catalogue,
   .btn-vider-catalogue { flex: 1; text-align: center; }
 
-  /* Layout */
+  /* Layout — une seule colonne sur mobile */
+  .app-body {
+    display: flex !important;
+    flex-direction: column;
+    grid-template-columns: none;
+    overflow-y: auto;
+    height: auto;
+    flex: 1;
+  }
+  .app-catalogue, .app-main {
+    width: 100%;
+    height: auto;
+    overflow-y: visible;
+    padding: 0.75rem;
+  }
+  .app-filters {
+    position: fixed;
+    width: min(85vw, 320px);
+  }
+  .filter-handle {
+    display: none;
+  }
+
   .layout { grid-template-columns: 1fr; }
 
   /* Main */
