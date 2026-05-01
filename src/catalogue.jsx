@@ -487,8 +487,7 @@ export default function Catalogue() {
         <ActivityFormModal
           onClose={() => { setShowAddModal(false); setEditingActivite(null); }}
           onSave={editingActivite ? handleUpdateActivite : handleSaveActivite}
-          tousThemes={tousThemes}
-          tousMaterialels={tousMaterialels}
+          activites={activites}
           initialData={editingActivite}
         />
       )}

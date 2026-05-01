@@ -452,50 +452,114 @@ export function ImportFichierModal({ onClose, onImport }) {
   );
 }
 
-// ── Sélecteur de mots-clés (thèmes, matériels) ────────────────
+/**
+ * Extrait un tableau dédoublonné et trié des mots-clés d'une propriété spécifique
+ * à partir du catalogue d'activités.
+ * 
+ * @param {Array<Object>} activites - Le tableau des activités du catalogue.
+ * @param {string} cle - La propriété à extraire (ex: "themes", "materiels").
+ * @returns {string[]} Un tableau de chaînes de caractères dédoublonnées et triées.
+ */
+export function extraireTagsUniques(activites, cle) {
+  const set = new Set();
+  for (const a of activites || []) {
+    if (Array.isArray(a[cle])) {
+      for (const val of a[cle]) set.add(val);
+    }
+  }
+  return [...set].sort((a, b) => a.localeCompare(b, "fr"));
+}
 
-function KeywordSelector({ label, valeurs, existants, nouveauVal, setNouveauVal, onToggle, onAjouter }) {
-  const tries = [...existants].sort((a, b) => a.localeCompare(b, "fr"));
+// ── Sélecteur de mots-clés dynamique (creatable multi-select) ──
+
+function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle, onAjouter }) {
+  const [saisie, setSaisie] = React.useState("");
+  const [focus, setFocus] = React.useState(false);
+
+  const matchSaisie = saisie.trim().toLowerCase();
+  
+  const suggestionsAffichees = suggestionsDisponibles
+    .filter(s => !valeurs.includes(s))
+    .filter(s => !matchSaisie || s.toLowerCase().includes(matchSaisie));
+
+  const showAjouter = saisie.trim() !== "" 
+    && !suggestionsDisponibles.some(s => s.toLowerCase() === matchSaisie)
+    && !valeurs.some(v => v.toLowerCase() === matchSaisie);
+
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const val = saisie.trim();
+      if (val) {
+        if (!valeurs.includes(val)) onAjouter(val);
+        setSaisie("");
+      }
+    }
+  }
+
+  function handleClickSuggestion(val) {
+    onToggle(val);
+    setSaisie("");
+  }
+
+  function handleAjouterSaisie() {
+    const val = saisie.trim();
+    if (val) {
+      onAjouter(val);
+      setSaisie("");
+    }
+  }
+
   return (
     <div className="form-group">
       <label className="form-label">{label}</label>
-      {tries.length > 0 && (
-        <div className="form-chips form-chips-mb">
-          {tries.map((t) => (
-            <button
-              key={t}
-              className={`form-chip ${valeurs.includes(t) ? "form-chip-active" : ""}`}
-              onClick={() => onToggle(t)}
-              type="button"
-            >{t}</button>
-          ))}
-        </div>
-      )}
+
       {valeurs.length > 0 && (
         <div className="form-themes-selected">
-          {valeurs.map((t) => (
-            <span key={t} className="form-theme-chip">
-              {t}
-              <button onClick={() => onToggle(t)} className="form-theme-chip-remove">×</button>
+          {valeurs.map((v) => (
+            <span key={v} className="form-theme-chip">
+              {v}
+              <button type="button" onClick={() => onToggle(v)} className="form-theme-chip-remove">×</button>
             </span>
           ))}
         </div>
       )}
-      <div className="form-new-theme">
+
+      <div className="multi-select-container">
         <input
           className="form-input"
           type="text"
-          placeholder={`Ajouter un mot-clé…`}
-          value={nouveauVal}
-          onChange={(e) => setNouveauVal(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); onAjouter(); } }}
+          placeholder={`Ajouter ou sélectionner ${label.toLowerCase()}...`}
+          value={saisie}
+          onChange={(e) => setSaisie(e.target.value)}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
+          onKeyDown={handleKeyDown}
         />
-        <button
-          className="btn-add-theme"
-          onClick={onAjouter}
-          type="button"
-          disabled={!nouveauVal.trim()}
-        >Ajouter</button>
+        
+        {focus && (suggestionsAffichees.length > 0 || showAjouter) && (
+          <div className="multi-select-dropdown" onMouseDown={(e) => e.preventDefault()}>
+            {suggestionsAffichees.map(s => (
+              <button 
+                key={s} 
+                className="multi-select-option" 
+                type="button" 
+                onClick={() => handleClickSuggestion(s)}
+              >
+                {s}
+              </button>
+            ))}
+            {showAjouter && (
+              <button 
+                className="multi-select-option multi-select-option-new" 
+                type="button" 
+                onClick={handleAjouterSaisie}
+              >
+                + Ajouter « {saisie.trim()} »
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -503,7 +567,7 @@ function KeywordSelector({ label, valeurs, existants, nouveauVal, setNouveauVal,
 
 // ── ActivityFormModal ──────────────────────────────────────────
 
-export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels, initialData }) {
+export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
   const modeEdition = !!initialData;
   const [form, setForm] = React.useState(() => {
     if (initialData) {
@@ -556,9 +620,10 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
     };
   });
 
-  const [nouveauTheme, setNouveauTheme] = React.useState("");
-  const [nouveauMateriel, setNouveauMateriel] = React.useState("");
   const [erreurs, setErreurs] = React.useState({});
+
+  const tousThemes = React.useMemo(() => extraireTagsUniques(activites, "themes"), [activites]);
+  const tousMaterialels = React.useMemo(() => extraireTagsUniques(activites, "materiels"), [activites]);
 
   function setField(key, value) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -708,24 +773,28 @@ export function ActivityFormModal({ onClose, onSave, tousThemes, tousMaterialels
           </div>
         </div>
 
-        <KeywordSelector
+        <CreatableMultiSelect
           label="Thèmes"
           valeurs={form.themes}
-          existants={tousThemes}
-          nouveauVal={nouveauTheme}
-          setNouveauVal={setNouveauTheme}
+          suggestionsDisponibles={tousThemes}
           onToggle={(t) => toggleKeyword("themes", t)}
-          onAjouter={() => ajouterKeyword("themes", nouveauTheme, setNouveauTheme)}
+          onAjouter={(val) => {
+            if (!form.themes.includes(val)) {
+              setForm(prev => ({ ...prev, themes: [...prev.themes, val] }));
+            }
+          }}
         />
 
-        <KeywordSelector
+        <CreatableMultiSelect
           label="Matériels nécessaires"
           valeurs={form.materiels}
-          existants={tousMaterialels}
-          nouveauVal={nouveauMateriel}
-          setNouveauVal={setNouveauMateriel}
+          suggestionsDisponibles={tousMaterialels}
           onToggle={(t) => toggleKeyword("materiels", t)}
-          onAjouter={() => ajouterKeyword("materiels", nouveauMateriel, setNouveauMateriel)}
+          onAjouter={(val) => {
+            if (!form.materiels.includes(val)) {
+              setForm(prev => ({ ...prev, materiels: [...prev.materiels, val] }));
+            }
+          }}
         />
 
         <div className="form-group">
