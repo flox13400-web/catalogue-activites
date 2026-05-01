@@ -287,7 +287,7 @@ export default function SequenceBuilder({
   // ── Render ────────────────────────────────────────────────────
 
   return (
-    <aside className={`panel panel-cart${mobileOpen ? " panel-open" : ""}`}>
+    <main className={`panel panel-cart builder-main${mobileOpen ? " panel-open" : ""}`}>
       <div className="panel-header seq-panel-header">
         <button className="panel-mobile-close" onClick={onMobileClose}>×</button>
         <h2 className="panel-title">Constructeur</h2>
@@ -519,6 +519,6 @@ export default function SequenceBuilder({
           </button>
         )}
       </div>
-    </aside>
+    </main>
   );
 }

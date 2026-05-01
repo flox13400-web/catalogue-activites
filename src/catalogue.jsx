@@ -354,58 +354,60 @@ export default function Catalogue() {
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}
-      <div className={`layout${sidebarOpen ? "" : " layout--sidebar-closed"}`}>
-        <FilterPanel
-          filtres={filtres}
-          setFiltres={setFiltres}
-          filteredCount={activitesFiltrees.length}
-          totalActivites={activites.length}
-          tousThemes={tousThemes}
-          tousMaterialels={tousMaterialels}
-          mobileOpen={mobilePanelOpen === "filters"}
-          onMobileClose={() => setMobilePanelOpen(null)}
-        />
-        <main className="main">
-          <div className="main-topbar">
-            <button
-              className="sidebar-toggle-btn"
-              onClick={() => setSidebarOpen(o => !o)}
-              title={sidebarOpen ? "Masquer le panneau filtres" : "Afficher le panneau filtres"}
-            >
-              {sidebarOpen ? "« Filtres" : "Filtres »"}
-            </button>
-            <ActiveFilterBadges filtres={filtres} setFiltres={setFiltres} />
+      <div className="app-layout">
+        <aside className="catalogue-sidebar">
+          <FilterPanel
+            filtres={filtres}
+            setFiltres={setFiltres}
+            filteredCount={activitesFiltrees.length}
+            totalActivites={activites.length}
+            tousThemes={tousThemes}
+            tousMaterialels={tousMaterialels}
+            mobileOpen={mobilePanelOpen === "filters"}
+            onMobileClose={() => setMobilePanelOpen(null)}
+          />
+          <div className="catalogue-content">
+            <div className="main-topbar">
+              <button
+                className="sidebar-toggle-btn"
+                onClick={() => setSidebarOpen(o => !o)}
+                title={sidebarOpen ? "Masquer le panneau filtres" : "Afficher le panneau filtres"}
+              >
+                {sidebarOpen ? "« Filtres" : "Filtres »"}
+              </button>
+              <ActiveFilterBadges filtres={filtres} setFiltres={setFiltres} />
+            </div>
+            {activites.length === 0 ? (
+              <div className="empty-catalogue">
+                <p className="empty-catalogue-title">Votre catalogue est vide</p>
+                <p className="empty-catalogue-hint">Chargez le catalogue de base ou ajoutez vos propres activités.</p>
+                <button className="btn empty-catalogue-btn" onClick={() => setShowChoixImport(true)}>+ Ajouter des activités</button>
+              </div>
+            ) : activitesFiltrees.length === 0 ? (
+              <div className="no-results">
+                <p className="no-results-title">Aucune activité ne correspond à ces filtres.</p>
+                <p className="no-results-hint">Essayez de réduire le nombre de critères sélectionnés.</p>
+              </div>
+            ) : (
+              <div className="cards-grid">
+                {activitesFiltrees.map(a => (
+                  <ActivityCard
+                    key={a.id}
+                    activite={a}
+                    onClick={setSelected}
+                    estEpingle={panier.has(a.id)}
+                    estFavori={favoris.has(a.id)}
+                    onToggleFavori={toggleFavori}
+                    onAssigner={setAssignTarget}
+                  />
+                ))}
+              </div>
+            )}
+            <footer className="app-footer">
+              <p>Catalogue · {activites.length} activité{activites.length !== 1 ? "s" : ""} · {activitesFiltrees.length} affichées</p>
+            </footer>
           </div>
-          {activites.length === 0 ? (
-            <div className="empty-catalogue">
-              <p className="empty-catalogue-title">Votre catalogue est vide</p>
-              <p className="empty-catalogue-hint">Chargez le catalogue de base ou ajoutez vos propres activités.</p>
-              <button className="btn empty-catalogue-btn" onClick={() => setShowChoixImport(true)}>+ Ajouter des activités</button>
-            </div>
-          ) : activitesFiltrees.length === 0 ? (
-            <div className="no-results">
-              <p className="no-results-title">Aucune activité ne correspond à ces filtres.</p>
-              <p className="no-results-hint">Essayez de réduire le nombre de critères sélectionnés.</p>
-            </div>
-          ) : (
-            <div className="cards-grid">
-              {activitesFiltrees.map(a => (
-                <ActivityCard
-                  key={a.id}
-                  activite={a}
-                  onClick={setSelected}
-                  estEpingle={panier.has(a.id)}
-                  estFavori={favoris.has(a.id)}
-                  onToggleFavori={toggleFavori}
-                  onAssigner={setAssignTarget}
-                />
-              ))}
-            </div>
-          )}
-          <footer className="app-footer">
-            <p>Catalogue · {activites.length} activité{activites.length !== 1 ? "s" : ""} · {activitesFiltrees.length} affichées</p>
-          </footer>
-        </main>
+        </aside>
         <SequenceBuilder
           programme={programme}
           setProgramme={setProgramme}

@@ -33,8 +33,6 @@ body, .app {
 }
 
 .app {
-  height: 100vh;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -247,27 +245,37 @@ body, .app {
 }
 
 
-/* LAYOUT 3 COLONNES */
-.layout {
+/* LAYOUT 2 COLONNES (.app-layout) */
+.app-layout {
   flex: 1;
   display: grid;
-  grid-template-columns: 280px 1fr clamp(440px, 46vw, 704px);
-  gap: 0;
-  width: 100%;
+  grid-template-columns: 350px 1fr;
+  height: 100vh;
   overflow: hidden;
-  transition: grid-template-columns 240ms ease;
+  width: 100%;
 }
 
-/* SIDEBAR RÉTRACTABLE */
-.layout--sidebar-closed {
-  grid-template-columns: 0px 1fr clamp(440px, 46vw, 704px);
+@media print {
+  .app-layout {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
 }
-.layout--sidebar-closed .panel-filters {
-  min-width: 0;
-  overflow: hidden;
-  opacity: 0;
-  border-right: none;
-  pointer-events: none;
+
+.catalogue-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.builder-main {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--bg);
 }
 
 /* PANELS LATÉRAUX */
@@ -377,11 +385,11 @@ body, .app {
 }
 .btn-print:hover { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-deep); }
 
-/* MAIN */
-.main {
-  height: 100%;
-  overflow-y: auto;
-  padding: 32px 48px 80px;
+/* CATALOGUE CONTENT (Anciennement main) */
+.catalogue-content {
+  padding: 24px 24px 80px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* BARRE SUPÉRIEURE DU MAIN (toggle sidebar + badges filtres) */
