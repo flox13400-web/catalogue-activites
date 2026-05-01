@@ -11,45 +11,7 @@ const VERBES_BLOOM_GROUPED = [
   { niveau: "Créer",      verbes: ["Concevoir", "Construire", "Planifier", "Produire", "Générer", "Inventer"] },
 ];
 
-const DUREE_PLAGES = {
-  "0-15min":  { min: 0,  max: 15 },
-  "15-30min": { min: 15, max: 30 },
-  "30-45min": { min: 30, max: 45 },
-  "45-60min": { min: 45, max: 60 },
-  ">60min":   null,
-};
-
-function parseDureeString(str) {
-  if (!str) return null;
-  str = str.trim();
-  let m = str.match(/^(\d+)\s*min$/i);
-  if (m) return parseInt(m[1], 10);
-  m = str.match(/^(\d+)\s*h\s*(\d+)\s*(?:min)?$/i);
-  if (m) return parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
-  m = str.match(/^(\d+)\s*h$/i);
-  if (m) return parseInt(m[1], 10) * 60;
-  m = str.match(/^(\d+)$/);
-  if (m) return parseInt(m[1], 10);
-  return null;
-}
-
-function parseDureeActivite(activite) {
-  const plage = DUREE_PLAGES[activite.duree];
-  if (plage === null) return { min: 0, max: 0, hasProjet: true };
-  if (plage) return { min: plage.min, max: plage.max, hasProjet: false };
-  const minutes = parseDureeString(activite.duree_detail || activite.duree);
-  if (minutes !== null) return { min: minutes, max: minutes, hasProjet: false };
-  return { min: 0, max: 0, hasProjet: false };
-}
-
-function formatMinutes(m) {
-  if (m === 0) return "0min";
-  const h = Math.floor(m / 60);
-  const min = m % 60;
-  if (h === 0) return `${min}min`;
-  if (min === 0) return `${h}h`;
-  return `${h}h${String(min).padStart(2, "0")}`;
-}
+import { calculerDureeTotalProgramme, formatDureeGlobale } from "../utils/duree";
 
 export const PROGRAMME_INIT = {
   id: "prog-1",
@@ -77,28 +39,8 @@ export default function SequenceBuilder({
     0
   );
 
-  const dureeTotal = useMemo(() => {
-    let min = 0, max = 0, hasProjet = false;
-    for (const seq of programme.sequences) {
-      for (const sea of seq.seances) {
-        for (const fiche of sea.fiches) {
-          const activite = toutesActivites.find(a => a.id === fiche.activite_id);
-          if (!activite) continue;
-          const { min: dMin, max: dMax, hasProjet: hp } = parseDureeActivite(activite);
-          min += dMin; max += dMax;
-          if (hp) hasProjet = true;
-        }
-      }
-    }
-    return { min, max, hasProjet };
-  }, [programme, toutesActivites]);
-
-  const dureeStr = (dureeTotal.min > 0 || dureeTotal.max > 0 || dureeTotal.hasProjet)
-    ? (dureeTotal.min === dureeTotal.max
-        ? formatMinutes(dureeTotal.min)
-        : `${formatMinutes(dureeTotal.min)} – ${formatMinutes(dureeTotal.max)}`)
-      + (dureeTotal.hasProjet ? " + projet" : "")
-    : null;
+  const dureeTotal = useMemo(() => calculerDureeTotalProgramme(programme, toutesActivites), [programme, toutesActivites]);
+  const dureeStr = formatDureeGlobale(dureeTotal);
 
   // ── Collapse ──────────────────────────────────────────────────
 
@@ -318,6 +260,7 @@ export default function SequenceBuilder({
 
       <div className="panel-body seq-builder-body">
         <div className="seq-programme-header">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px', flexShrink: 0}}><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
           {renderTitre(programme.id, programme.titre, "seq-programme-titre")}
           <div className="seq-madlibs">
             <span className="seq-madlibs-prefix">À l'issue de cette formation, l'apprenant sera capable de :</span>
@@ -382,6 +325,7 @@ export default function SequenceBuilder({
                   <button className="seq-collapse-btn" onClick={() => toggleCollapse(seq.id)}>
                     {seqCollapsed ? "▶" : "▼"}
                   </button>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                   {renderTitre(seq.id, seq.titre, "seq-sequence-titre")}
                   <button className="seq-remove-btn" onClick={() => removeSequence(seq.id)} title="Supprimer la séquence">×</button>
                 </div>
@@ -433,6 +377,7 @@ export default function SequenceBuilder({
                             <button className="seq-collapse-btn seq-collapse-btn-sm" onClick={() => toggleCollapse(sea.id)}>
                               {seaCollapsed ? "▶" : "▼"}
                             </button>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                             {renderTitre(sea.id, sea.titre, "seq-seance-titre")}
                             <button className="seq-remove-btn" onClick={() => removeSeance(seq.id, sea.id)} title="Supprimer la séance">×</button>
                           </div>
@@ -480,6 +425,7 @@ export default function SequenceBuilder({
                                 ficheAvecActivite.map(({ fiche, activite }) => (
                                   <div key={fiche.id} className="seq-fiche">
                                     <span className="seq-fiche-id">{activite.id}</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                                     <span className="seq-fiche-titre">{activite.titre}</span>
                                     <button
                                       className="seq-remove-btn"

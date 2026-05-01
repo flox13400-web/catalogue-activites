@@ -1,23 +1,27 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "../styles/global.css";
 import LogoBrand from "./LogoBrand";
+import { formatDureeGlobale } from "../utils/duree";
 
 /**
  * Composant d'en-tête de l'application.
- * @param {Function} onExportSQA - Déclenche l'export du programme courant en fichier .sqa.
- * @param {Function} onImportSQA - Reçoit un objet File .sqa et déclenche le chargement de l'état.
  */
-export default function Header({ totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue, nbCorbeille, onOuvrirCorbeille, onExportSQA, onImportSQA }) {
+export default function Header({ programme, dureeTotal, totalActivites, filteredCount, onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue, nbCorbeille, onOuvrirCorbeille, onExportSQA, onImportSQA }) {
   const fileInputRef = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   function handleFileChange(e) {
     const file = e.target.files[0];
     if (file) {
       onImportSQA(file);
-      // Réinitialise l'input pour permettre le rechargement du même fichier
       e.target.value = "";
     }
   }
+
+  const dureeStr = formatDureeGlobale(dureeTotal) || "0min";
+  const dureeCible = (programme?.duree_objectif || 0) * 60;
+  const ratio = dureeCible > 0 ? Math.min((dureeTotal?.max || 0) / dureeCible, 1) * 100 : 0;
+
   return (
     <header className="header">
       <div className="header-inner">
@@ -27,6 +31,14 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
             <LogoBrand className="header-nom" />
             <span className="header-tagline">TICE ton architecture pédagogique</span>
           </div>
+          {dureeCible > 0 && (
+            <div className="header-jauge">
+              <span className="header-jauge-text">{dureeStr} / {programme.duree_objectif}h</span>
+              <div className="header-jauge-bar">
+                <div className="header-jauge-fill" style={{ width: `${ratio}%` }}></div>
+              </div>
+            </div>
+          )}
         </div>
         <div className="header-right">
           <div className="header-stat">
@@ -38,31 +50,40 @@ export default function Header({ totalActivites, filteredCount, onNouvelleActivi
             <div className="header-stat-label">activités</div>
           </div>
           <div className="header-actions">
-            <button className="btn-nouvelle-activite" onClick={onNouvelleActivite}>
-              ✚ Nouvelle activité
+            <button className="btn-header btn-creer" onClick={onNouvelleActivite}>
+              Créer +
             </button>
-            <button className="btn-sauvegarder-catalogue" onClick={onSauvegarderCatalogue} title="Télécharger tout le catalogue en JSON">
-              Sauvegarder
-            </button>
-            <button className="btn-sauvegarder-catalogue" onClick={onExportSQA} title="Exporter le parcours en cours au format .sqa">
-              ↓ Exporter (.sqa)
-            </button>
-            <button className="btn-sauvegarder-catalogue" onClick={() => fileInputRef.current?.click()} title="Charger un fichier de parcours .sqa">
-              ↑ Importer (.sqa)
-            </button>
+            <div className="dropdown-container">
+              <button className="btn-header" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                Mémoire ▼
+              </button>
+              {isMenuOpen && (
+                <div className="dropdown-menu">
+                  <button className="dropdown-item" onClick={() => { onSauvegarderCatalogue(); setIsMenuOpen(false); }}>
+                    Sauvegarder JSON
+                  </button>
+                  <button className="dropdown-item" onClick={() => { onExportSQA(); setIsMenuOpen(false); }}>
+                    Exporter (.sqa)
+                  </button>
+                  <button className="dropdown-item" onClick={() => { fileInputRef.current?.click(); setIsMenuOpen(false); }}>
+                    Importer (.sqa)
+                  </button>
+                  <button className="dropdown-item" onClick={() => { onViderCatalogue(); setIsMenuOpen(false); }} style={{ color: "#c0392b" }}>
+                    Vider catalogue
+                  </button>
+                </div>
+              )}
+            </div>
             <input
               ref={fileInputRef}
               id="sqa-file-input"
               type="file"
               accept=".sqa"
               className="sqa-file-input-hidden"
-              onChange={handleFileChange}
+              onChange={(e) => { handleFileChange(e); setIsMenuOpen(false); }}
             />
-            <button className="btn-vider-catalogue" onClick={onViderCatalogue}>
-              Vider le catalogue
-            </button>
-            <button className="btn-corbeille-header" onClick={onOuvrirCorbeille} title="Corbeille">
-              🗑 <span className="btn-corbeille-header-count">{nbCorbeille}</span>
+            <button className="btn-header" onClick={onOuvrirCorbeille} title="Corbeille">
+              🗑 {nbCorbeille}
             </button>
           </div>
         </div>
