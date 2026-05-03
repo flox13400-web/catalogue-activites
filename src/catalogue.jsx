@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 
 import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
-import { exportCatalogue } from "./utils/export";
+import { exportCatalogue, sauvegarderCatalogueFS } from "./utils/export";
 import { exportToSQA, importFromSQA } from "./utils/sqaManager";
 import { genererIdActivite, ChoixImportModal, ImportFichierModal, ActivityFormModal } from "./components/AddActivityModal";
 import Header from "./components/Header";
@@ -28,6 +28,8 @@ export default function Catalogue() {
   const [showCorbeille, setShowCorbeille] = useState(false);
   const [editingActivite, setEditingActivite] = useState(null);
   const [assignTarget, setAssignTarget] = useState(null);
+  /** @type {[FileSystemFileHandle|null, Function]} Handle mémorisé pour éviter la modale à chaque sauvegarde */
+  const [fileHandle, setFileHandle] = useState(null);
 
   const [activites, setActivites] = useState(() => {
     const unified = loadJSON(KEYS.activites, null);
@@ -272,6 +274,17 @@ export default function Catalogue() {
   }
 
   /**
+   * Sauvegarde directe via File System Access API (Chrome/Edge desktop).
+   * Au premier appel : ouvre une modale de sélection de fichier et mémorise le handle.
+   * Aux appels suivants : réécrit directement sans redemander l'emplacement.
+   * Fallback automatique vers téléchargement sur navigateurs non compatibles.
+   */
+  async function handleSauvegarderDisquette() {
+    const handle = await sauvegarderCatalogueFS(activites, fileHandle);
+    if (handle && handle !== fileHandle) setFileHandle(handle);
+  }
+
+  /**
    * Exporte l'état courant de programme vers un fichier .sqa sur le disque local.
    * Le dictionnaireActivites embarque les objets complets de toutes les activités
    * référencées dans le programme pour rendre l'archive autonome.
@@ -326,13 +339,6 @@ export default function Catalogue() {
     setAssignTarget(null);
   }
 
-  function handleViderCatalogue() {
-    if (!window.confirm(
-      `Vider le catalogue ?\n\nLes ${activites.length} activité${activites.length > 1 ? "s" : ""} seront supprimées. Le constructeur de séquence sera également vidé.`
-    )) return;
-    setActivites([]);
-    setProgramme(prev => ({ ...prev, sequences: [] }));
-  }
 
   return (
     <div className="app-layout">
@@ -345,7 +351,8 @@ export default function Catalogue() {
       <Header
         onNouvelleActivite={() => setShowChoixImport(true)}
         onSauvegarderCatalogue={handleSauvegarderCatalogue}
-        onViderCatalogue={handleViderCatalogue}
+        onSauvegarderDisquette={handleSauvegarderDisquette}
+        fileHandleActif={!!fileHandle}
         nbCorbeille={corbeille.length}
         onOuvrirCorbeille={() => setShowCorbeille(true)}
         onExportSQA={handleExportSQA}

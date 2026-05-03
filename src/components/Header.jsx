@@ -4,8 +4,16 @@ import LogoBrand from "./LogoBrand";
 
 /**
  * Composant d'en-tête de l'application.
+ * @param {Function} onNouvelleActivite
+ * @param {Function} onSauvegarderCatalogue - Téléchargement JSON classique (menu).
+ * @param {Function} onSauvegarderDisquette - Sauvegarde directe via File System Access API.
+ * @param {boolean} fileHandleActif - True si un handle de fichier est déjà mémorisé.
+ * @param {number} nbCorbeille
+ * @param {Function} onOuvrirCorbeille
+ * @param {Function} onExportSQA
+ * @param {Function} onImportSQA
  */
-export default function Header({ onNouvelleActivite, onViderCatalogue, onSauvegarderCatalogue, nbCorbeille, onOuvrirCorbeille, onExportSQA, onImportSQA }) {
+export default function Header({ onNouvelleActivite, onSauvegarderCatalogue, onSauvegarderDisquette, fileHandleActif, nbCorbeille, onOuvrirCorbeille, onExportSQA, onImportSQA }) {
   const fileInputRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -29,6 +37,13 @@ export default function Header({ onNouvelleActivite, onViderCatalogue, onSauvega
         </div>
         <div className="header-right">
           <div className="header-actions">
+            <button
+              className={`btn-header btn-disquette${fileHandleActif ? " btn-disquette-lie" : ""}`}
+              onClick={onSauvegarderDisquette}
+              title={fileHandleActif ? "Sauvegarder (fichier lié)" : "Sauvegarder le catalogue…"}
+            >
+              💾
+            </button>
             <button className="btn-header btn-creer" onClick={onNouvelleActivite}>
               Créer +
             </button>
@@ -39,16 +54,13 @@ export default function Header({ onNouvelleActivite, onViderCatalogue, onSauvega
               {isMenuOpen && (
                 <div className="dropdown-menu">
                   <button className="dropdown-item" onClick={() => { onSauvegarderCatalogue(); setIsMenuOpen(false); }}>
-                    Sauvegarder JSON
+                    Sauvegarder bibliothèque
                   </button>
                   <button className="dropdown-item" onClick={() => { onExportSQA(); setIsMenuOpen(false); }}>
-                    Exporter (.sqa)
+                    Exporter un programme
                   </button>
                   <button className="dropdown-item" onClick={() => { fileInputRef.current?.click(); setIsMenuOpen(false); }}>
-                    Importer (.sqa)
-                  </button>
-                  <button className="dropdown-item" onClick={() => { onViderCatalogue(); setIsMenuOpen(false); }} style={{ color: "#c0392b" }}>
-                    Vider catalogue
+                    Importer un programme
                   </button>
                 </div>
               )}

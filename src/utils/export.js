@@ -13,6 +13,40 @@ export function exportCatalogue(activites) {
   telecharger(JSON.stringify(activites, null, 2), `catalogue-sequencia-${date}.json`, "application/json");
 }
 
+/**
+ * Sauvegarde le catalogue via File System Access API si disponible,
+ * sinon déclenche un téléchargement classique (fallback mobile / Safari / Firefox).
+ * @param {Array} activites - Liste complète des activités.
+ * @param {FileSystemFileHandle|null} existingHandle - Handle existant pour réécriture directe sans nouvelle modale.
+ * @returns {Promise<FileSystemFileHandle|null>} Handle obtenu (à conserver en état) ou null si fallback.
+ */
+export async function sauvegarderCatalogueFS(activites, existingHandle = null) {
+  const contenu = JSON.stringify(activites, null, 2);
+
+  // Fallback : navigateurs sans support (Safari iOS, Firefox)
+  if (!window.showSaveFilePicker) {
+    telecharger(contenu, "activites.json", "application/json");
+    return null;
+  }
+
+  try {
+    let handle = existingHandle;
+    if (!handle) {
+      handle = await window.showSaveFilePicker({
+        suggestedName: "activites.json",
+        types: [{ description: "Catalogue JSON", accept: { "application/json": [".json"] } }],
+      });
+    }
+    const writable = await handle.createWritable();
+    await writable.write(contenu);
+    await writable.close();
+    return handle;
+  } catch (err) {
+    if (err.name !== "AbortError") console.error("Erreur sauvegarde FS:", err);
+    return existingHandle ?? null;
+  }
+}
+
 export function exportJSON(activites, titre = "") {
   const data = {
     export: titre.trim() || "Catalogue IA — Panier de séance",

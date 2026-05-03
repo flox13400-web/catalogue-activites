@@ -760,6 +760,34 @@ body, .app {
   background: var(--text);
 }
 
+/* Bouton disquette — sauvegarde directe catalogue */
+.btn-disquette {
+  padding: 10px 14px;
+  font-size: 17px;
+  line-height: 1;
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-muted);
+  transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+.btn-disquette:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+/* Fichier lié : anneau vert discret pour indiquer que la prochaine sauvegarde sera silencieuse */
+.btn-disquette-lie {
+  box-shadow: 0 0 0 2px #4caf5055;
+  border-color: #4caf50;
+  color: #2e7d32;
+}
+.btn-disquette-lie:hover {
+  background: #e8f5e9;
+  border-color: #388e3c;
+  color: #1b5e20;
+}
+
+
 .dropdown-container {
   position: relative;
 }

@@ -1,8 +1,16 @@
 import React from "react";
 import "../styles/modal.css";
 
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
+/**
+ * Formate une date ISO en "3 mai 2026 à 18:05".
+ * @param {string} iso - Date au format ISO 8601.
+ * @returns {string}
+ */
+function formatDateHeure(iso) {
+  const d = new Date(iso);
+  const date = d.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+  const heure = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  return `${date} à ${heure}`;
 }
 
 export default function CorbeillModal({ corbeille, onRestore, onDeleteEntry, onRestoreTout, onVider, onClose }) {
@@ -40,13 +48,10 @@ export default function CorbeillModal({ corbeille, onRestore, onDeleteEntry, onR
             <div className="corbeille-list">
               {[...corbeille].reverse().map(entry => (
                 <div key={entry.id} className="corbeille-item">
-                  <span className={`corbeille-badge corbeille-badge-${entry.type}`}>
-                    {entry.type === "suppression" ? "supprimée" : "modifiée"}
-                  </span>
                   <div className="corbeille-item-info">
                     <div className="corbeille-item-titre">{entry.activite.titre}</div>
                     <div className="corbeille-item-meta">
-                      {entry.activite.id} · {entry.activite.duree} · {formatDate(entry.date)}
+                      {entry.type === "suppression" ? "Supprimée" : "Modifiée"} le {formatDateHeure(entry.date)}
                     </div>
                   </div>
                   <div className="corbeille-item-actions">
