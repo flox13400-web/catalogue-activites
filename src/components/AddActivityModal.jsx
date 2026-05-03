@@ -15,7 +15,6 @@ const VERBES_BLOOM_GROUPED = [
 ];
 const DUREES_OK = new Set(DUREES_DISPONIBLES);
 const TAILLES_GROUPE_DISPONIBLES = ["1", "2-6", "7-12", ">12"];
-const CONTEXTES_DISPONIBLES = ["Scolaire", "Entreprise", "Montée en compétence", "Diplomant"];
 const MODALITES_DISPONIBLES = ["Présentielle", "Distanciel", "Synchrone", "Asynchrone"];
 
 // ── Utilitaire ID ──────────────────────────────────────────────
@@ -52,7 +51,6 @@ export function parserJSON(texte) {
       taille_groupe: norm(a.taille_groupe ?? a.groupe),
       themes: norm(a.themes),
       materiels: norm(a.materiels),
-      contexte: norm(a.contexte),
       modalite: norm(a.modalite),
       description: String(a.description || "").trim(),
       apprentissage_cle: String(a.apprentissage_cle || "").trim(),
@@ -107,7 +105,6 @@ export function parserMarkdown(texte) {
       taille_groupe: splitter(extraireChamp("Taille de groupe") || extraireChamp("Groupe")),
       themes: splitter(extraireChamp("Thèmes")),
       materiels: splitter(extraireChamp("Matériels")),
-      contexte: splitter(extraireChamp("Contexte")),
       modalite: splitter(extraireChamp("Modalité")),
       description: extraireSection("Description"),
       apprentissage_cle: extraireSection("Apprentissage clé"),
@@ -169,7 +166,6 @@ export function parserCSV(texte) {
       taille_groupe: split(get(c, "taille_groupe") || get(c, "groupe")),
       themes: split(get(c, "themes")),
       materiels: split(get(c, "materiels")),
-      contexte: split(get(c, "contexte")),
       modalite: split(get(c, "modalite")),
       description: get(c, "description"),
       apprentissage_cle: get(c, "apprentissage_cle"),
@@ -183,7 +179,7 @@ export function parserCSV(texte) {
 }
 
 function telechargerModeleCSV() {
-  const entetes = "titre;age_public;duree;taille_groupe;themes;materiels;contexte;modalite;description;apprentissage_cle;problematique;remediation";
+  const entetes = "titre;age_public;duree;taille_groupe;themes;materiels;modalite;description;apprentissage_cle;problematique;remediation";
   const valeurs = [
     "Mon activité pédagogique",
     "Collège | Lycée",
@@ -245,7 +241,6 @@ const EXEMPLE_JSON = `[
     "taille_groupe": ["7-12"],
     "themes": ["Mon thème"],
     "materiels": ["Cartes", "Tableau"],
-    "contexte": ["Scolaire"],
     "modalite": ["Présentielle"],
     "description": "...",
     "apprentissage_cle": "...",
@@ -261,7 +256,6 @@ const EXEMPLE_MD = `## 1. Titre de l'activité \`ID\`
 **Taille de groupe :** 7-12
 **Thèmes :** Mon thème
 **Matériels :** Cartes, Tableau
-**Contexte :** Scolaire
 **Modalité :** Présentielle
 
 ### Description
@@ -569,7 +563,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         taille_groupe: initialData.taille_groupe || initialData.groupe || [],
         themes: initialData.themes || [],
         materiels: initialData.materiels || [],
-        contexte: initialData.contexte || [],
         modalite: initialData.modalite || [],
         type_fiche: initialData.type_fiche || "Activite_Apprentissage",
         verbe_action_bloom: initialData.verbe_action_bloom || "",
@@ -591,7 +584,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       taille_groupe: [],
       themes: [],
       materiels: [],
-      contexte: [],
       modalite: [],
       type_fiche: "Activite_Apprentissage",
       verbe_action_bloom: "",
@@ -731,20 +723,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
                 >{m}</button>
               ))}
             </div>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Contexte</label>
-          <div className="form-chips">
-            {CONTEXTES_DISPONIBLES.map((c) => (
-              <button
-                key={c}
-                className={`form-chip ${form.contexte.includes(c) ? "form-chip-active" : ""}`}
-                onClick={() => toggleMulti("contexte", c)}
-                type="button"
-              >{c}</button>
-            ))}
           </div>
         </div>
 

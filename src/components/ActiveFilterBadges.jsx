@@ -4,7 +4,6 @@ const ETIQUETTES = {
   age_public: "Âge",
   duree: "Durée",
   taille_groupe: "Groupe",
-  contexte: "Contexte",
   modalite: "Modalité",
   themes: "Thème",
   materiels: "Matériel",

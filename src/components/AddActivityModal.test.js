@@ -34,7 +34,6 @@ const ACT_BASE = {
   duree: "30-45min",
   taille_groupe: ["7-12"],
   themes: ["IA déconnecté"],
-  contexte: ["Scolaire"],
   modalite: ["Présentielle"],
   materiels: ["Cartes"],
   description: "Description complète",
@@ -116,13 +115,13 @@ describe("parserJSON — erreurs", () => {
 
 // ── parserCSV ─────────────────────────────────────────────────
 
-const ENTETES = "titre;age_public;duree;taille_groupe;themes;materiels;contexte;modalite;description;apprentissage_cle";
+const ENTETES = "titre;age_public;duree;taille_groupe;themes;materiels;modalite;description;apprentissage_cle";
 
 function csv(...lignes) {
   return [ENTETES, ...lignes].join("\n");
 }
 
-const LIGNE_BASE = '"Mon activité";"Collège | Lycée";"30-45min";"";"7-12";"IA déconnecté";"Cartes";"Scolaire";"Présentielle";"Résumé";"Description complète";"Ce que l\'on retient"';
+const LIGNE_BASE = '"Mon activité";"Collège | Lycée";"30-45min";"";"7-12";"IA déconnecté";"Scolaire";"Présentielle";"Résumé";"Description complète";"Ce que l\'on retient"';
 
 describe("parserCSV — structure valide", () => {
   it("parse une ligne basique (séparateur ;)", () => {
@@ -138,8 +137,8 @@ describe("parserCSV — structure valide", () => {
   });
 
   it("détecte le séparateur virgule automatiquement", () => {
-    const entetes = "titre,age_public,duree,taille_groupe,themes,materiels,contexte,modalite,description,apprentissage_cle";
-    const ligne = '"Activité A","Adultes","45-60min","",">12","Éthique","","Entreprise","Distanciel","Résumé","Desc","Apprentissage"';
+    const entetes = "titre,age_public,duree,taille_groupe,themes,materiels,modalite,description,apprentissage_cle";
+    const ligne = '"Activité A","Adultes","45-60min","",">12","Éthique","Entreprise","Distanciel","Résumé","Desc","Apprentissage"';
     const res = parserCSV(`${entetes}\n${ligne}`);
     expect(res).toHaveLength(1);
     expect(res[0].titre).toBe("Activité A");
@@ -218,7 +217,6 @@ describe("parserMarkdown", () => {
 **Taille de groupe :** 7-12
 **Thèmes :** IA déconnecté
 **Matériels :** Cartes, Tableau
-**Contexte :** Scolaire
 **Modalité :** Présentielle
 
 ### Description

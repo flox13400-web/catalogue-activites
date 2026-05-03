@@ -128,7 +128,6 @@ export default function Catalogue() {
       taille_groupe: formData.taille_groupe,
       themes: formData.themes,
       materiels: formData.materiels,
-      contexte: formData.contexte,
       modalite: formData.modalite,
 
       description: formData.description.trim(),
@@ -192,7 +191,6 @@ export default function Catalogue() {
       taille_groupe: formData.taille_groupe,
       themes: formData.themes,
       materiels: formData.materiels,
-      contexte: formData.contexte,
       modalite: formData.modalite,
 
       description: formData.description.trim(),

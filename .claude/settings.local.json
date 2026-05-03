@@ -13,7 +13,9 @@
       "Bash(git revert *)",
       "Bash(npm audit *)",
       "Bash(npm install *)",
-      "Bash(npm test *)"
+      "Bash(npm test *)",
+      "Skill(update-config)",
+      "Skill(update-config:*)"
     ]
   },
   "hooks": {
@@ -24,6 +26,18 @@
           {
             "type": "command",
             "command": "INPUT=$(cat); CMD=$(echo \"$INPUT\" | jq -r '.tool_input.command // \"\"'); if echo \"$CMD\" | grep -q 'git push'; then npm test; RC=$?; if [ $RC -ne 0 ]; then echo '{\"continue\": false, \"stopReason\": \"Tests unitaires échoués — push annulé. Corrigez les erreurs avant de pousser.\"}'; exit 1; fi; fi",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); CMD=$(echo \"$INPUT\" | jq -r '.tool_input.command // \"\"'); if ! echo \"$CMD\" | grep -q 'npm test'; then exit 0; fi; RESP=$(echo \"$INPUT\" | jq -r '.tool_response // \"\"'); if echo \"$RESP\" | grep -qi 'failed'; then exit 0; fi; if ! echo \"$RESP\" | grep -q 'passed'; then exit 0; fi; CHANGES=$(git status --porcelain); if [ -z \"$CHANGES\" ]; then exit 0; fi; git add -A && git commit -m 'auto: push apres tests passes' && git push",
             "timeout": 60
           }
         ]

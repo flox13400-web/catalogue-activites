@@ -55,17 +55,6 @@ export default function DetailModal({ activite, onClose, estEpingle, onAssigner,
           </div>
         )}
 
-        {(activite.contexte || []).length > 0 && (
-          <div className="modal-section">
-            <h3 className="modal-section-title">Contexte</h3>
-            <div className="modal-tags">
-              {(activite.contexte || []).map((c) => (
-                <span key={c} className="tag tag-contexte tag-large">{c}</span>
-              ))}
-            </div>
-          </div>
-        )}
-
         {(activite.themes || []).length > 0 && (
           <div className="modal-section">
             <h3 className="modal-section-title">Thèmes</h3>

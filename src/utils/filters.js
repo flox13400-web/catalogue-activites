@@ -4,7 +4,6 @@ export const FILTRES_INIT = {
   taille_groupe: [],
   themes: [],
   materiels: [],
-  contexte: [],
   modalite: [],
   favorisOnly: false,
   search: "",
@@ -24,7 +23,6 @@ export function applyFilters(activites, filtres, favorisIds = new Set()) {
     if (filtres.duree.length > 0 && !filtres.duree.includes(a.duree)) return false;
     const tailleGroupe = a.taille_groupe || a.groupe || [];
     if (filtres.taille_groupe.length > 0 && !filtres.taille_groupe.some((v) => tailleGroupe.includes(v))) return false;
-    if (filtres.contexte.length > 0 && !filtres.contexte.some((v) => (a.contexte || []).includes(v))) return false;
     if (filtres.modalite.length > 0 && !filtres.modalite.some((v) => (a.modalite || []).includes(v))) return false;
     if (filtres.themes.length > 0 && !filtres.themes.some((v) => (a.themes || []).includes(v))) return false;
     if (filtres.materiels.length > 0 && !filtres.materiels.some((v) => (a.materiels || []).includes(v))) return false;

@@ -5,19 +5,19 @@ const ACT = [
   {
     id: "A01", titre: "Bingo IA", age_public: ["Collège", "Lycée"],
     duree: "30-45min", taille_groupe: ["7-12"], themes: ["IA déconnecté"],
-    materiels: ["Cartes", "Tableau"], contexte: ["Scolaire"], modalite: ["Présentielle"],
+    materiels: ["Cartes", "Tableau"], modalite: ["Présentielle"],
     apprentissage_cle: "Comprendre les biais",
   },
   {
     id: "A02", titre: "Grand débat éthique", age_public: ["Lycée", "Adultes"],
     duree: ">60min", taille_groupe: [">12"], themes: ["Éthique", "IA générative"],
-    materiels: ["Tableau"], contexte: ["Entreprise", "Scolaire"], modalite: ["Présentielle", "Distanciel"],
+    materiels: ["Tableau"], modalite: ["Présentielle", "Distanciel"],
     apprentissage_cle: "Argumenter",
   },
   {
     id: "A03", titre: "Classement d'images", age_public: ["Primaire"],
     duree: "0-15min", taille_groupe: ["1", "2-6"], themes: ["IA déconnecté"],
-    materiels: ["Cartes"], contexte: ["Scolaire"], modalite: ["Présentielle"],
+    materiels: ["Cartes"], modalite: ["Présentielle"],
     apprentissage_cle: "Classer",
   },
 ];
@@ -29,7 +29,6 @@ describe("FILTRES_INIT", () => {
     expect(FILTRES_INIT.taille_groupe).toEqual([]);
     expect(FILTRES_INIT.themes).toEqual([]);
     expect(FILTRES_INIT.materiels).toEqual([]);
-    expect(FILTRES_INIT.contexte).toEqual([]);
     expect(FILTRES_INIT.modalite).toEqual([]);
     expect(FILTRES_INIT.search).toBe("");
     expect(FILTRES_INIT.favorisOnly).toBe(false);
@@ -121,19 +120,6 @@ describe("applyFilters — taille de groupe", () => {
   });
 });
 
-describe("applyFilters — contexte (OR entre valeurs)", () => {
-  it("filtre par contexte unique", () => {
-    const res = applyFilters(ACT, { ...FILTRES_INIT, contexte: ["Entreprise"] });
-    expect(res).toHaveLength(1);
-    expect(res[0].id).toBe("A02");
-  });
-
-  it("plusieurs valeurs = union", () => {
-    const res = applyFilters(ACT, { ...FILTRES_INIT, contexte: ["Scolaire", "Entreprise"] });
-    expect(res).toHaveLength(3);
-  });
-});
-
 describe("applyFilters — modalité (OR entre valeurs)", () => {
   it("filtre par modalité unique", () => {
     const res = applyFilters(ACT, { ...FILTRES_INIT, modalite: ["Distanciel"] });
@@ -210,12 +196,6 @@ describe("applyFilters — filtres combinés (AND entre catégories)", () => {
   it("âge ET durée incompatibles = vide", () => {
     const res = applyFilters(ACT, { ...FILTRES_INIT, age_public: ["Primaire"], duree: [">60min"] });
     expect(res).toHaveLength(0);
-  });
-
-  it("matériels ET contexte", () => {
-    const res = applyFilters(ACT, { ...FILTRES_INIT, materiels: ["Tableau"], contexte: ["Entreprise"] });
-    expect(res).toHaveLength(1);
-    expect(res[0].id).toBe("A02");
   });
 
   it("thèmes (OR) ET âge (OR)", () => {

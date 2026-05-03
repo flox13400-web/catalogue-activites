@@ -133,12 +133,6 @@ export default function FilterPanel({ filtres, setFiltres, filteredCount, totalA
           onToggle={(v) => toggle("taille_groupe", v)}
         />
         <FilterGroup
-          label="Contexte"
-          values={["Scolaire", "Entreprise", "Montée en compétence", "Diplomant"]}
-          active={filtres.contexte}
-          onToggle={(v) => toggle("contexte", v)}
-        />
-        <FilterGroup
           label="Modalité"
           values={["Présentielle", "Distanciel", "Synchrone", "Asynchrone"]}
           active={filtres.modalite}
