@@ -44,6 +44,7 @@ export default function SequenceBuilder({
   const [editingValue, setEditingValue] = useState("");
   const [validationErreurs, setValidationErreurs] = useState({});
   const [prerequisWarning, setPrerequisWarning] = useState(false);
+  const [tooltipIdx, setTooltipIdx] = useState(null);
 
   const totalFiches = programme.sequences.reduce(
     (acc, seq) => acc + seq.seances.reduce((a, sea) => a + sea.fiches.length, 0),
@@ -63,23 +64,26 @@ export default function SequenceBuilder({
     const segs = [];
     for (const fiche of allFiches) {
       if (cumul >= maxMin) break;
-      let minutes, key;
+      let minutes, key, label, dureeLabel;
       if (fiche.type === "texte") {
         minutes = fiche.duree_min || 0;
         key = "texte";
+        label = fiche.titre || "Encart";
+        dureeLabel = minutes > 0 ? `${minutes} min` : "";
       } else {
         const activite = toutesActivites.find(a => a.id === fiche.activite_id);
         if (!activite) continue;
         const d = parseDureeActivite(activite);
         minutes = d.max > 0 ? d.max : (d.hasProjet ? 75 : 0);
         key = methodeGaugeKey(activite);
+        label = activite.titre;
+        dureeLabel = activite.duree || "";
       }
       if (minutes <= 0) continue;
       const visible = Math.min(minutes, maxMin - cumul);
       const pct = (visible / maxMin) * 100;
-      const last = segs[segs.length - 1];
-      if (last && last.key === key) last.pct += pct;
-      else segs.push({ key, pct });
+      const cumulPct = (cumul / maxMin) * 100;
+      segs.push({ key, pct, cumulPct, label, dureeLabel });
       cumul += minutes;
     }
     return segs;
@@ -438,10 +442,27 @@ export default function SequenceBuilder({
                 {Math.round(Math.min((dureeTotal.max / (programme.duree_objectif * 60)) * 100, 100))}%
               </span>
             </div>
-            <div className="seq-jauge-custom">
-              {jaugeSegments.map((seg, i) => (
-                <div key={i} className={`seq-jauge-seg seq-jauge-seg-${seg.key}`} style={{width: `${seg.pct}%`}} />
-              ))}
+            <div className="seq-jauge-track" onMouseLeave={() => setTooltipIdx(null)}>
+              <div className="seq-jauge-custom">
+                {jaugeSegments.map((seg, i) => (
+                  <div
+                    key={i}
+                    className={`seq-jauge-seg seq-jauge-seg-${seg.key}`}
+                    style={{width: `${seg.pct}%`}}
+                    onMouseEnter={() => setTooltipIdx(i)}
+                  />
+                ))}
+              </div>
+              {tooltipIdx !== null && jaugeSegments[tooltipIdx] && (() => {
+                const seg = jaugeSegments[tooltipIdx];
+                const left = Math.min(Math.max(seg.cumulPct + seg.pct / 2, 4), 96);
+                return (
+                  <div className="seq-jauge-tooltip" style={{left: `${left}%`}}>
+                    <span className="seq-jauge-tooltip-titre">{seg.label}</span>
+                    {seg.dureeLabel && <span className="seq-jauge-tooltip-duree">{seg.dureeLabel}</span>}
+                  </div>
+                );
+              })()}
             </div>
           </div>
         )}

@@ -6,20 +6,20 @@ import "../styles/card.css";
  * @param {Object} activite - L'objet activité.
  * @returns {boolean} True si l'activité est une évaluation.
  */
-function isEvaluation(activite) {
-  if (activite.methode) return activite.methode === "evaluation";
-  const t = activite.type_fiche || "";
-  return t === "Activite_Evaluation" || t === "Évaluation" || t === "Evaluation";
+function cardMethodeClass(activite) {
+  if (activite.methode === "evaluation" || activite.type_fiche === "Activite_Evaluation" || activite.type_fiche === "Évaluation" || activite.type_fiche === "Evaluation")
+    return "card-eval";
+  if (activite.methode === "expositive") return "card-expositive";
+  return "card-apprentissage";
 }
 
 export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggleFavori, onAssigner }) {
   const agePublic = activite.age_public || activite.public || [];
   const tailleGroupe = activite.taille_groupe || activite.groupe || [];
-  const isEval = isEvaluation(activite);
 
   return (
     <article
-      className={`card ${estEpingle ? "card-epingle" : ""} ${isEval ? "card-eval" : "card-apprentissage"}`}
+      className={`card ${estEpingle ? "card-epingle" : ""} ${cardMethodeClass(activite)}`}
       onClick={() => onClick(activite)}
     >
       <div className="card-type-indicator"></div>

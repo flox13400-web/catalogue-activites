@@ -44,7 +44,10 @@
   border-radius: 8px 8px 0 0;
 }
 .card-apprentissage .card-type-indicator {
-  background: var(--accent);
+  background: #D46A54;
+}
+.card-expositive .card-type-indicator {
+  background: #4A90C4;
 }
 .card-eval .card-type-indicator {
   background: #8a6bc8;
