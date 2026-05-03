@@ -430,7 +430,73 @@ body, .app {
   flex-direction: column;
 }
 
+/* BARRE D'ACTIONS CATALOGUE (Créer, 💾, Corbeille) */
+.catalogue-actionbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.btn-cat {
+  font-family: var(--sans);
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 13px;
+  cursor: var(--cursor-hand);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text);
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+  white-space: nowrap;
+}
+.btn-cat-creer {
+  background: var(--accent-deep);
+  color: #fff;
+  border-color: var(--accent-deep);
+}
+.btn-cat-creer:hover { background: var(--text); border-color: var(--text); }
+.btn-cat-disquette {
+  padding: 8px 12px;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+.btn-cat-disquette:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+.btn-cat-corbeille {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-cat-corbeille:hover { background: #fef0f0; border-color: #e8b8b8; color: #c0392b; }
+.cat-corbeille-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--text-muted);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
 /* BARRE SUPÉRIEURE DU MAIN (toggle sidebar + badges filtres) */
+
 .main-topbar {
   display: flex;
   align-items: center;

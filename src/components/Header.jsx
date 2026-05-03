@@ -4,16 +4,12 @@ import LogoBrand from "./LogoBrand";
 
 /**
  * Composant d'en-tête de l'application.
- * @param {Function} onNouvelleActivite
- * @param {Function} onSauvegarderCatalogue - Téléchargement JSON classique (menu).
- * @param {Function} onSauvegarderDisquette - Sauvegarde directe via File System Access API.
- * @param {boolean} fileHandleActif - True si un handle de fichier est déjà mémorisé.
- * @param {number} nbCorbeille
- * @param {Function} onOuvrirCorbeille
+ * Contient uniquement le logo et le menu Mémoire (Exporter / Importer un programme .sqa).
+ * Les actions catalogue (Créer, 💾, Corbeille) sont dans le panneau catalogue.
  * @param {Function} onExportSQA
  * @param {Function} onImportSQA
  */
-export default function Header({ onNouvelleActivite, onSauvegarderCatalogue, onSauvegarderDisquette, fileHandleActif, nbCorbeille, onOuvrirCorbeille, onExportSQA, onImportSQA }) {
+export default function Header({ onExportSQA, onImportSQA }) {
   const fileInputRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -37,25 +33,12 @@ export default function Header({ onNouvelleActivite, onSauvegarderCatalogue, onS
         </div>
         <div className="header-right">
           <div className="header-actions">
-            <button
-              className={`btn-header btn-disquette${fileHandleActif ? " btn-disquette-lie" : ""}`}
-              onClick={onSauvegarderDisquette}
-              title={fileHandleActif ? "Sauvegarder (fichier lié)" : "Sauvegarder le catalogue…"}
-            >
-              💾
-            </button>
-            <button className="btn-header btn-creer" onClick={onNouvelleActivite}>
-              Créer +
-            </button>
             <div className="dropdown-container">
               <button className="btn-header" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 Mémoire ▼
               </button>
               {isMenuOpen && (
                 <div className="dropdown-menu">
-                  <button className="dropdown-item" onClick={() => { onSauvegarderCatalogue(); setIsMenuOpen(false); }}>
-                    Sauvegarder bibliothèque
-                  </button>
                   <button className="dropdown-item" onClick={() => { onExportSQA(); setIsMenuOpen(false); }}>
                     Exporter un programme
                   </button>
@@ -73,9 +56,6 @@ export default function Header({ onNouvelleActivite, onSauvegarderCatalogue, onS
               className="sqa-file-input-hidden"
               onChange={(e) => { handleFileChange(e); setIsMenuOpen(false); }}
             />
-            <button className="btn-header" onClick={onOuvrirCorbeille} title="Corbeille">
-              🗑 {nbCorbeille}
-            </button>
           </div>
         </div>
       </div>

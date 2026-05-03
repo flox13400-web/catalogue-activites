@@ -349,12 +349,6 @@ export default function Catalogue() {
       </div>
       <PrintView programme={programme} activites={activites} />
       <Header
-        onNouvelleActivite={() => setShowChoixImport(true)}
-        onSauvegarderCatalogue={handleSauvegarderCatalogue}
-        onSauvegarderDisquette={handleSauvegarderDisquette}
-        fileHandleActif={!!fileHandle}
-        nbCorbeille={corbeille.length}
-        onOuvrirCorbeille={() => setShowCorbeille(true)}
         onExportSQA={handleExportSQA}
         onImportSQA={handleImportSQA}
       />
@@ -382,9 +376,29 @@ export default function Catalogue() {
           />
         </aside>
         <section className="app-catalogue">
+          {/* Barre d'actions du catalogue : Créer, Sauvegarder, Corbeille */}
+          <div className="catalogue-actionbar">
+            <button className="btn-cat btn-cat-creer" onClick={() => setShowChoixImport(true)}>
+              Créer +
+            </button>
+            <button
+              className={`btn-cat btn-cat-disquette${fileHandle ? " btn-disquette-lie" : ""}`}
+              onClick={handleSauvegarderDisquette}
+              title={fileHandle ? "Sauvegarder (fichier lié)" : "Sauvegarder le catalogue…"}
+            >
+              💾
+            </button>
+            <button
+              className="btn-cat btn-cat-corbeille"
+              onClick={() => setShowCorbeille(true)}
+              title="Corbeille"
+            >
+              🗑 {corbeille.length > 0 && <span className="cat-corbeille-badge">{corbeille.length}</span>}
+            </button>
+          </div>
           <div className="main-topbar">
-              <ActiveFilterBadges filtres={filtres} setFiltres={setFiltres} />
-            </div>
+            <ActiveFilterBadges filtres={filtres} setFiltres={setFiltres} />
+          </div>
             {activites.length === 0 ? (
               <div className="empty-catalogue">
                 <p className="empty-catalogue-title">Votre catalogue est vide</p>
