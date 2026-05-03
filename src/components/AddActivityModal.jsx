@@ -557,7 +557,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         materiels: initialData.materiels || [],
         modalite: initialData.modalite || [],
         methode: initialData.methode || (initialData.type_fiche === "Activite_Evaluation" || initialData.type_fiche === "Évaluation" || initialData.type_fiche === "Evaluation" ? "evaluation" : "active"),
-        opo_activite: initialData.opo_activite || "",
         description: initialData.description || "",
         apprentissage_cle: initialData.apprentissage_cle || "",
         eval_type: initialData.eval_type || "Formative",
@@ -577,7 +576,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       materiels: [],
       modalite: [],
       methode: "active",
-      opo_activite: "",
       description: "",
       apprentissage_cle: "",
       eval_type: "Formative",
@@ -760,12 +758,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
 
         <div className="form-madlibs">
           <span className="form-madlibs-label">À l'issue de cette activité, l'apprenant sera capable de :</span>
-          <div className="form-madlibs-row">
-            <input className="form-input" type="text"
-              placeholder="décrire l'action attendue..."
-              value={form.opo_activite}
-              onChange={(e) => setField("opo_activite", e.target.value)} />
-          </div>
           {form.methode !== "evaluation" && (
             <textarea className="form-textarea" placeholder="Ce que les participants retiennent"
               rows={2} value={form.apprentissage_cle}
