@@ -5,7 +5,21 @@ import bloomTaxonomyData from "../data/bloomTaxonomy.json";
 
 const VERBES_BLOOM_GROUPED = bloomTaxonomyData.map(n => ({ niveau: n.nom, verbes: n.verbes }));
 
-import { calculerDureeTotalProgramme, formatDureeGlobale } from "../utils/duree";
+import { calculerDureeTotalProgramme, formatDureeGlobale, parseDureeActivite } from "../utils/duree";
+
+function methodeClass(a) {
+  if (a.methode === "evaluation" || a.type_fiche === "Activite_Evaluation" || a.type_fiche === "Évaluation" || a.type_fiche === "Evaluation")
+    return "seq-fiche-eval";
+  if (a.methode === "expositive") return "seq-fiche-expositive";
+  return "seq-fiche-apprentissage";
+}
+
+function methodeGaugeKey(a) {
+  if (a.methode === "evaluation" || a.type_fiche === "Activite_Evaluation" || a.type_fiche === "Évaluation" || a.type_fiche === "Evaluation")
+    return "evaluation";
+  if (a.methode === "expositive") return "expositive";
+  return "active";
+}
 
 export const PROGRAMME_INIT = {
   id: "prog-1",
@@ -38,6 +52,38 @@ export default function SequenceBuilder({
 
   const dureeTotal = useMemo(() => calculerDureeTotalProgramme(programme, toutesActivites), [programme, toutesActivites]);
   const dureeStr = formatDureeGlobale(dureeTotal);
+
+  const jaugeSegments = useMemo(() => {
+    if (programme.duree_objectif <= 0) return [];
+    const maxMin = programme.duree_objectif * 60;
+    const allFiches = (programme.sequences || []).flatMap(seq =>
+      (seq.seances || []).flatMap(sea => sea.fiches || [])
+    );
+    let cumul = 0;
+    const segs = [];
+    for (const fiche of allFiches) {
+      if (cumul >= maxMin) break;
+      let minutes, key;
+      if (fiche.type === "texte") {
+        minutes = fiche.duree_min || 0;
+        key = "texte";
+      } else {
+        const activite = toutesActivites.find(a => a.id === fiche.activite_id);
+        if (!activite) continue;
+        const d = parseDureeActivite(activite);
+        minutes = d.max > 0 ? d.max : (d.hasProjet ? 75 : 0);
+        key = methodeGaugeKey(activite);
+      }
+      if (minutes <= 0) continue;
+      const visible = Math.min(minutes, maxMin - cumul);
+      const pct = (visible / maxMin) * 100;
+      const last = segs[segs.length - 1];
+      if (last && last.key === key) last.pct += pct;
+      else segs.push({ key, pct });
+      cumul += minutes;
+    }
+    return segs;
+  }, [programme, toutesActivites]);
 
   // ── Collapse ──────────────────────────────────────────────────
 
@@ -392,11 +438,11 @@ export default function SequenceBuilder({
                 {Math.round(Math.min((dureeTotal.max / (programme.duree_objectif * 60)) * 100, 100))}%
               </span>
             </div>
-            <progress
-              className="seq-jauge"
-              value={Math.min(dureeTotal.max, programme.duree_objectif * 60)}
-              max={programme.duree_objectif * 60}
-            />
+            <div className="seq-jauge-custom">
+              {jaugeSegments.map((seg, i) => (
+                <div key={i} className={`seq-jauge-seg seq-jauge-seg-${seg.key}`} style={{width: `${seg.pct}%`}} />
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -630,10 +676,9 @@ export default function SequenceBuilder({
                                     );
                                   }
                                   const { fiche, activite } = item;
-                                  const isEval = activite.methode === "evaluation" || activite.type_fiche === "Activite_Evaluation" || activite.type_fiche === "Évaluation" || activite.type_fiche === "Evaluation";
                                   const modalites = activite.modalite || [];
                                   return (
-                                    <div key={item.key} className={`seq-fiche ${isEval ? "seq-fiche-eval" : "seq-fiche-apprentissage"}`}>
+                                    <div key={item.key} className={`seq-fiche ${methodeClass(activite)}`}>
                                       <div className="seq-fiche-content">
                                         <span className="seq-fiche-titre">{activite.titre}</span>
                                         <div className="seq-fiche-meta-row">
