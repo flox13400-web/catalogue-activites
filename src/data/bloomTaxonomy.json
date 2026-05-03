@@ -3,36 +3,68 @@
     "niveau": 1,
     "nom": "Mémoriser",
     "code": "memoriser",
-    "verbes": ["Définir", "Lister", "Nommer", "Identifier", "Répéter", "Reconnaître", "Citer"]
+    "verbes": [
+      "Citer", "Définir", "Énoncer", "Énumérer", "Identifier",
+      "Indiquer", "Lister", "Localiser", "Mémoriser", "Nommer",
+      "Rappeler", "Reconnaître", "Reproduire", "Retenir",
+      "Sélectionner", "Situer", "Étiqueter"
+    ]
   },
   {
     "niveau": 2,
     "nom": "Comprendre",
     "code": "comprendre",
-    "verbes": ["Expliquer", "Résumer", "Décrire", "Classifier", "Discuter", "Traduire", "Illustrer"]
+    "verbes": [
+      "Associer", "Classer", "Comparer", "Décrire", "Déduire",
+      "Discuter", "Distinguer", "Estimer", "Expliquer", "Extrapoler",
+      "Illustrer", "Interpréter", "Paraphraser", "Prédire",
+      "Reformuler", "Résumer", "Traduire"
+    ]
   },
   {
     "niveau": 3,
     "nom": "Appliquer",
     "code": "appliquer",
-    "verbes": ["Démontrer", "Utiliser", "Résoudre", "Calculer", "Expérimenter", "Appliquer", "Modifier"]
+    "verbes": [
+      "Adapter", "Appliquer", "Calculer", "Démontrer", "Employer",
+      "Exécuter", "Expérimenter", "Implémenter", "Mettre en œuvre",
+      "Mettre en pratique", "Modéliser", "Modifier", "Opérer",
+      "Pratiquer", "Réaliser", "Résoudre", "Simuler",
+      "Transférer", "Utiliser"
+    ]
   },
   {
     "niveau": 4,
     "nom": "Analyser",
     "code": "analyser",
-    "verbes": ["Comparer", "Catégoriser", "Examiner", "Contraster", "Différencier", "Déduire", "Structurer"]
+    "verbes": [
+      "Attribuer", "Catégoriser", "Comparer", "Contraster",
+      "Déconstruire", "Décomposer", "Différencier", "Examiner",
+      "Hiérarchiser", "Inférer", "Organiser", "Questionner",
+      "Relier", "Schématiser", "Sélectionner", "Structurer"
+    ]
   },
   {
     "niveau": 5,
     "nom": "Évaluer",
     "code": "evaluer",
-    "verbes": ["Juger", "Défendre", "Justifier", "Critiquer", "Estimer", "Évaluer", "Argumenter"]
+    "verbes": [
+      "Apprécier", "Argumenter", "Contrôler", "Critiquer",
+      "Décider", "Défendre", "Estimer", "Évaluer", "Juger",
+      "Justifier", "Mesurer", "Peser", "Prioriser",
+      "Recommander", "Réviser", "Valider", "Vérifier"
+    ]
   },
   {
     "niveau": 6,
     "nom": "Créer",
     "code": "creer",
-    "verbes": ["Concevoir", "Construire", "Planifier", "Inventer", "Formuler", "Produire", "Élaborer"]
+    "verbes": [
+      "Assembler", "Combiner", "Composer", "Concevoir",
+      "Construire", "Élaborer", "Formuler", "Générer",
+      "Imaginer", "Intégrer", "Inventer", "Planifier",
+      "Produire", "Proposer", "Rédiger", "Synthétiser",
+      "Transformer"
+    ]
   }
 ]

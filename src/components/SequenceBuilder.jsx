@@ -1,15 +1,9 @@
 import { useState, useMemo } from "react";
 import { verifierAlignementPedagogique } from "../utils/alignmentChecker.js";
 import "../styles/cart.css";
+import bloomTaxonomyData from "../data/bloomTaxonomy.json";
 
-const VERBES_BLOOM_GROUPED = [
-  { niveau: "Mémoriser",  verbes: ["Définir", "Lister", "Nommer", "Rappeler", "Reconnaître", "Reproduire"] },
-  { niveau: "Comprendre", verbes: ["Expliquer", "Résumer", "Interpréter", "Classer", "Comparer", "Décrire"] },
-  { niveau: "Appliquer",  verbes: ["Utiliser", "Exécuter", "Résoudre", "Illustrer", "Calculer", "Mettre en œuvre"] },
-  { niveau: "Analyser",   verbes: ["Distinguer", "Organiser", "Décomposer", "Différencier", "Examiner", "Attribuer"] },
-  { niveau: "Évaluer",    verbes: ["Vérifier", "Critiquer", "Juger", "Argumenter", "Justifier", "Apprécier"] },
-  { niveau: "Créer",      verbes: ["Concevoir", "Construire", "Planifier", "Produire", "Générer", "Inventer"] },
-];
+const VERBES_BLOOM_GROUPED = bloomTaxonomyData.map(n => ({ niveau: n.nom, verbes: n.verbes }));
 
 import { calculerDureeTotalProgramme, formatDureeGlobale } from "../utils/duree";
 
@@ -35,6 +29,7 @@ export default function SequenceBuilder({
   const [editingId, setEditingId] = useState(null);
   const [editingValue, setEditingValue] = useState("");
   const [validationErreurs, setValidationErreurs] = useState({});
+  const [prerequisWarning, setPrerequisWarning] = useState(false);
 
   const totalFiches = programme.sequences.reduce(
     (acc, seq) => acc + seq.seances.reduce((a, sea) => a + sea.fiches.length, 0),
@@ -93,7 +88,6 @@ export default function SequenceBuilder({
 
   function validerPourExport() {
     const e = {};
-    if (!programme.prerequis?.trim()) e.prog_prerequis = true;
     if (!programme.objectif_bloom || !programme.objectif_action?.trim()) e.prog_objectif = true;
     for (const seq of programme.sequences) {
       if (!seq.objectif_bloom || !seq.objectif_action?.trim()) e[`seq_${seq.id}`] = true;
@@ -328,9 +322,19 @@ export default function SequenceBuilder({
     const errsForm = validerPourExport();
     if (Object.keys(errsForm).length > 0) {
       setValidationErreurs(errsForm);
+      setPrerequisWarning(false);
       return;
     }
     setValidationErreurs({});
+    if (!programme.prerequis?.trim()) {
+      setPrerequisWarning(true);
+      return;
+    }
+    lancerImpression();
+  }
+
+  function lancerImpression() {
+    setPrerequisWarning(false);
     const { valide, erreurs } = verifierAlignementPedagogique(programme);
     if (valide) {
       window.print();
@@ -448,12 +452,12 @@ export default function SequenceBuilder({
             />
           </div>
           <div className="seq-madlibs-simple">
-            <span className="seq-madlibs-prefix">Prérequis * :</span>
+            <span className="seq-madlibs-prefix">Prérequis :</span>
             <textarea
-              className={`seq-objectif-input${validationErreurs.prog_prerequis ? " seq-input-error" : ""}`}
+              className="seq-objectif-input"
               value={programme.prerequis || ""}
               placeholder="Connaissances ou compétences requises avant la formation..."
-              onChange={e => { updateProgrammeField("prerequis", e.target.value); clearValidationError("prog_prerequis"); }}
+              onChange={e => { updateProgrammeField("prerequis", e.target.value); if (prerequisWarning && e.target.value.trim()) setPrerequisWarning(false); }}
               rows={2}
             />
           </div>
@@ -705,7 +709,15 @@ export default function SequenceBuilder({
       <div className="panel-footer">
         {Object.keys(validationErreurs).length > 0 && (
           <div className="seq-validation-banner">
-            ⚠ Champs requis manquants — vérifiez les zones marquées en rouge (objectifs, prérequis).
+            ⚠ Champs requis manquants — vérifiez les zones marquées en rouge.
+          </div>
+        )}
+        {prerequisWarning && (
+          <div className="seq-prerequis-warning">
+            <span>⚠ Le champ Prérequis est vide — le document sera moins complet.</span>
+            <button className="seq-prerequis-warning-btn" onClick={lancerImpression}>
+              Imprimer quand même
+            </button>
           </div>
         )}
         {totalFiches === 0 ? (

@@ -756,6 +756,7 @@
 }
 .seq-opo-select {
   flex-shrink: 0;
+  max-width: 168px;
   background: var(--bg-elevated);
   border: 1px solid var(--border-strong);
   border-radius: 3px;
@@ -785,6 +786,34 @@
   margin-bottom: 8px;
   text-align: center;
 }
+.seq-prerequis-warning {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  color: #7a5800;
+  background: #fffbe6;
+  border: 1px solid #e8c020;
+  border-radius: 4px;
+  padding: 7px 10px;
+  margin-bottom: 8px;
+}
+.seq-prerequis-warning-btn {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: #7a5800;
+  background: #fff3b0;
+  border: 1px solid #c8a000;
+  border-radius: 3px;
+  padding: 3px 9px;
+  cursor: var(--cursor-hand);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 120ms ease;
+}
+.seq-prerequis-warning-btn:hover { background: #ffe060; }
 /* JAUGE DURÉE */
 .seq-panel-header {
   flex-wrap: wrap;
