@@ -770,6 +770,21 @@
   border-color: var(--accent);
   color: var(--text);
 }
+.seq-input-error {
+  border-color: #c0392b !important;
+  background: #fef9f9 !important;
+  color: var(--text) !important;
+}
+.seq-validation-banner {
+  font-size: 11px;
+  color: #c0392b;
+  background: #fef9f9;
+  border: 1px solid #c0392b;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  text-align: center;
+}
 /* JAUGE DURÉE */
 .seq-panel-header {
   flex-wrap: wrap;

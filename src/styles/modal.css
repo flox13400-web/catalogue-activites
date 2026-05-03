@@ -463,6 +463,12 @@
   flex-wrap: wrap;
   gap: 5px;
 }
+.form-chips-error {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #c0392b;
+  background: #fef9f9;
+}
 .form-chips-mb {
   margin-bottom: 8px;
 }

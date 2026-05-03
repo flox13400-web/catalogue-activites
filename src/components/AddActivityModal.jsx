@@ -449,7 +449,7 @@ export function extraireTagsUniques(activites, cle) {
 
 // ── Sélecteur de mots-clés dynamique (creatable multi-select) ──
 
-function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle, onAjouter }) {
+function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle, onAjouter, erreur }) {
   const [saisie, setSaisie] = React.useState("");
   const [focus, setFocus] = React.useState(false);
 
@@ -504,7 +504,7 @@ function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle
 
       <div className="multi-select-container">
         <input
-          className="form-input"
+          className={`form-input${erreur ? " form-input-error" : ""}`}
           type="text"
           placeholder={`Ajouter ou sélectionner ${label.toLowerCase()}...`}
           value={saisie}
@@ -513,23 +513,23 @@ function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle
           onBlur={() => setFocus(false)}
           onKeyDown={handleKeyDown}
         />
-        
+
         {focus && (suggestionsAffichees.length > 0 || showAjouter) && (
           <div className="multi-select-dropdown" onMouseDown={(e) => e.preventDefault()}>
             {suggestionsAffichees.map(s => (
-              <button 
-                key={s} 
-                className="multi-select-option" 
-                type="button" 
+              <button
+                key={s}
+                className="multi-select-option"
+                type="button"
                 onClick={() => handleClickSuggestion(s)}
               >
                 {s}
               </button>
             ))}
             {showAjouter && (
-              <button 
-                className="multi-select-option multi-select-option-new" 
-                type="button" 
+              <button
+                className="multi-select-option multi-select-option-new"
+                type="button"
                 onClick={handleAjouterSaisie}
               >
                 + Ajouter « {saisie.trim()} »
@@ -538,6 +538,7 @@ function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle
           </div>
         )}
       </div>
+      {erreur && <div className="form-error">{erreur}</div>}
     </div>
   );
 }
@@ -607,6 +608,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         [key]: arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value],
       };
     });
+    setErreurs((prev) => ({ ...prev, [key]: undefined }));
   }
 
   function toggleKeyword(key, value) {
@@ -617,6 +619,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         [key]: arr.includes(value) ? arr.filter((t) => t !== value) : [...arr, value],
       };
     });
+    setErreurs((prev) => ({ ...prev, [key]: undefined }));
   }
 
   function ajouterKeyword(key, valeur, setValeur) {
@@ -631,6 +634,19 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
   function valider() {
     const e = {};
     if (!form.titre.trim()) e.titre = "Le titre est obligatoire.";
+    if (form.age_public.length === 0) e.age_public = "Sélectionnez au moins un public (requis Qualiopi).";
+    if (form.taille_groupe.length === 0) e.taille_groupe = "Sélectionnez au moins une taille de groupe (requis Qualiopi).";
+    if (form.modalite.length === 0) e.modalite = "Sélectionnez au moins une modalité (requis Qualiopi).";
+    if (form.materiels.length === 0) e.materiels = "Ajoutez au moins un matériel (requis Qualiopi).";
+    if (!form.adaptation_psh.trim()) e.adaptation_psh = "Ce champ est requis (Qualiopi).";
+    if (form.methode !== "evaluation") {
+      if (!form.apprentissage_cle.trim()) e.apprentissage_cle = "L'apprentissage clé est obligatoire (requis Qualiopi).";
+      if (!form.problematique.trim()) e.problematique = "La problématique est obligatoire (requis Qualiopi).";
+      if (!form.remediation.trim()) e.remediation = "La remédiation est obligatoire (requis Qualiopi).";
+    }
+    if (form.methode === "evaluation") {
+      if (!form.eval_criteres.trim()) e.eval_criteres = "Les critères de réussite sont obligatoires (requis Qualiopi).";
+    }
     setErreurs(e);
     return Object.keys(e).length === 0;
   }
@@ -660,8 +676,8 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Âge du public</label>
-          <div className="form-chips">
+          <label className="form-label">Âge du public <span className="form-required">*</span></label>
+          <div className={`form-chips${erreurs.age_public ? " form-chips-error" : ""}`}>
             {AGES_DISPONIBLES.map((p) => (
               <button
                 key={p}
@@ -671,6 +687,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
               >{p}</button>
             ))}
           </div>
+          {erreurs.age_public && <div className="form-error">{erreurs.age_public}</div>}
         </div>
 
         <div className="form-group">
@@ -689,8 +706,8 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
 
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">Taille de groupe</label>
-            <div className="form-chips">
+            <label className="form-label">Taille de groupe <span className="form-required">*</span></label>
+            <div className={`form-chips${erreurs.taille_groupe ? " form-chips-error" : ""}`}>
               {TAILLES_GROUPE_DISPONIBLES.map((g) => (
                 <button
                   key={g}
@@ -700,10 +717,11 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
                 >{g}</button>
               ))}
             </div>
+            {erreurs.taille_groupe && <div className="form-error">{erreurs.taille_groupe}</div>}
           </div>
           <div className="form-group">
-            <label className="form-label">Modalité</label>
-            <div className="form-chips">
+            <label className="form-label">Modalité <span className="form-required">*</span></label>
+            <div className={`form-chips${erreurs.modalite ? " form-chips-error" : ""}`}>
               {MODALITES_DISPONIBLES.map((m) => (
                 <button
                   key={m}
@@ -713,6 +731,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
                 >{m}</button>
               ))}
             </div>
+            {erreurs.modalite && <div className="form-error">{erreurs.modalite}</div>}
           </div>
         </div>
 
@@ -729,13 +748,15 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         />
 
         <CreatableMultiSelect
-          label="Matériels nécessaires"
+          label={<>Matériels nécessaires <span className="form-required">*</span></>}
           valeurs={form.materiels}
           suggestionsDisponibles={tousMaterialels}
+          erreur={erreurs.materiels}
           onToggle={(t) => toggleKeyword("materiels", t)}
           onAjouter={(val) => {
             if (!form.materiels.includes(val)) {
               setForm(prev => ({ ...prev, materiels: [...prev.materiels, val] }));
+              setErreurs(prev => ({ ...prev, materiels: undefined }));
             }
           }}
         />
@@ -759,11 +780,19 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         </div>
 
         <div className="form-madlibs">
-          <span className="form-madlibs-label">À l'issue de cette activité, l'apprenant sera capable de :</span>
+          <span className="form-madlibs-label">
+            À l'issue de cette activité, l'apprenant sera capable de :
+            {form.methode !== "evaluation" && <span className="form-required">*</span>}
+          </span>
           {form.methode !== "evaluation" && (
-            <textarea className="form-textarea" placeholder="Ce que les participants retiennent"
-              rows={2} value={form.apprentissage_cle}
-              onChange={(e) => setField("apprentissage_cle", e.target.value)} />
+            <>
+              <textarea
+                className={`form-textarea${erreurs.apprentissage_cle ? " form-input-error" : ""}`}
+                placeholder="Ce que les participants retiennent"
+                rows={2} value={form.apprentissage_cle}
+                onChange={(e) => setField("apprentissage_cle", e.target.value)} />
+              {erreurs.apprentissage_cle && <div className="form-error">{erreurs.apprentissage_cle}</div>}
+            </>
           )}
         </div>
 
@@ -811,36 +840,51 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
                 onChange={(e) => setField("eval_conditions", e.target.value)} />
             </div>
             <div className="form-group form-group-last">
-              <label className="form-label">Critères de réussite</label>
-              <textarea className="form-textarea" placeholder="Qu'est-ce qui démontre la maîtrise ?"
+              <label className="form-label">Critères de réussite <span className="form-required">*</span></label>
+              <textarea
+                className={`form-textarea${erreurs.eval_criteres ? " form-input-error" : ""}`}
+                placeholder="Qu'est-ce qui démontre la maîtrise ?"
                 rows={3} value={form.eval_criteres}
                 onChange={(e) => setField("eval_criteres", e.target.value)} />
+              {erreurs.eval_criteres && <div className="form-error">{erreurs.eval_criteres}</div>}
             </div>
           </div>
         )}
 
         <div className="form-group">
-          <label className="form-label">Problématique possible</label>
-          <textarea className="form-textarea"
+          <label className="form-label">
+            Problématique possible
+            {form.methode !== "evaluation" && <span className="form-required">*</span>}
+          </label>
+          <textarea
+            className={`form-textarea${erreurs.problematique ? " form-input-error" : ""}`}
             placeholder="Difficultés ou obstacles fréquents rencontrés lors de cette activité"
             rows={2} value={form.problematique}
             onChange={(e) => setField("problematique", e.target.value)} />
+          {erreurs.problematique && <div className="form-error">{erreurs.problematique}</div>}
         </div>
 
         <div className="form-group">
-          <label className="form-label">Remédiation</label>
-          <textarea className="form-textarea"
+          <label className="form-label">
+            Remédiation
+            {form.methode !== "evaluation" && <span className="form-required">*</span>}
+          </label>
+          <textarea
+            className={`form-textarea${erreurs.remediation ? " form-input-error" : ""}`}
             placeholder="Pistes pour surmonter les difficultés identifiées"
             rows={2} value={form.remediation}
             onChange={(e) => setField("remediation", e.target.value)} />
+          {erreurs.remediation && <div className="form-error">{erreurs.remediation}</div>}
         </div>
 
         <div className="form-group">
-          <label className="form-label">Adaptation Handicap <span className="form-hint">(PSH)</span></label>
-          <textarea className="form-textarea"
+          <label className="form-label">Adaptation Handicap <span className="form-hint">(PSH)</span> <span className="form-required">*</span></label>
+          <textarea
+            className={`form-textarea${erreurs.adaptation_psh ? " form-input-error" : ""}`}
             placeholder="Adaptations pour les personnes en situation de handicap..."
             rows={2} value={form.adaptation_psh}
             onChange={(e) => setField("adaptation_psh", e.target.value)} />
+          {erreurs.adaptation_psh && <div className="form-error">{erreurs.adaptation_psh}</div>}
         </div>
 
         <div className="modal-footer">

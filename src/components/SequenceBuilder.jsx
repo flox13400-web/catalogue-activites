@@ -34,6 +34,7 @@ export default function SequenceBuilder({
   const [collapsed, setCollapsed] = useState(new Set());
   const [editingId, setEditingId] = useState(null);
   const [editingValue, setEditingValue] = useState("");
+  const [validationErreurs, setValidationErreurs] = useState({});
 
   const totalActivites = programme.sequences.reduce(
     (acc, seq) => acc + seq.seances.reduce((a, sea) => a + sea.fiches.length, 0),
@@ -84,6 +85,23 @@ export default function SequenceBuilder({
   function handleEditKey(e) {
     if (e.key === "Enter") commitEdit();
     if (e.key === "Escape") { setEditingId(null); setEditingValue(""); }
+  }
+
+  function clearValidationError(key) {
+    setValidationErreurs(prev => { const n = { ...prev }; delete n[key]; return n; });
+  }
+
+  function validerPourExport() {
+    const e = {};
+    if (!programme.prerequis?.trim()) e.prog_prerequis = true;
+    if (!programme.objectif_bloom || !programme.objectif_action?.trim()) e.prog_objectif = true;
+    for (const seq of programme.sequences) {
+      if (!seq.objectif_bloom || !seq.objectif_action?.trim()) e[`seq_${seq.id}`] = true;
+      for (const sea of seq.seances) {
+        if (!sea.opo_bloom || !sea.opo_verbe?.trim()) e[`sea_${sea.id}`] = true;
+      }
+    }
+    return e;
   }
 
   // ── Ajout ─────────────────────────────────────────────────────
@@ -193,6 +211,12 @@ export default function SequenceBuilder({
   // ── Export avec validation pédagogique ───────────────────────
 
   function handleExport() {
+    const errsForm = validerPourExport();
+    if (Object.keys(errsForm).length > 0) {
+      setValidationErreurs(errsForm);
+      return;
+    }
+    setValidationErreurs({});
     const { valide, erreurs } = verifierAlignementPedagogique(programme);
     if (valide) {
       window.print();
@@ -267,11 +291,11 @@ export default function SequenceBuilder({
             <span className="seq-madlibs-prefix">À l'issue de cette formation, l'apprenant sera capable de :</span>
             <div className="seq-madlibs-inputs">
               <select
-                className="seq-opo-select"
+                className={`seq-opo-select${validationErreurs.prog_objectif ? " seq-input-error" : ""}`}
                 value={programme.objectif_bloom || ""}
-                onChange={e => updateProgrammeField("objectif_bloom", e.target.value)}
+                onChange={e => { updateProgrammeField("objectif_bloom", e.target.value); clearValidationError("prog_objectif"); }}
               >
-                <option value="">— Verbe d'action —</option>
+                <option value="">— Verbe d'action * —</option>
                 {VERBES_BLOOM_GROUPED.map(g => (
                   <optgroup key={g.niveau} label={g.niveau}>
                     {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
@@ -279,10 +303,10 @@ export default function SequenceBuilder({
                 ))}
               </select>
               <input
-                className="seq-objectif-input"
+                className={`seq-objectif-input${validationErreurs.prog_objectif ? " seq-input-error" : ""}`}
                 value={programme.objectif_action || ""}
-                placeholder="…"
-                onChange={e => updateProgrammeField("objectif_action", e.target.value)}
+                placeholder="… *"
+                onChange={e => { updateProgrammeField("objectif_action", e.target.value); clearValidationError("prog_objectif"); }}
               />
             </div>
           </div>
@@ -310,12 +334,12 @@ export default function SequenceBuilder({
             />
           </div>
           <div className="seq-madlibs-simple">
-            <span className="seq-madlibs-prefix">Prérequis :</span>
+            <span className="seq-madlibs-prefix">Prérequis * :</span>
             <textarea
-              className="seq-objectif-input"
+              className={`seq-objectif-input${validationErreurs.prog_prerequis ? " seq-input-error" : ""}`}
               value={programme.prerequis || ""}
               placeholder="Connaissances ou compétences requises avant la formation..."
-              onChange={e => updateProgrammeField("prerequis", e.target.value)}
+              onChange={e => { updateProgrammeField("prerequis", e.target.value); clearValidationError("prog_prerequis"); }}
               rows={2}
             />
           </div>
@@ -347,11 +371,11 @@ export default function SequenceBuilder({
                       <span className="seq-madlibs-prefix">À l'issue de cette séquence, l'apprenant sera capable de :</span>
                       <div className="seq-madlibs-inputs">
                         <select
-                          className="seq-opo-select"
+                          className={`seq-opo-select${validationErreurs[`seq_${seq.id}`] ? " seq-input-error" : ""}`}
                           value={seq.objectif_bloom || ""}
-                          onChange={e => updateSeqField(seq.id, "objectif_bloom", e.target.value)}
+                          onChange={e => { updateSeqField(seq.id, "objectif_bloom", e.target.value); clearValidationError(`seq_${seq.id}`); }}
                         >
-                          <option value="">— Verbe d'action —</option>
+                          <option value="">— Verbe d'action * —</option>
                           {VERBES_BLOOM_GROUPED.map(g => (
                             <optgroup key={g.niveau} label={g.niveau}>
                               {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
@@ -359,10 +383,10 @@ export default function SequenceBuilder({
                           ))}
                         </select>
                         <input
-                          className="seq-objectif-input"
+                          className={`seq-objectif-input${validationErreurs[`seq_${seq.id}`] ? " seq-input-error" : ""}`}
                           value={seq.objectif_action || ""}
-                          placeholder="…"
-                          onChange={e => updateSeqField(seq.id, "objectif_action", e.target.value)}
+                          placeholder="… *"
+                          onChange={e => { updateSeqField(seq.id, "objectif_action", e.target.value); clearValidationError(`seq_${seq.id}`); }}
                         />
                       </div>
                     </div>
@@ -411,11 +435,11 @@ export default function SequenceBuilder({
                                 <span className="seq-madlibs-prefix">À l'issue de cette séance, l'apprenant sera capable de :</span>
                                 <div className="seq-madlibs-inputs">
                                   <select
-                                    className="seq-opo-select"
+                                    className={`seq-opo-select${validationErreurs[`sea_${sea.id}`] ? " seq-input-error" : ""}`}
                                     value={sea.opo_bloom || ""}
-                                    onChange={e => updateOpoSeance(seq.id, sea.id, "opo_bloom", e.target.value)}
+                                    onChange={e => { updateOpoSeance(seq.id, sea.id, "opo_bloom", e.target.value); clearValidationError(`sea_${sea.id}`); }}
                                   >
-                                    <option value="">— Verbe d'action —</option>
+                                    <option value="">— Verbe d'action * —</option>
                                     {VERBES_BLOOM_GROUPED.map(g => (
                                       <optgroup key={g.niveau} label={g.niveau}>
                                         {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
@@ -423,10 +447,10 @@ export default function SequenceBuilder({
                                     ))}
                                   </select>
                                   <input
-                                    className="seq-objectif-input"
+                                    className={`seq-objectif-input${validationErreurs[`sea_${sea.id}`] ? " seq-input-error" : ""}`}
                                     value={sea.opo_verbe || ""}
-                                    placeholder="…"
-                                    onChange={e => updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value)}
+                                    placeholder="… *"
+                                    onChange={e => { updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value); clearValidationError(`sea_${sea.id}`); }}
                                   />
                                 </div>
                               </div>
@@ -502,6 +526,11 @@ export default function SequenceBuilder({
       </div>
 
       <div className="panel-footer">
+        {Object.keys(validationErreurs).length > 0 && (
+          <div className="seq-validation-banner">
+            ⚠ Champs requis manquants — vérifiez les zones marquées en rouge (objectifs, prérequis).
+          </div>
+        )}
         {totalActivites === 0 ? (
           <span className="panel-footnote">Créez des séquences, puis assignez des activités</span>
         ) : (
