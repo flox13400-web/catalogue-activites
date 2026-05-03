@@ -104,6 +104,26 @@ export default function DetailModal({ activite, onClose, estEpingle, onAssigner,
           </div>
         )}
 
+        {(() => {
+          const liens = (activite.liens_qr || []).filter(l => l.url?.trim());
+          if (liens.length === 0 && activite.lien_qr?.trim()) liens.push({ url: activite.lien_qr, label: "" });
+          if (liens.length === 0) return null;
+          return (
+            <div className="modal-section">
+              <h3 className="modal-section-title">Liens</h3>
+              <div className="modal-liens">
+                {liens.map((l, i) => (
+                  <div key={i}>
+                    <a href={l.url} target="_blank" rel="noopener noreferrer" className="modal-lien">
+                      {l.label || l.url}
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
         <div className="modal-footer">
           {onAssigner && (
             <button className={`btn ${estEpingle ? "btn-retirer" : ""}`} onClick={() => onAssigner(activite.id)}>
