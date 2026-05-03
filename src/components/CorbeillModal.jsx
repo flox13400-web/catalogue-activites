@@ -49,7 +49,12 @@ export default function CorbeillModal({ corbeille, onRestore, onDeleteEntry, onR
               {[...corbeille].reverse().map(entry => (
                 <div key={entry.id} className="corbeille-item">
                   <div className="corbeille-item-info">
-                    <div className="corbeille-item-titre">{entry.activite.titre}</div>
+                    <div className="corbeille-item-titre">
+                      <span className={`corbeille-badge corbeille-badge-${entry.type}`}>
+                        {entry.type === "suppression" ? "Suppression" : "Modification"}
+                      </span>
+                      <span className="corbeille-item-titre-text">{entry.activite.titre}</span>
+                    </div>
                     <div className="corbeille-item-meta">
                       {entry.type === "suppression" ? "Supprimée" : "Modifiée"} le {formatDateHeure(entry.date)}
                     </div>

@@ -724,12 +724,20 @@
   min-width: 0;
 }
 .corbeille-item-titre {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
   font-weight: 500;
   color: var(--text);
-  white-space: nowrap;
+  min-width: 0;
+}
+.corbeille-item-titre-text {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 .corbeille-item-meta {
   font-size: 11px;
