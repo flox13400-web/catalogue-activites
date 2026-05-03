@@ -49,7 +49,6 @@ export function parserJSON(texte) {
       titre: String(a.titre).trim(),
       age_public: norm(a.age_public ?? a.public),
       duree: String(a.duree).trim(),
-      duree_detail: a.duree_detail || null,
       taille_groupe: norm(a.taille_groupe ?? a.groupe),
       themes: norm(a.themes),
       materiels: norm(a.materiels),
@@ -98,7 +97,6 @@ export function parserMarkdown(texte) {
 
     const dureeStr = extraireChamp("Durée");
     const duree = [...DUREES_OK].find(d => dureeStr.includes(d)) || dureeStr || "30-45min";
-    const duree_detail = dureeStr !== duree ? dureeStr : null;
 
     if (!titre) continue;
 
@@ -107,7 +105,6 @@ export function parserMarkdown(texte) {
       titre,
       age_public: splitter(extraireChamp("Âge du public") || extraireChamp("Public")),
       duree,
-      duree_detail,
       taille_groupe: splitter(extraireChamp("Taille de groupe") || extraireChamp("Groupe")),
       themes: splitter(extraireChamp("Thèmes")),
       materiels: splitter(extraireChamp("Matériels")),
@@ -171,7 +168,6 @@ export function parserCSV(texte) {
       titre,
       age_public: split(get(c, "age_public") || get(c, "public")),
       duree,
-      duree_detail: get(c, "duree_detail") || null,
       taille_groupe: split(get(c, "taille_groupe") || get(c, "groupe")),
       themes: split(get(c, "themes")),
       materiels: split(get(c, "materiels")),
@@ -190,12 +186,11 @@ export function parserCSV(texte) {
 }
 
 function telechargerModeleCSV() {
-  const entetes = "titre;age_public;duree;duree_detail;taille_groupe;themes;materiels;contexte;modalite;description_courte;description;apprentissage_cle;problematique;remediation";
+  const entetes = "titre;age_public;duree;taille_groupe;themes;materiels;contexte;modalite;description_courte;description;apprentissage_cle;problematique;remediation";
   const valeurs = [
     "Mon activité pédagogique",
     "Collège | Lycée",
     "30-45min",
-    "",
     "7-12",
     "Mon thème",
     "Cartes | Tableau",
@@ -575,7 +570,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         titre: initialData.titre || "",
         age_public: initialData.age_public || initialData.public || [],
         duree: initialData.duree || "30-45min",
-        duree_detail: initialData.duree_detail || "",
         taille_groupe: initialData.taille_groupe || initialData.groupe || [],
         themes: initialData.themes || [],
         materiels: initialData.materiels || [],
@@ -599,7 +593,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       titre: "",
       age_public: [],
       duree: "30-45min",
-      duree_detail: "",
       taille_groupe: [],
       themes: [],
       materiels: [],
@@ -704,29 +697,17 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label className="form-label">Durée <span className="form-required">*</span></label>
-            <div className="form-chips">
-              {DUREES_DISPONIBLES.map((d) => (
-                <button
-                  key={d}
-                  className={`form-chip ${form.duree === d ? "form-chip-active" : ""}`}
-                  onClick={() => setField("duree", d)}
-                  type="button"
-                >{d}</button>
-              ))}
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="form-label">Précision durée <span className="form-hint">(optionnel)</span></label>
-            <input
-              className="form-input"
-              type="text"
-              placeholder="ex : 20min (enfants) / 40min (adultes)"
-              value={form.duree_detail}
-              onChange={(e) => setField("duree_detail", e.target.value)}
-            />
+        <div className="form-group">
+          <label className="form-label">Durée <span className="form-required">*</span></label>
+          <div className="form-chips">
+            {DUREES_DISPONIBLES.map((d) => (
+              <button
+                key={d}
+                className={`form-chip ${form.duree === d ? "form-chip-active" : ""}`}
+                onClick={() => setField("duree", d)}
+                type="button"
+              >{d}</button>
+            ))}
           </div>
         </div>
 

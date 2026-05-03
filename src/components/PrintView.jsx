@@ -17,7 +17,7 @@ function FicheActivite({ activite: a, num }) {
           {(a.modalite || []).length > 0 && (
             <span className="print-fiche-modalite">{(a.modalite || []).join(" · ")}</span>
           )}
-          <span className="print-fiche-duree">{a.duree_detail || a.duree}</span>
+          <span className="print-fiche-duree">{a.duree}</span>
         </div>
       </div>
       {(a.materiels || []).length > 0 && (

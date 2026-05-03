@@ -435,7 +435,7 @@ export default function SequenceBuilder({
                                         <div className="seq-fiche-meta-row">
                                           <span className="seq-fiche-duree">
                                             <svg className="seq-fiche-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                            {activite.duree_detail || activite.duree}
+                                            {activite.duree}
                                           </span>
                                           {modalites.length > 0 && (
                                             <span className="seq-fiche-modalites">

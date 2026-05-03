@@ -40,7 +40,7 @@ export function exportMarkdown(activites, titre = "") {
     lignes.push(``);
     if ((a.age_public || a.public || []).length > 0)
       lignes.push(`**Âge du public :** ${(a.age_public || a.public || []).join(", ")}  `);
-    lignes.push(`**Durée :** ${a.duree_detail || a.duree}  `);
+    lignes.push(`**Durée :** ${a.duree}  `);
     if ((a.taille_groupe || a.groupe || []).length > 0)
       lignes.push(`**Taille de groupe :** ${(a.taille_groupe || a.groupe || []).join(", ")}  `);
     if ((a.themes || []).length > 0)
@@ -84,7 +84,7 @@ export function exportMarkdown(activites, titre = "") {
 }
 
 export function exportCSV(activites, _titre = "") {
-  const entetes = ["id", "titre", "age_public", "duree", "duree_detail", "taille_groupe", "themes", "materiels", "contexte", "modalite", "description_courte", "description", "apprentissage_cle", "problematique", "remediation"];
+  const entetes = ["id", "titre", "age_public", "duree", "taille_groupe", "themes", "materiels", "contexte", "modalite", "description_courte", "description", "apprentissage_cle", "problematique", "remediation"];
   const echapper = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 
   const lignes = [
@@ -95,7 +95,6 @@ export function exportCSV(activites, _titre = "") {
         a.titre,
         (a.age_public || a.public || []).join(" | "),
         a.duree,
-        a.duree_detail || "",
         (a.taille_groupe || a.groupe || []).join(" | "),
         (a.themes || []).join(" | "),
         (a.materiels || []).join(" | "),

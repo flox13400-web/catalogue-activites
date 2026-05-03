@@ -117,7 +117,7 @@ describe("parserJSON — erreurs", () => {
 
 // ── parserCSV ─────────────────────────────────────────────────
 
-const ENTETES = "titre;age_public;duree;duree_detail;taille_groupe;themes;materiels;contexte;modalite;description_courte;description;apprentissage_cle";
+const ENTETES = "titre;age_public;duree;taille_groupe;themes;materiels;contexte;modalite;description_courte;description;apprentissage_cle";
 
 function csv(...lignes) {
   return [ENTETES, ...lignes].join("\n");
@@ -139,7 +139,7 @@ describe("parserCSV — structure valide", () => {
   });
 
   it("détecte le séparateur virgule automatiquement", () => {
-    const entetes = "titre,age_public,duree,duree_detail,taille_groupe,themes,materiels,contexte,modalite,description_courte,description,apprentissage_cle";
+    const entetes = "titre,age_public,duree,taille_groupe,themes,materiels,contexte,modalite,description_courte,description,apprentissage_cle";
     const ligne = '"Activité A","Adultes","45-60min","",">12","Éthique","","Entreprise","Distanciel","Résumé","Desc","Apprentissage"';
     const res = parserCSV(`${entetes}\n${ligne}`);
     expect(res).toHaveLength(1);

@@ -27,7 +27,7 @@ export default function DetailModal({ activite, onClose, estEpingle, onAssigner,
         <div className="modal-eyebrow">{activite.id}</div>
         <h2 className="modal-title">{activite.titre}</h2>
         <div className="modal-meta-row">
-          <span className="modal-meta"><strong>Durée</strong> · {activite.duree_detail || activite.duree}</span>
+          <span className="modal-meta"><strong>Durée</strong> · {activite.duree}</span>
           {tailleGroupe.length > 0 && (
             <span className="modal-meta"><strong>Groupe</strong> · {tailleGroupe.join(", ")}</span>
           )}

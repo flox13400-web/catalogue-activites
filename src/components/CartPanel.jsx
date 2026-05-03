@@ -28,7 +28,7 @@ function parseDureeActivite(activite) {
   const plage = DUREE_PLAGES[activite.duree];
   if (plage === null) return { min: 0, max: 0, hasProjet: true };
   if (plage) return { min: plage.min, max: plage.max, hasProjet: false };
-  const minutes = parseDureeString(activite.duree_detail || activite.duree);
+  const minutes = parseDureeString(activite.duree);
   if (minutes !== null) return { min: minutes, max: minutes, hasProjet: false };
   return { min: 0, max: 0, hasProjet: false };
 }
@@ -69,7 +69,7 @@ function getDureeStr(panierItems) {
       const plage = DUREE_PLAGES[a.duree];
       if (plage === null) { hasProjet = true; continue; }
       if (plage) { min += plage.min; max += plage.max; continue; }
-      const mn = parseDureeString(a.duree_detail || a.duree);
+      const mn = parseDureeString(a.duree);
       if (mn !== null) { min += mn; max += mn; }
     } else if ((item.duree ?? 0) > 0) {
       min += item.duree;
@@ -130,7 +130,7 @@ function generatePrintHTML(panierItems, titre = "") {
     return `<div class="print-fiche">
 <div class="print-fiche-header"><div class="print-fiche-header-left"><span class="print-fiche-num">${item.num}</span><div><h2 class="print-fiche-titre">${esc(a.titre)}</h2><span class="print-fiche-id">${esc(a.id)}</span></div></div></div>
 <div class="print-fiche-meta-grid">
-<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Durée</div><div class="print-fiche-meta-value">${esc(a.duree_detail || a.duree)}</div></div>
+<div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Durée</div><div class="print-fiche-meta-value">${esc(a.duree)}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Public</div><div class="print-fiche-meta-value">${esc(a.public.join(", "))}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Taille groupe</div><div class="print-fiche-meta-value">${esc(a.groupe.join(", "))}</div></div>
 <div class="print-fiche-meta-item"><div class="print-fiche-meta-label">Thèmes</div><div class="print-fiche-meta-value">${esc(a.themes.join(", "))}</div></div>
@@ -487,7 +487,7 @@ export default function CartPanel({ panier, setPanier, panierOrdre, setPanierOrd
                     <button className="cart-item-remove" onClick={() => retirer(a.id)} title="Retirer">×</button>
                   </div>
                   <div className="cart-item-titre">{a.titre}</div>
-                  <div className="cart-item-meta">{a.duree_detail || a.duree}</div>
+                  <div className="cart-item-meta">{a.duree}</div>
                 </div>
               );
             })}

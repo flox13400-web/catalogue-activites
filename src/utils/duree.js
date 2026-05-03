@@ -27,14 +27,14 @@ export function parseDureeString(str) {
 
 /**
  * Calcule la plage de durée (min et max en minutes) pour une activité spécifique.
- * @param {Object} activite - L'objet activité contenant les propriétés `duree` et `duree_detail`.
+ * @param {Object} activite - L'objet activité contenant la propriété `duree`.
  * @returns {{min: number, max: number, hasProjet: boolean}} Un objet représentant la plage de durée.
  */
 export function parseDureeActivite(activite) {
   const plage = DUREE_PLAGES[activite.duree];
   if (plage === null) return { min: 0, max: 0, hasProjet: true };
   if (plage) return { min: plage.min, max: plage.max, hasProjet: false };
-  const minutes = parseDureeString(activite.duree_detail || activite.duree);
+  const minutes = parseDureeString(activite.duree);
   if (minutes !== null) return { min: minutes, max: minutes, hasProjet: false };
   return { min: 0, max: 0, hasProjet: false };
 }
