@@ -1058,11 +1058,32 @@
 .seq-programme-card { border: 1px solid #111; border-radius: 12px; background: #fff; overflow: hidden; }
 .seq-programme-row { padding: 12px 16px; background: #e8eaed; border-bottom: 1px solid #111; display: flex; align-items: center; }
 .seq-programme-props { padding: 10px 14px 12px 24px; display: flex; flex-direction: column; gap: 8px; }
-.seq-programme-children { margin-left: 28px; padding-left: 18px; border-left: 2px solid #111; padding-top: 12px; display: flex; flex-direction: column; gap: 12px; }
+.seq-programme-children { 
+  margin-left: 28px; 
+  padding-left: 18px; 
+  border-left: 2px solid #111; 
+  padding-top: 12px; 
+  margin-top: -1px; /* Pour bien 'raccrocher' le lien à la carte du dessus */
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+  position: relative;
+}
 
 .seq-sequence { position: relative; margin-bottom: 16px; }
 .seq-sequence-card { border: 1px solid #111; border-radius: 12px; background: #fff; overflow: hidden; transition: border-left-color 200ms ease; }
 .seq-sequence::before { content: ''; position: absolute; left: -18px; top: 22px; width: 18px; height: 2px; background: #111; transition: background-color 200ms ease; }
+/* Masque pour stopper la ligne verticale au dernier élément */
+.seq-sequence:last-of-type::after {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 23px; /* Juste après la jonction */
+  bottom: -20px;
+  width: 4px;
+  background: #fff;
+  z-index: 1;
+}
 
 /* Alignement pédagogique Programme -> Séquence */
 .seq-sequence.align-vert::before { background: #10b981; }
@@ -1081,6 +1102,17 @@
 .seq-seance { position: relative; }
 .seq-seance-card { border: 1px solid #111; border-radius: 12px; background: #fafafa; overflow: hidden; }
 .seq-seance::before { content: ''; position: absolute; left: -16px; top: 19px; width: 16px; height: 2px; background: #111; }
+/* Masque pour stopper la ligne verticale au dernier élément */
+.seq-seance:last-of-type::after {
+  content: '';
+  position: absolute;
+  left: -18px;
+  top: 20px;
+  bottom: -20px;
+  width: 4px;
+  background: #fff;
+  z-index: 1;
+}
 .seq-seance-row { padding: 8px 12px; background: #ffffff; border-bottom: 1px solid #111; border-radius: 12px 12px 0 0; }
 .seq-seance-props { padding: 6px 10px 8px 16px; display: flex; flex-direction: column; gap: 6px; }
 
@@ -1105,6 +1137,17 @@
   width: 16px;
   height: 2px;
   background: #999;
+}
+/* Masque pour stopper la ligne verticale au dernier élément */
+.seq-fiche:last-of-type::after {
+  content: '';
+  position: absolute;
+  left: -21px;
+  top: calc(50% + 2px);
+  bottom: -10px;
+  width: 4px;
+  background: #fff;
+  z-index: 1;
 }
 
 /* Couleur selon le type d'activité */
