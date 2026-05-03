@@ -1054,9 +1054,26 @@
 }
 
 /* --- PHASE 3 : STYLISATION DU CONSTRUCTEUR --- */
-.seq-programme-header { border: 1px solid #111; border-radius: 12px; background: #e8eaed; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; }
-.seq-sequence { margin-bottom: 16px; }
-.seq-sequence-card { border: 1px solid #111; border-radius: 12px; background: #fff; overflow: hidden; }
+.seq-programme { margin-bottom: 16px; }
+.seq-programme-card { border: 1px solid #111; border-radius: 12px; background: #fff; overflow: hidden; }
+.seq-programme-row { padding: 12px 16px; background: #e8eaed; border-bottom: 1px solid #111; display: flex; align-items: center; }
+.seq-programme-props { padding: 10px 14px 12px 24px; display: flex; flex-direction: column; gap: 8px; }
+.seq-programme-children { margin-left: 28px; padding-left: 18px; border-left: 2px solid #111; padding-top: 12px; display: flex; flex-direction: column; gap: 12px; }
+
+.seq-sequence { position: relative; margin-bottom: 16px; }
+.seq-sequence-card { border: 1px solid #111; border-radius: 12px; background: #fff; overflow: hidden; transition: border-left-color 200ms ease; }
+.seq-sequence::before { content: ''; position: absolute; left: -18px; top: 22px; width: 18px; height: 2px; background: #111; transition: background-color 200ms ease; }
+
+/* Alignement pédagogique Programme -> Séquence */
+.seq-sequence.align-vert::before { background: #10b981; }
+.seq-sequence.align-vert .seq-sequence-card { border-left: 4px solid #10b981; }
+
+.seq-sequence.align-rouge::before { background: #ef4444; }
+.seq-sequence.align-rouge .seq-sequence-card { border-left: 4px solid #ef4444; }
+
+.seq-sequence.align-noir::before { background: #111; }
+.seq-sequence.align-noir .seq-sequence-card { border-left: 4px solid #111; }
+
 .seq-sequence-row { padding: 10px 14px; background: #f1f3f4; border-bottom: 1px solid #111; border-radius: 12px 12px 0 0; }
 .seq-sequence-props { padding: 8px 10px 10px 20px; display: flex; flex-direction: column; gap: 6px; }
 .seq-sequence-children { margin-left: 26px; padding-left: 16px; border-left: 2px solid #111; padding-top: 10px; display: flex; flex-direction: column; gap: 10px; }

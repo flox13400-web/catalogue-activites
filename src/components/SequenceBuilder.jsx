@@ -486,79 +486,93 @@ export default function SequenceBuilder({
       </div>
 
       <div className="panel-body seq-builder-body">
-        <div className="seq-programme-header">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px', flexShrink: 0}}><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-          {renderTitre(programme.id, programme.titre, "seq-programme-titre")}
-          <div className="seq-madlibs">
-            <span className="seq-madlibs-prefix">À l'issue de cette formation, l'apprenant sera capable de :</span>
-            <div className="seq-madlibs-inputs">
-              <select
-                className={`seq-opo-select${validationErreurs.prog_objectif ? " seq-input-error" : ""}`}
-                value={programme.objectif_bloom || ""}
-                onChange={e => { updateProgrammeField("objectif_bloom", e.target.value); clearValidationError("prog_objectif"); }}
-              >
-                <option value="">— Verbe d'action * —</option>
-                {VERBES_BLOOM_GROUPED.map(g => (
-                  <optgroup key={g.niveau} label={g.niveau}>
-                    {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
-                  </optgroup>
-                ))}
-              </select>
-              <input
-                className={`seq-objectif-input${validationErreurs.prog_objectif ? " seq-input-error" : ""}`}
-                value={programme.objectif_action || ""}
-                placeholder="… *"
-                onChange={e => { updateProgrammeField("objectif_action", e.target.value); clearValidationError("prog_objectif"); }}
-              />
+        <div className="seq-programme">
+          <div className="seq-programme-card">
+            <div className="seq-row seq-programme-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '8px', flexShrink: 0}}><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+              {renderTitre(programme.id, programme.titre, "seq-programme-titre")}
+            </div>
+            <div className="seq-programme-props">
+              <div className="seq-madlibs">
+                <span className="seq-madlibs-prefix">À l'issue de cette formation, l'apprenant sera capable de :</span>
+                <div className="seq-madlibs-inputs">
+                  <select
+                    className={`seq-opo-select${validationErreurs.prog_objectif ? " seq-input-error" : ""}`}
+                    value={programme.objectif_bloom || ""}
+                    onChange={e => { updateProgrammeField("objectif_bloom", e.target.value); clearValidationError("prog_objectif"); }}
+                  >
+                    <option value="">— Verbe d'action * —</option>
+                    {VERBES_BLOOM_GROUPED.map(g => (
+                      <optgroup key={g.niveau} label={g.niveau}>
+                        {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
+                      </optgroup>
+                    ))}
+                  </select>
+                  <input
+                    className={`seq-objectif-input${validationErreurs.prog_objectif ? " seq-input-error" : ""}`}
+                    value={programme.objectif_action || ""}
+                    placeholder="… *"
+                    onChange={e => { updateProgrammeField("objectif_action", e.target.value); clearValidationError("prog_objectif"); }}
+                  />
+                </div>
+              </div>
+              <div className="seq-duree-cible-row">
+                <span className="seq-madlibs-prefix">Durée cible :</span>
+                <input
+                  className="seq-duree-cible-input"
+                  type="number"
+                  min="0"
+                  step="0.5"
+                  defaultValue={programme.duree_objectif > 0 ? programme.duree_objectif : ""}
+                  placeholder="0"
+                  onBlur={e => updateProgrammeField("duree_objectif", parseFloat(e.target.value) || 0)}
+                />
+                <span className="seq-duree-cible-unit">h</span>
+              </div>
+              <div className="seq-madlibs-simple">
+                <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
+                <textarea
+                  className="seq-objectif-input"
+                  value={programme.objectif_final || ""}
+                  placeholder="Décrire les critères d'acquisition..."
+                  onChange={e => updateObjectifProgramme(e.target.value)}
+                  rows={2}
+                />
+              </div>
+              <div className="seq-madlibs-simple">
+                <span className="seq-madlibs-prefix">Prérequis :</span>
+                <textarea
+                  className="seq-objectif-input"
+                  value={programme.prerequis || ""}
+                  placeholder="Connaissances ou compétences requises avant la formation..."
+                  onChange={e => { updateProgrammeField("prerequis", e.target.value); if (prerequisWarning && e.target.value.trim()) setPrerequisWarning(false); }}
+                  rows={2}
+                />
+              </div>
             </div>
           </div>
-          <div className="seq-duree-cible-row">
-            <span className="seq-madlibs-prefix">Durée cible :</span>
-            <input
-              className="seq-duree-cible-input"
-              type="number"
-              min="0"
-              step="0.5"
-              defaultValue={programme.duree_objectif > 0 ? programme.duree_objectif : ""}
-              placeholder="0"
-              onBlur={e => updateProgrammeField("duree_objectif", parseFloat(e.target.value) || 0)}
-            />
-            <span className="seq-duree-cible-unit">h</span>
-          </div>
-          <div className="seq-madlibs-simple">
-            <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
-            <textarea
-              className="seq-objectif-input"
-              value={programme.objectif_final || ""}
-              placeholder="Décrire les critères d'acquisition..."
-              onChange={e => updateObjectifProgramme(e.target.value)}
-              rows={2}
-            />
-          </div>
-          <div className="seq-madlibs-simple">
-            <span className="seq-madlibs-prefix">Prérequis :</span>
-            <textarea
-              className="seq-objectif-input"
-              value={programme.prerequis || ""}
-              placeholder="Connaissances ou compétences requises avant la formation..."
-              onChange={e => { updateProgrammeField("prerequis", e.target.value); if (prerequisWarning && e.target.value.trim()) setPrerequisWarning(false); }}
-              rows={2}
-            />
-          </div>
-        </div>
 
-        <div className="seq-tree">
-          {programme.sequences.length === 0 && (
-            <div className="seq-empty">
-              <p className="seq-empty-text">Commencez par créer une séquence.</p>
-            </div>
-          )}
+          <div className="seq-tree seq-programme-children">
+            {programme.sequences.length === 0 && (
+              <div className="seq-empty">
+                <p className="seq-empty-text">Commencez par créer une séquence.</p>
+              </div>
+            )}
 
-          {programme.sequences.map((seq, seqIdx) => {
-            const seqCollapsed = collapsed.has(seq.id);
-            return (
-              <div key={seq.id} className="seq-sequence">
-                <div className="seq-sequence-card">
+            {programme.sequences.map((seq, seqIdx) => {
+              const seqCollapsed = collapsed.has(seq.id);
+
+              // Calcul alignement Programme -> Sequence
+              const progLevel = getBloomLevel(programme.objectif_bloom);
+              const seqLevel = getBloomLevel(seq.objectif_bloom);
+              let seqAlignmentClass = "align-noir";
+              if (progLevel > 0 && seqLevel > 0) {
+                seqAlignmentClass = seqLevel <= progLevel ? "align-vert" : "align-rouge";
+              }
+
+              return (
+                <div key={seq.id} className={`seq-sequence ${seqAlignmentClass}`}>
+                  <div className="seq-sequence-card">
                   <div className="seq-row seq-sequence-row">
                     <button className="seq-collapse-btn" onClick={() => toggleCollapse(seq.id)}>
                       {seqCollapsed ? "▶" : "▼"}
@@ -807,6 +821,7 @@ export default function SequenceBuilder({
               </div>
             );
           })}
+        </div>
         </div>
 
         <button className="seq-add-btn seq-add-sequence-btn" onClick={addSequence}>
