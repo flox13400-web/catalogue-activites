@@ -779,6 +779,7 @@ body, .app {
   border-bottom: 1px solid var(--border);
   font-size: 13px;
   cursor: var(--cursor-hand);
+  color: var(--text);
 }
 .dropdown-item:last-child {
   border-bottom: none;
