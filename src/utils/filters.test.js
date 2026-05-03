@@ -6,19 +6,19 @@ const ACT = [
     id: "A01", titre: "Bingo IA", age_public: ["Collège", "Lycée"],
     duree: "30-45min", taille_groupe: ["7-12"], themes: ["IA déconnecté"],
     materiels: ["Cartes", "Tableau"], contexte: ["Scolaire"], modalite: ["Présentielle"],
-    description_courte: "Jeu de cartes", apprentissage_cle: "Comprendre les biais",
+    apprentissage_cle: "Comprendre les biais",
   },
   {
     id: "A02", titre: "Grand débat éthique", age_public: ["Lycée", "Adultes"],
     duree: ">60min", taille_groupe: [">12"], themes: ["Éthique", "IA générative"],
     materiels: ["Tableau"], contexte: ["Entreprise", "Scolaire"], modalite: ["Présentielle", "Distanciel"],
-    description_courte: "Discussion collective", apprentissage_cle: "Argumenter",
+    apprentissage_cle: "Argumenter",
   },
   {
     id: "A03", titre: "Classement d'images", age_public: ["Primaire"],
     duree: "0-15min", taille_groupe: ["1", "2-6"], themes: ["IA déconnecté"],
     materiels: ["Cartes"], contexte: ["Scolaire"], modalite: ["Présentielle"],
-    description_courte: "Tri visuel", apprentissage_cle: "Classer",
+    apprentissage_cle: "Classer",
   },
 ];
 
@@ -53,7 +53,7 @@ describe("applyFilters — recherche texte", () => {
     expect(res[0].id).toBe("A01");
   });
 
-  it("filtre par description_courte", () => {
+  it("filtre par titre (mot isolé)", () => {
     const res = applyFilters(ACT, { ...FILTRES_INIT, search: "Discussion" });
     expect(res).toHaveLength(1);
     expect(res[0].id).toBe("A02");

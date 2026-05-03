@@ -15,7 +15,7 @@ export function applyFilters(activites, filtres, favorisIds = new Set()) {
     if (filtres.favorisOnly && !favorisIds.has(a.id)) return false;
     if (filtres.search.trim()) {
       const q = filtres.search.toLowerCase();
-      const haystack = [a.titre, a.description_courte, a.apprentissage_cle, a.id]
+      const haystack = [a.titre, a.apprentissage_cle, a.id]
         .join(" ").toLowerCase();
       if (!haystack.includes(q)) return false;
     }

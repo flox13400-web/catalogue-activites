@@ -130,7 +130,7 @@ export default function Catalogue() {
       materiels: formData.materiels,
       contexte: formData.contexte,
       modalite: formData.modalite,
-      description_courte: formData.description_courte.trim(),
+
       description: formData.description.trim(),
       apprentissage_cle: formData.apprentissage_cle.trim(),
       problematique: formData.problematique.trim() || null,
@@ -194,7 +194,7 @@ export default function Catalogue() {
       materiels: formData.materiels,
       contexte: formData.contexte,
       modalite: formData.modalite,
-      description_courte: formData.description_courte.trim(),
+
       description: formData.description.trim(),
       apprentissage_cle: formData.apprentissage_cle.trim(),
       problematique: formData.problematique.trim() || null,

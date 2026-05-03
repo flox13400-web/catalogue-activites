@@ -88,12 +88,6 @@ export default function DetailModal({ activite, onClose, estEpingle, onAssigner,
           </div>
         )}
 
-        {activite.description_courte && (
-          <div className="modal-section">
-            <h3 className="modal-section-title">Résumé</h3>
-            <p className="modal-text">{activite.description_courte}</p>
-          </div>
-        )}
 
         <div className="modal-section">
           <h3 className="modal-section-title">Description</h3>

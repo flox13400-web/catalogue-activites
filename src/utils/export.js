@@ -84,7 +84,7 @@ export function exportMarkdown(activites, titre = "") {
 }
 
 export function exportCSV(activites, _titre = "") {
-  const entetes = ["id", "titre", "age_public", "duree", "taille_groupe", "themes", "materiels", "contexte", "modalite", "description_courte", "description", "apprentissage_cle", "problematique", "remediation"];
+  const entetes = ["id", "titre", "age_public", "duree", "taille_groupe", "themes", "materiels", "contexte", "modalite", "description", "apprentissage_cle", "problematique", "remediation"];
   const echapper = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 
   const lignes = [
@@ -100,7 +100,6 @@ export function exportCSV(activites, _titre = "") {
         (a.materiels || []).join(" | "),
         (a.contexte || []).join(" | "),
         (a.modalite || []).join(" | "),
-        a.description_courte || "",
         a.description || "",
         a.apprentissage_cle || "",
         a.problematique || "",

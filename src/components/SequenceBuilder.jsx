@@ -429,9 +429,6 @@ export default function SequenceBuilder({
                                     <div key={fiche.id} className={`seq-fiche ${isEval ? "seq-fiche-eval" : "seq-fiche-apprentissage"}`}>
                                       <div className="seq-fiche-content">
                                         <span className="seq-fiche-titre">{activite.titre}</span>
-                                        {activite.description_courte && (
-                                          <span className="seq-fiche-desc">{activite.description_courte}</span>
-                                        )}
                                         <div className="seq-fiche-meta-row">
                                           <span className="seq-fiche-duree">
                                             <svg className="seq-fiche-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>

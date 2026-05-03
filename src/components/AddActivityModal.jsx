@@ -54,7 +54,6 @@ export function parserJSON(texte) {
       materiels: norm(a.materiels),
       contexte: norm(a.contexte),
       modalite: norm(a.modalite),
-      description_courte: String(a.description_courte || "").trim(),
       description: String(a.description || "").trim(),
       apprentissage_cle: String(a.apprentissage_cle || "").trim(),
       problematique: a.problematique ? String(a.problematique).trim() : null,
@@ -110,7 +109,6 @@ export function parserMarkdown(texte) {
       materiels: splitter(extraireChamp("Matériels")),
       contexte: splitter(extraireChamp("Contexte")),
       modalite: splitter(extraireChamp("Modalité")),
-      description_courte: "",
       description: extraireSection("Description"),
       apprentissage_cle: extraireSection("Apprentissage clé"),
       problematique: extraireSection("Problématique") || null,
@@ -173,7 +171,6 @@ export function parserCSV(texte) {
       materiels: split(get(c, "materiels")),
       contexte: split(get(c, "contexte")),
       modalite: split(get(c, "modalite")),
-      description_courte: get(c, "description_courte"),
       description: get(c, "description"),
       apprentissage_cle: get(c, "apprentissage_cle"),
       problematique,
@@ -186,7 +183,7 @@ export function parserCSV(texte) {
 }
 
 function telechargerModeleCSV() {
-  const entetes = "titre;age_public;duree;taille_groupe;themes;materiels;contexte;modalite;description_courte;description;apprentissage_cle;problematique;remediation";
+  const entetes = "titre;age_public;duree;taille_groupe;themes;materiels;contexte;modalite;description;apprentissage_cle;problematique;remediation";
   const valeurs = [
     "Mon activité pédagogique",
     "Collège | Lycée",
@@ -250,7 +247,6 @@ const EXEMPLE_JSON = `[
     "materiels": ["Cartes", "Tableau"],
     "contexte": ["Scolaire"],
     "modalite": ["Présentielle"],
-    "description_courte": "...",
     "description": "...",
     "apprentissage_cle": "...",
     "problematique": null,
@@ -578,7 +574,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         type_fiche: initialData.type_fiche || "Activite_Apprentissage",
         verbe_action_bloom: initialData.verbe_action_bloom || "",
         opo_activite: initialData.opo_activite || "",
-        description_courte: initialData.description_courte || "",
         description: initialData.description || "",
         apprentissage_cle: initialData.apprentissage_cle || "",
         eval_type: initialData.eval_type || "Formative",
@@ -601,7 +596,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       type_fiche: "Activite_Apprentissage",
       verbe_action_bloom: "",
       opo_activite: "",
-      description_courte: "",
       description: "",
       apprentissage_cle: "",
       eval_type: "Formative",
@@ -815,13 +809,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
 
         {form.type_fiche === "Activite_Apprentissage" && (
           <>
-            <div className="form-group">
-              <label className="form-label">Description courte</label>
-              <input className="form-input" type="text"
-                placeholder="1-2 phrases pour la carte"
-                value={form.description_courte}
-                onChange={(e) => setField("description_courte", e.target.value)} />
-            </div>
             <div className="form-group">
               <label className="form-label">Description complète</label>
               <textarea className="form-textarea" placeholder="Déroulé détaillé de l'activité"
