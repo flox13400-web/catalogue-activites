@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { verifierAlignementPedagogique } from "../utils/alignmentChecker.js";
 import "../styles/cart.css";
 
@@ -36,7 +36,7 @@ export default function SequenceBuilder({
   const [editingValue, setEditingValue] = useState("");
   const [validationErreurs, setValidationErreurs] = useState({});
 
-  const totalActivites = programme.sequences.reduce(
+  const totalFiches = programme.sequences.reduce(
     (acc, seq) => acc + seq.seances.reduce((a, sea) => a + sea.fiches.length, 0),
     0
   );
@@ -137,6 +137,24 @@ export default function SequenceBuilder({
     startEdit(id, "Nouvelle séance");
   }
 
+  function addEncart(seqId, seaId) {
+    const id = `enc-${Date.now()}`;
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq =>
+        seq.id !== seqId ? seq : {
+          ...seq,
+          seances: seq.seances.map(sea =>
+            sea.id !== seaId ? sea : {
+              ...sea,
+              fiches: [...sea.fiches, { id, type: "texte", titre: "", contenu: "", duree_min: 0 }],
+            }
+          ),
+        }
+      ),
+    }));
+  }
+
   // ── Suppression ───────────────────────────────────────────────
 
   function removeSequence(seqId) {
@@ -164,6 +182,102 @@ export default function SequenceBuilder({
         }
       ),
     }));
+  }
+
+  // ── Mise à jour encart ────────────────────────────────────────
+
+  function updateFicheEncart(seqId, seaId, ficheId, field, value) {
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq =>
+        seq.id !== seqId ? seq : {
+          ...seq,
+          seances: seq.seances.map(sea =>
+            sea.id !== seaId ? sea : {
+              ...sea,
+              fiches: sea.fiches.map(f =>
+                f.id !== ficheId ? f : { ...f, [field]: value }
+              ),
+            }
+          ),
+        }
+      ),
+    }));
+  }
+
+  // ── Déplacement ───────────────────────────────────────────────
+
+  function moveSequence(seqId, dir) {
+    setProgramme(prev => {
+      const seqs = [...prev.sequences];
+      const i = seqs.findIndex(s => s.id === seqId);
+      const j = i + dir;
+      if (j < 0 || j >= seqs.length) return prev;
+      [seqs[i], seqs[j]] = [seqs[j], seqs[i]];
+      return { ...prev, sequences: seqs };
+    });
+  }
+
+  function moveSeance(seqId, seaId, dir) {
+    setProgramme(prev => {
+      const seqs = [...prev.sequences];
+      const si = seqs.findIndex(s => s.id === seqId);
+      if (si < 0) return prev;
+      const seances = [...seqs[si].seances];
+      const ei = seances.findIndex(s => s.id === seaId);
+      if (ei < 0) return prev;
+      const ni = ei + dir;
+      if (ni >= 0 && ni < seances.length) {
+        [seances[ei], seances[ni]] = [seances[ni], seances[ei]];
+        seqs[si] = { ...seqs[si], seances };
+      } else if (ni < 0 && si > 0) {
+        const prevSeances = [...seqs[si - 1].seances];
+        const [moved] = seances.splice(ei, 1);
+        prevSeances.push(moved);
+        seqs[si - 1] = { ...seqs[si - 1], seances: prevSeances };
+        seqs[si] = { ...seqs[si], seances };
+      } else if (ni >= seances.length && si < seqs.length - 1) {
+        const nextSeances = [...seqs[si + 1].seances];
+        const [moved] = seances.splice(ei, 1);
+        nextSeances.unshift(moved);
+        seqs[si + 1] = { ...seqs[si + 1], seances: nextSeances };
+        seqs[si] = { ...seqs[si], seances };
+      }
+      return { ...prev, sequences: seqs };
+    });
+  }
+
+  function moveFiche(seqId, seaId, ficheId, dir) {
+    setProgramme(prev => {
+      const seqs = [...prev.sequences];
+      const si = seqs.findIndex(s => s.id === seqId);
+      if (si < 0) return prev;
+      const seances = [...seqs[si].seances];
+      const ei = seances.findIndex(s => s.id === seaId);
+      if (ei < 0) return prev;
+      const fiches = [...seances[ei].fiches];
+      const fi = fiches.findIndex(f => f.id === ficheId);
+      if (fi < 0) return prev;
+      const ni = fi + dir;
+      if (ni >= 0 && ni < fiches.length) {
+        [fiches[fi], fiches[ni]] = [fiches[ni], fiches[fi]];
+        seances[ei] = { ...seances[ei], fiches };
+      } else if (ni < 0 && ei > 0) {
+        const prevFiches = [...seances[ei - 1].fiches];
+        const [moved] = fiches.splice(fi, 1);
+        prevFiches.push(moved);
+        seances[ei - 1] = { ...seances[ei - 1], fiches: prevFiches };
+        seances[ei] = { ...seances[ei], fiches };
+      } else if (ni >= fiches.length && ei < seances.length - 1) {
+        const nextFiches = [...seances[ei + 1].fiches];
+        const [moved] = fiches.splice(fi, 1);
+        nextFiches.unshift(moved);
+        seances[ei + 1] = { ...seances[ei + 1], fiches: nextFiches };
+        seances[ei] = { ...seances[ei], fiches };
+      }
+      seqs[si] = { ...seqs[si], seances };
+      return { ...prev, sequences: seqs };
+    });
   }
 
   // ── Objectifs pédagogiques ────────────────────────────────────
@@ -261,7 +375,7 @@ export default function SequenceBuilder({
         <div className="panel-header-end">
           <div className="panel-header-stats">
             <span className="panel-subtitle">
-              {totalActivites} activité{totalActivites !== 1 ? "s" : ""}
+              {totalFiches} activité{totalFiches !== 1 ? "s" : ""}
             </span>
             {dureeStr && <span className="seq-duree-header">{dureeStr}</span>}
           </div>
@@ -352,7 +466,7 @@ export default function SequenceBuilder({
             </div>
           )}
 
-          {programme.sequences.map(seq => {
+          {programme.sequences.map((seq, seqIdx) => {
             const seqCollapsed = collapsed.has(seq.id);
             return (
               <div key={seq.id} className="seq-sequence">
@@ -362,6 +476,10 @@ export default function SequenceBuilder({
                   </button>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                   {renderTitre(seq.id, seq.titre, "seq-sequence-titre")}
+                  <div className="seq-move-btns">
+                    <button className="seq-move-btn" onClick={() => moveSequence(seq.id, -1)} title="Monter" disabled={seqIdx === 0}>↑</button>
+                    <button className="seq-move-btn" onClick={() => moveSequence(seq.id, 1)} title="Descendre" disabled={seqIdx === programme.sequences.length - 1}>↓</button>
+                  </div>
                   <button className="seq-remove-btn" onClick={() => removeSequence(seq.id)} title="Supprimer la séquence">×</button>
                 </div>
 
@@ -399,12 +517,14 @@ export default function SequenceBuilder({
                         onChange={e => updateObjectifSequence(seq.id, e.target.value)}
                       />
                     </div>
-                    {seq.seances.map(sea => {
+
+                    {seq.seances.map((sea, seaIdx) => {
                       const seaCollapsed = collapsed.has(sea.id);
-                      const ficheAvecActivite = sea.fiches.map(f => ({
-                        fiche: f,
-                        activite: toutesActivites.find(a => a.id === f.activite_id),
-                      })).filter(x => x.activite);
+                      const toutFiches = sea.fiches.map(f => {
+                        if (f.type === "texte") return { key: f.id, type: "texte", fiche: f };
+                        const activite = toutesActivites.find(a => a.id === f.activite_id);
+                        return activite ? { key: f.id, type: "activite", fiche: f, activite } : null;
+                      }).filter(Boolean);
 
                       return (
                         <div key={sea.id} className="seq-seance">
@@ -414,6 +534,10 @@ export default function SequenceBuilder({
                             </button>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                             {renderTitre(sea.id, sea.titre, "seq-seance-titre")}
+                            <div className="seq-move-btns">
+                              <button className="seq-move-btn" onClick={() => moveSeance(seq.id, sea.id, -1)} title="Monter" disabled={seqIdx === 0 && seaIdx === 0}>↑</button>
+                              <button className="seq-move-btn" onClick={() => moveSeance(seq.id, sea.id, 1)} title="Descendre" disabled={seqIdx === programme.sequences.length - 1 && seaIdx === seq.seances.length - 1}>↓</button>
+                            </div>
                             <button className="seq-remove-btn" onClick={() => removeSeance(seq.id, sea.id)} title="Supprimer la séance">×</button>
                           </div>
 
@@ -454,14 +578,58 @@ export default function SequenceBuilder({
                                   />
                                 </div>
                               </div>
-                              {ficheAvecActivite.length === 0 ? (
+
+                              {toutFiches.length === 0 ? (
                                 <p className="seq-fiche-empty">Aucune activité assignée</p>
                               ) : (
-                                ficheAvecActivite.map(({ fiche, activite }) => {
+                                toutFiches.map((item, ficheIdx) => {
+                                  if (item.type === "texte") {
+                                    const f = item.fiche;
+                                    return (
+                                      <div key={item.key} className="seq-fiche seq-fiche-encart">
+                                        <div className="seq-fiche-content">
+                                          <input
+                                            className="seq-encart-titre"
+                                            type="text"
+                                            placeholder="Titre de l'encart…"
+                                            value={f.titre || ""}
+                                            onChange={e => updateFicheEncart(seq.id, sea.id, f.id, "titre", e.target.value)}
+                                          />
+                                          <textarea
+                                            className="seq-encart-contenu"
+                                            placeholder="Contenu…"
+                                            value={f.contenu || ""}
+                                            onChange={e => updateFicheEncart(seq.id, sea.id, f.id, "contenu", e.target.value)}
+                                            rows={2}
+                                          />
+                                          <div className="seq-encart-duree-row">
+                                            <svg className="seq-fiche-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                            <input
+                                              className="seq-encart-duree"
+                                              type="number"
+                                              min="0"
+                                              placeholder="0"
+                                              value={f.duree_min || ""}
+                                              onChange={e => updateFicheEncart(seq.id, sea.id, f.id, "duree_min", parseInt(e.target.value) || 0)}
+                                            />
+                                            <span className="seq-duree-cible-unit">min</span>
+                                          </div>
+                                        </div>
+                                        <div className="seq-fiche-actions">
+                                          <div className="seq-move-btns">
+                                            <button className="seq-move-btn" onClick={() => moveFiche(seq.id, sea.id, f.id, -1)} title="Monter" disabled={ficheIdx === 0 && seaIdx === 0}>↑</button>
+                                            <button className="seq-move-btn" onClick={() => moveFiche(seq.id, sea.id, f.id, 1)} title="Descendre" disabled={ficheIdx === toutFiches.length - 1 && seaIdx === seq.seances.length - 1}>↓</button>
+                                          </div>
+                                          <button className="seq-remove-btn" onClick={() => removeFiche(seq.id, sea.id, f.id)} title="Retirer">×</button>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                  const { fiche, activite } = item;
                                   const isEval = activite.methode === "evaluation" || activite.type_fiche === "Activite_Evaluation" || activite.type_fiche === "Évaluation" || activite.type_fiche === "Evaluation";
                                   const modalites = activite.modalite || [];
                                   return (
-                                    <div key={fiche.id} className={`seq-fiche ${isEval ? "seq-fiche-eval" : "seq-fiche-apprentissage"}`}>
+                                    <div key={item.key} className={`seq-fiche ${isEval ? "seq-fiche-eval" : "seq-fiche-apprentissage"}`}>
                                       <div className="seq-fiche-content">
                                         <span className="seq-fiche-titre">{activite.titre}</span>
                                         <div className="seq-fiche-meta-row">
@@ -495,15 +663,24 @@ export default function SequenceBuilder({
                                           )}
                                         </div>
                                       </div>
-                                      <button
-                                        className="seq-remove-btn"
-                                        onClick={() => removeFiche(seq.id, sea.id, fiche.id)}
-                                        title="Retirer"
-                                      >×</button>
+                                      <div className="seq-fiche-actions">
+                                        <div className="seq-move-btns">
+                                          <button className="seq-move-btn" onClick={() => moveFiche(seq.id, sea.id, fiche.id, -1)} title="Monter" disabled={ficheIdx === 0 && seaIdx === 0}>↑</button>
+                                          <button className="seq-move-btn" onClick={() => moveFiche(seq.id, sea.id, fiche.id, 1)} title="Descendre" disabled={ficheIdx === toutFiches.length - 1 && seaIdx === seq.seances.length - 1}>↓</button>
+                                        </div>
+                                        <button
+                                          className="seq-remove-btn"
+                                          onClick={() => removeFiche(seq.id, sea.id, fiche.id)}
+                                          title="Retirer"
+                                        >×</button>
+                                      </div>
                                     </div>
                                   );
                                 })
                               )}
+                              <button className="seq-add-btn seq-add-encart-btn" onClick={() => addEncart(seq.id, sea.id)}>
+                                + Encart
+                              </button>
                             </div>
                           )}
                         </div>
@@ -531,7 +708,7 @@ export default function SequenceBuilder({
             ⚠ Champs requis manquants — vérifiez les zones marquées en rouge (objectifs, prérequis).
           </div>
         )}
-        {totalActivites === 0 ? (
+        {totalFiches === 0 ? (
           <span className="panel-footnote">Créez des séquences, puis assignez des activités</span>
         ) : (
           <button className="btn btn-print" onClick={handleExport}>

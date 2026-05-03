@@ -1000,5 +1000,116 @@
 }
 
 
+/* Actions (déplacement + suppression) sur les fiches */
+.seq-fiche-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+/* Boutons ↑↓ */
+.seq-move-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.seq-move-btn {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  cursor: var(--cursor-hand);
+  font-size: 10px;
+  line-height: 1;
+  padding: 1px 3px;
+  border-radius: 2px;
+  transition: color 120ms ease, background 120ms ease;
+}
+.seq-move-btn:hover:not(:disabled) {
+  color: var(--accent-deep);
+  background: var(--accent-soft);
+}
+.seq-move-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+/* Boutons ↑↓ dans les rangées séquence/séance */
+.seq-sequence-row .seq-move-btns,
+.seq-seance-row .seq-move-btns {
+  flex-direction: row;
+  gap: 2px;
+  margin-left: auto;
+}
+
+/* Encart texte libre */
+.seq-fiche-encart {
+  background: #fffbec;
+  border-left: 4px solid #e8a020;
+}
+.seq-encart-titre {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 2px 0 3px;
+  outline: none;
+}
+.seq-encart-titre:focus {
+  border-bottom-color: var(--accent);
+}
+.seq-encart-titre::placeholder { color: var(--text-faint); font-weight: 400; }
+.seq-encart-contenu {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  padding: 2px 0;
+  outline: none;
+  resize: none;
+  line-height: 1.4;
+}
+.seq-encart-contenu:focus { outline: none; }
+.seq-encart-contenu::placeholder { color: var(--text-faint); }
+.seq-encart-duree-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
+}
+.seq-encart-duree {
+  width: 44px;
+  font-family: var(--sans);
+  font-size: 10px;
+  color: var(--text-faint);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 4px;
+  outline: none;
+  text-align: right;
+}
+.seq-encart-duree:focus { border-color: var(--accent); }
+
+/* Bouton "+ Encart" */
+.seq-add-encart-btn {
+  border-style: dashed;
+  border-color: #e8a020;
+  color: #a07010;
+}
+.seq-add-encart-btn:hover {
+  border-color: #c07800;
+  color: #7a5800;
+  background: #fff8e0;
+}
+
 @media print { .seq-programme-header, .seq-sequence, .seq-seance, .seq-fiche { display: block !important; overflow: visible !important; height: auto !important; } }
 

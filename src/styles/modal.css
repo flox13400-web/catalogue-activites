@@ -902,3 +902,47 @@
 .multi-select-option-new:hover {
   background: var(--accent-soft);
 }
+
+/* Liens QR — liste dynamique dans le formulaire */
+.form-liens-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.form-lien-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.form-lien-label {
+  width: 140px;
+  flex-shrink: 0;
+}
+.form-lien-url {
+  flex: 1;
+}
+.form-lien-remove {
+  background: none;
+  border: none;
+  color: var(--text-faint);
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 4px;
+  cursor: var(--cursor-hand);
+  flex-shrink: 0;
+  transition: color 120ms ease;
+}
+.form-lien-remove:hover { color: #c0392b; }
+.btn-add-lien {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--accent-deep);
+  background: none;
+  border: 1px dashed var(--accent);
+  border-radius: 4px;
+  padding: 5px 12px;
+  cursor: var(--cursor-hand);
+  transition: background 120ms ease;
+}
+.btn-add-lien:hover { background: var(--accent-soft); }

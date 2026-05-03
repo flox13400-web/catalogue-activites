@@ -567,7 +567,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         problematique: initialData.problematique || "",
         remediation: initialData.remediation || "",
         adaptation_psh: initialData.adaptation_psh || "",
-        lien_qr: initialData.lien_qr || "",
+        liens_qr: initialData.liens_qr ?? (initialData.lien_qr ? [{ url: initialData.lien_qr, label: "" }] : []),
       };
     }
     return {
@@ -588,7 +588,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       problematique: "",
       remediation: "",
       adaptation_psh: "",
-      lien_qr: "",
+      liens_qr: [],
     };
   });
 
@@ -891,14 +891,43 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         </div>
 
         <div className="form-group form-group-lien-qr">
-          <label className="form-label">Lien <span className="form-hint">(QR code dans le PDF)</span></label>
-          <input
-            className="form-input"
-            type="url"
-            placeholder="https://..."
-            value={form.lien_qr}
-            onChange={(e) => setField("lien_qr", e.target.value)}
-          />
+          <label className="form-label">Liens <span className="form-hint">(QR codes dans le PDF)</span></label>
+          <div className="form-liens-list">
+            {form.liens_qr.map((lien, i) => (
+              <div key={i} className="form-lien-row">
+                <input
+                  className="form-input form-lien-label"
+                  type="text"
+                  placeholder="Étiquette (ex : Vidéo, Fiche…)"
+                  value={lien.label}
+                  onChange={e => {
+                    const arr = form.liens_qr.map((l, j) => j === i ? { ...l, label: e.target.value } : l);
+                    setField("liens_qr", arr);
+                  }}
+                />
+                <input
+                  className="form-input form-lien-url"
+                  type="url"
+                  placeholder="https://..."
+                  value={lien.url}
+                  onChange={e => {
+                    const arr = form.liens_qr.map((l, j) => j === i ? { ...l, url: e.target.value } : l);
+                    setField("liens_qr", arr);
+                  }}
+                />
+                <button
+                  type="button"
+                  className="form-lien-remove"
+                  onClick={() => setField("liens_qr", form.liens_qr.filter((_, j) => j !== i))}
+                >×</button>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="btn-add-lien"
+            onClick={() => setField("liens_qr", [...form.liens_qr, { url: "", label: "" }])}
+          >+ Ajouter un lien</button>
         </div>
 
         <div className="modal-footer">

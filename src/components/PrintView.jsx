@@ -1,9 +1,9 @@
 import React from "react";
 import "../styles/card.css";
 
-import { sumDureeActivites, formatDureeGlobale } from "../utils/duree";
+import { sumDureeItems, formatDureeGlobale, parseDureeActivite } from "../utils/duree";
 
-function QRCodeImage({ url, size = 80 }) {
+function QRCodeImage({ url, size = 64 }) {
   const [src, setSrc] = React.useState(null);
   React.useEffect(() => {
     if (!url?.trim()) { setSrc(null); return; }
@@ -15,6 +15,44 @@ function QRCodeImage({ url, size = 80 }) {
   }, [url, size]);
   if (!src) return null;
   return <img src={src} width={size} height={size} alt="QR Code" style={{ display: "block" }} />;
+}
+
+function LiensQR({ activite: a }) {
+  const liens = (a.liens_qr || []).filter(l => l.url?.trim());
+  if (liens.length === 0 && a.lien_qr?.trim()) liens.push({ url: a.lien_qr, label: "" });
+  if (liens.length === 0) return null;
+  return (
+    <div className="print-fiche-qr-group">
+      {liens.map((lien, i) => (
+        <div key={i} className="print-fiche-qr">
+          <QRCodeImage url={lien.url} size={64} />
+          {lien.label && <span className="print-fiche-qr-label">{lien.label}</span>}
+          <span className="print-fiche-qr-url">{lien.url}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EncartTexte({ fiche, num }) {
+  return (
+    <div className="print-fiche print-fiche-texte">
+      <div className="print-fiche-header">
+        <div className="print-fiche-header-left">
+          <span className="print-fiche-num">{num}</span>
+          <h2 className="print-fiche-titre">{fiche.titre || "Encart"}</h2>
+        </div>
+        {fiche.duree_min > 0 && (
+          <div className="print-fiche-header-right">
+            <span className="print-fiche-duree">{fiche.duree_min} min</span>
+          </div>
+        )}
+      </div>
+      {fiche.contenu?.trim() && (
+        <p className="print-fiche-body">{fiche.contenu}</p>
+      )}
+    </div>
+  );
 }
 
 function FicheActivite({ activite: a, num }) {
@@ -34,12 +72,7 @@ function FicheActivite({ activite: a, num }) {
           <span className="print-fiche-duree">{a.duree}</span>
         </div>
       </div>
-      {a.lien_qr?.trim() && (
-        <div className="print-fiche-qr">
-          <QRCodeImage url={a.lien_qr} size={76} />
-          <span className="print-fiche-qr-url">{a.lien_qr}</span>
-        </div>
-      )}
+      <LiensQR activite={a} />
       {(a.materiels || []).length > 0 && (
         <div className="print-fiche-meta-grid">
           <div className="print-fiche-meta-item">
@@ -118,16 +151,10 @@ export default function PrintView({ programme, activites }) {
 
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 
-  const toutesAct = [];
-  for (const seq of programme.sequences) {
-    for (const sea of seq.seances ?? []) {
-      for (const fiche of sea.fiches ?? []) {
-        const a = activites.find(x => x.id === fiche.activite_id);
-        if (a) toutesAct.push(a);
-      }
-    }
-  }
-  const dureeTotal = formatDureeGlobale(sumDureeActivites(toutesAct));
+  const allFiches = (programme.sequences ?? []).flatMap(seq =>
+    (seq.seances ?? []).flatMap(sea => sea.fiches ?? [])
+  );
+  const dureeTotal = formatDureeGlobale(sumDureeItems(allFiches, activites));
 
   return (
     <div className="print-view">
@@ -171,14 +198,8 @@ export default function PrintView({ programme, activites }) {
       )}
 
       {programme.sequences.map((seq, seqIdx) => {
-        const seqAct = [];
-        for (const sea of seq.seances ?? []) {
-          for (const fiche of sea.fiches ?? []) {
-            const a = activites.find(x => x.id === fiche.activite_id);
-            if (a) seqAct.push(a);
-          }
-        }
-        const dureeSeq = formatDureeGlobale(sumDureeActivites(seqAct));
+        const seqFiches = (seq.seances ?? []).flatMap(sea => sea.fiches ?? []);
+        const dureeSeq = formatDureeGlobale(sumDureeItems(seqFiches, activites));
 
         return (
           <div key={seq.id} className="print-sequence-section">
@@ -207,12 +228,14 @@ export default function PrintView({ programme, activites }) {
             </div>
 
             {(seq.seances ?? []).map((sea, seaIdx) => {
-              const seaAct = (sea.fiches ?? [])
-                .map(f => activites.find(a => a.id === f.activite_id))
-                .filter(Boolean);
-              const dureeSea = formatDureeGlobale(sumDureeActivites(seaAct));
-
+              const dureeSea = formatDureeGlobale(sumDureeItems(sea.fiches ?? [], activites));
               const opoPhrase = [sea.opo_bloom, sea.opo_verbe].filter(Boolean).join(" ");
+
+              const ficheItems = (sea.fiches ?? []).map(f => {
+                if (f.type === "texte") return { key: f.id, type: "texte", fiche: f };
+                const a = activites.find(x => x.id === f.activite_id);
+                return a ? { key: f.id, type: "activite", activite: a } : null;
+              }).filter(Boolean);
 
               return (
                 <div key={sea.id} className="print-seance-section">
@@ -234,12 +257,14 @@ export default function PrintView({ programme, activites }) {
                   </div>
 
                   <div className="print-seance-fiches">
-                    {seaAct.length === 0 ? (
+                    {ficheItems.length === 0 ? (
                       <p className="print-seance-vide">Aucune activité assignée à cette séance.</p>
                     ) : (
-                      seaAct.map((a, i) => (
-                        <FicheActivite key={a.id} activite={a} num={i + 1} />
-                      ))
+                      ficheItems.map((item, i) =>
+                        item.type === "texte"
+                          ? <EncartTexte key={item.key} fiche={item.fiche} num={i + 1} />
+                          : <FicheActivite key={item.key} activite={item.activite} num={i + 1} />
+                      )
                     )}
                   </div>
                 </div>

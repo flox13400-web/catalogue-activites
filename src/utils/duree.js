@@ -74,20 +74,28 @@ export function sumDureeActivites(activites) {
  * @param {Array<Object>} toutesActivites - La liste globale des activités pour résoudre les références des fiches.
  * @returns {{min: number, max: number, hasProjet: boolean}} La durée totale calculée.
  */
-export function calculerDureeTotalProgramme(programme, toutesActivites) {
+export function sumDureeItems(fiches, toutesActivites) {
   let min = 0, max = 0, hasProjet = false;
-  for (const seq of programme.sequences || []) {
-    for (const sea of seq.seances || []) {
-      for (const fiche of sea.fiches || []) {
-        const activite = toutesActivites.find(a => a.id === fiche.activite_id);
-        if (!activite) continue;
-        const d = parseDureeActivite(activite);
-        min += d.min; max += d.max;
-        if (d.hasProjet) hasProjet = true;
-      }
+  for (const fiche of fiches || []) {
+    if (fiche.type === "texte") {
+      const m = fiche.duree_min || 0;
+      min += m; max += m;
+    } else {
+      const activite = toutesActivites.find(a => a.id === fiche.activite_id);
+      if (!activite) continue;
+      const d = parseDureeActivite(activite);
+      min += d.min; max += d.max;
+      if (d.hasProjet) hasProjet = true;
     }
   }
   return { min, max, hasProjet };
+}
+
+export function calculerDureeTotalProgramme(programme, toutesActivites) {
+  const allFiches = (programme.sequences || []).flatMap(seq =>
+    (seq.seances || []).flatMap(sea => sea.fiches || [])
+  );
+  return sumDureeItems(allFiches, toutesActivites);
 }
 
 /**
