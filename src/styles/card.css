@@ -172,6 +172,10 @@
   background: var(--bg-soft);
   color: var(--text-muted);
 }
+.tag-psh {
+  background: #e6f4ea;
+  color: #2e7d32;
+}
 .tag-large {
   font-size: 12px;
   padding: 5px 10px;

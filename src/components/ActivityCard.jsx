@@ -70,6 +70,11 @@ export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggl
             ))}
           </div>
         )}
+        {activite.adaptation_psh && (
+          <div className="card-tags-row">
+            <span className="tag tag-psh">♿ PSH</span>
+          </div>
+        )}
       </div>
     </article>
   );

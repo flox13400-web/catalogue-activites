@@ -83,6 +83,12 @@ function FicheActivite({ activite: a, num }) {
           )}
         </>
       )}
+      {a.adaptation_psh && (
+        <div className="print-fiche-section">
+          <div className="print-fiche-section-label">Adaptation Handicap (PSH)</div>
+          <p className="print-fiche-body">{a.adaptation_psh}</p>
+        </div>
+      )}
     </div>
   );
 }

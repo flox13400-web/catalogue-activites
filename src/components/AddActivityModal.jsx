@@ -565,6 +565,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         eval_criteres: initialData.eval_criteres || "",
         problematique: initialData.problematique || "",
         remediation: initialData.remediation || "",
+        adaptation_psh: initialData.adaptation_psh || "",
       };
     }
     return {
@@ -584,6 +585,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       eval_criteres: "",
       problematique: "",
       remediation: "",
+      adaptation_psh: "",
     };
   });
 
@@ -831,6 +833,14 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
             placeholder="Pistes pour surmonter les difficultés identifiées"
             rows={2} value={form.remediation}
             onChange={(e) => setField("remediation", e.target.value)} />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Adaptation Handicap <span className="form-hint">(PSH)</span></label>
+          <textarea className="form-textarea"
+            placeholder="Adaptations pour les personnes en situation de handicap..."
+            rows={2} value={form.adaptation_psh}
+            onChange={(e) => setField("adaptation_psh", e.target.value)} />
         </div>
 
         <div className="modal-footer">
