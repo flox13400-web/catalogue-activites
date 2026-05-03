@@ -7,6 +7,12 @@ const VERBES_BLOOM_GROUPED = bloomTaxonomyData.map(n => ({ niveau: n.nom, verbes
 
 import { calculerDureeTotalProgramme, formatDureeGlobale, parseDureeActivite } from "../utils/duree";
 
+const getBloomLevel = (verb) => {
+  if (!verb) return 0;
+  const group = bloomTaxonomyData.find(g => g.verbes.includes(verb));
+  return group ? group.niveau : 0;
+};
+
 function methodeClass(a) {
   if (a.methode === "evaluation" || a.type_fiche === "Activite_Evaluation" || a.type_fiche === "Évaluation" || a.type_fiche === "Evaluation")
     return "seq-fiche-eval";
@@ -552,54 +558,60 @@ export default function SequenceBuilder({
             const seqCollapsed = collapsed.has(seq.id);
             return (
               <div key={seq.id} className="seq-sequence">
-                <div className="seq-row seq-sequence-row">
-                  <button className="seq-collapse-btn" onClick={() => toggleCollapse(seq.id)}>
-                    {seqCollapsed ? "▶" : "▼"}
-                  </button>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                  {renderTitre(seq.id, seq.titre, "seq-sequence-titre")}
-                  <div className="seq-move-btns">
-                    <button className="seq-move-btn" onClick={() => moveSequence(seq.id, -1)} title="Monter" disabled={seqIdx === 0}>↑</button>
-                    <button className="seq-move-btn" onClick={() => moveSequence(seq.id, 1)} title="Descendre" disabled={seqIdx === programme.sequences.length - 1}>↓</button>
+                <div className="seq-sequence-card">
+                  <div className="seq-row seq-sequence-row">
+                    <button className="seq-collapse-btn" onClick={() => toggleCollapse(seq.id)}>
+                      {seqCollapsed ? "▶" : "▼"}
+                    </button>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    {renderTitre(seq.id, seq.titre, "seq-sequence-titre")}
+                    <div className="seq-move-btns">
+                      <button className="seq-move-btn" onClick={() => moveSequence(seq.id, -1)} title="Monter" disabled={seqIdx === 0}>↑</button>
+                      <button className="seq-move-btn" onClick={() => moveSequence(seq.id, 1)} title="Descendre" disabled={seqIdx === programme.sequences.length - 1}>↓</button>
+                    </div>
+                    <button className="seq-remove-btn" onClick={() => removeSequence(seq.id)} title="Supprimer la séquence">×</button>
                   </div>
-                  <button className="seq-remove-btn" onClick={() => removeSequence(seq.id)} title="Supprimer la séquence">×</button>
-                </div>
 
-                {!seqCollapsed && (
-                  <div className="seq-sequence-body">
-                    <div className="seq-madlibs">
-                      <span className="seq-madlibs-prefix">À l'issue de cette séquence, l'apprenant sera capable de :</span>
-                      <div className="seq-madlibs-inputs">
-                        <select
-                          className={`seq-opo-select${validationErreurs[`seq_${seq.id}`] ? " seq-input-error" : ""}`}
-                          value={seq.objectif_bloom || ""}
-                          onChange={e => { updateSeqField(seq.id, "objectif_bloom", e.target.value); clearValidationError(`seq_${seq.id}`); }}
-                        >
-                          <option value="">— Verbe d'action * —</option>
-                          {VERBES_BLOOM_GROUPED.map(g => (
-                            <optgroup key={g.niveau} label={g.niveau}>
-                              {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
-                            </optgroup>
-                          ))}
-                        </select>
+                  {!seqCollapsed && (
+                    <div className="seq-sequence-props">
+                      <div className="seq-madlibs">
+                        <span className="seq-madlibs-prefix">À l'issue de cette séquence, l'apprenant sera capable de :</span>
+                        <div className="seq-madlibs-inputs">
+                          <select
+                            className={`seq-opo-select${validationErreurs[`seq_${seq.id}`] ? " seq-input-error" : ""}`}
+                            value={seq.objectif_bloom || ""}
+                            onChange={e => { updateSeqField(seq.id, "objectif_bloom", e.target.value); clearValidationError(`seq_${seq.id}`); }}
+                          >
+                            <option value="">— Verbe d'action * —</option>
+                            {VERBES_BLOOM_GROUPED.map(g => (
+                              <optgroup key={g.niveau} label={g.niveau}>
+                                {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
+                              </optgroup>
+                            ))}
+                          </select>
+                          <input
+                            className={`seq-objectif-input${validationErreurs[`seq_${seq.id}`] ? " seq-input-error" : ""}`}
+                            value={seq.objectif_action || ""}
+                            placeholder="… *"
+                            onChange={e => { updateSeqField(seq.id, "objectif_action", e.target.value); clearValidationError(`seq_${seq.id}`); }}
+                          />
+                        </div>
+                      </div>
+                      <div className="seq-madlibs-simple">
+                        <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
                         <input
-                          className={`seq-objectif-input${validationErreurs[`seq_${seq.id}`] ? " seq-input-error" : ""}`}
-                          value={seq.objectif_action || ""}
-                          placeholder="… *"
-                          onChange={e => { updateSeqField(seq.id, "objectif_action", e.target.value); clearValidationError(`seq_${seq.id}`); }}
+                          className="seq-objectif-input"
+                          value={seq.objectif_competence || ""}
+                          placeholder="Décrire les critères..."
+                          onChange={e => updateObjectifSequence(seq.id, e.target.value)}
                         />
                       </div>
                     </div>
-                    <div className="seq-madlibs-simple">
-                      <span className="seq-madlibs-prefix">La compétence sera acquise si :</span>
-                      <input
-                        className="seq-objectif-input"
-                        value={seq.objectif_competence || ""}
-                        placeholder="Décrire les critères..."
-                        onChange={e => updateObjectifSequence(seq.id, e.target.value)}
-                      />
-                    </div>
+                  )}
+                </div>
 
+                {!seqCollapsed && seq.seances.length > 0 && (
+                  <div className="seq-sequence-children">
                     {seq.seances.map((sea, seaIdx) => {
                       const seaCollapsed = collapsed.has(sea.id);
                       const toutFiches = sea.fiches.map(f => {
@@ -608,63 +620,74 @@ export default function SequenceBuilder({
                         return activite ? { key: f.id, type: "activite", fiche: f, activite } : null;
                       }).filter(Boolean);
 
-                      return (
-                        <div key={sea.id} className="seq-seance">
-                          <div className="seq-row seq-seance-row">
-                            <button className="seq-collapse-btn seq-collapse-btn-sm" onClick={() => toggleCollapse(sea.id)}>
-                              {seaCollapsed ? "▶" : "▼"}
-                            </button>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                            {renderTitre(sea.id, sea.titre, "seq-seance-titre")}
-                            <div className="seq-move-btns">
-                              <button className="seq-move-btn" onClick={() => moveSeance(seq.id, sea.id, -1)} title="Monter" disabled={seqIdx === 0 && seaIdx === 0}>↑</button>
-                              <button className="seq-move-btn" onClick={() => moveSeance(seq.id, sea.id, 1)} title="Descendre" disabled={seqIdx === programme.sequences.length - 1 && seaIdx === seq.seances.length - 1}>↓</button>
-                            </div>
-                            <button className="seq-remove-btn" onClick={() => removeSeance(seq.id, sea.id)} title="Supprimer la séance">×</button>
-                          </div>
+                      // Calcul alignement Sequence -> Seance
+                      const seqLevel = getBloomLevel(seq.objectif_bloom);
+                      const seaLevel = getBloomLevel(sea.opo_bloom);
+                      let seaAlignmentClass = "align-noir";
+                      if (seqLevel > 0 && seaLevel > 0) {
+                        seaAlignmentClass = seaLevel <= seqLevel ? "align-vert" : "align-rouge";
+                      }
 
-                          {!seaCollapsed && (
-                            <div className="seq-fiches">
-                              <div className="seq-opo-row">
-                                <span className="seq-opo-type-label">Type :</span>
-                                <select
-                                  className="seq-opo-select"
-                                  value={sea.opo_type || "Savoir"}
-                                  onChange={e => updateOpoSeance(seq.id, sea.id, "opo_type", e.target.value)}
-                                >
-                                  <option value="Savoir">Savoir</option>
-                                  <option value="Savoir-faire">Savoir-faire</option>
-                                  <option value="Savoir-être">Savoir-être</option>
-                                </select>
+                      return (
+                        <div key={sea.id} className={`seq-seance ${seaAlignmentClass}`}>
+                          <div className="seq-seance-card">
+                            <div className="seq-row seq-seance-row">
+                              <button className="seq-collapse-btn seq-collapse-btn-sm" onClick={() => toggleCollapse(sea.id)}>
+                                {seaCollapsed ? "▶" : "▼"}
+                              </button>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '4px', flexShrink: 0}}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                              {renderTitre(sea.id, sea.titre, "seq-seance-titre")}
+                              <div className="seq-move-btns">
+                                <button className="seq-move-btn" onClick={() => moveSeance(seq.id, sea.id, -1)} title="Monter" disabled={seqIdx === 0 && seaIdx === 0}>↑</button>
+                                <button className="seq-move-btn" onClick={() => moveSeance(seq.id, sea.id, 1)} title="Descendre" disabled={seqIdx === programme.sequences.length - 1 && seaIdx === seq.seances.length - 1}>↓</button>
                               </div>
-                              <div className="seq-madlibs">
-                                <span className="seq-madlibs-prefix">À l'issue de cette séance, l'apprenant sera capable de :</span>
-                                <div className="seq-madlibs-inputs">
+                              <button className="seq-remove-btn" onClick={() => removeSeance(seq.id, sea.id)} title="Supprimer la séance">×</button>
+                            </div>
+
+                            {!seaCollapsed && (
+                              <div className="seq-seance-props">
+                                <div className="seq-opo-row">
+                                  <span className="seq-opo-type-label">Type :</span>
                                   <select
-                                    className={`seq-opo-select${validationErreurs[`sea_${sea.id}`] ? " seq-input-error" : ""}`}
-                                    value={sea.opo_bloom || ""}
-                                    onChange={e => { updateOpoSeance(seq.id, sea.id, "opo_bloom", e.target.value); clearValidationError(`sea_${sea.id}`); }}
+                                    className="seq-opo-select"
+                                    value={sea.opo_type || "Savoir"}
+                                    onChange={e => updateOpoSeance(seq.id, sea.id, "opo_type", e.target.value)}
                                   >
-                                    <option value="">— Verbe d'action * —</option>
-                                    {VERBES_BLOOM_GROUPED.map(g => (
-                                      <optgroup key={g.niveau} label={g.niveau}>
-                                        {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
-                                      </optgroup>
-                                    ))}
+                                    <option value="Savoir">Savoir</option>
+                                    <option value="Savoir-faire">Savoir-faire</option>
+                                    <option value="Savoir-être">Savoir-être</option>
                                   </select>
-                                  <input
-                                    className={`seq-objectif-input${validationErreurs[`sea_${sea.id}`] ? " seq-input-error" : ""}`}
-                                    value={sea.opo_verbe || ""}
-                                    placeholder="… *"
-                                    onChange={e => { updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value); clearValidationError(`sea_${sea.id}`); }}
-                                  />
+                                </div>
+                                <div className="seq-madlibs">
+                                  <span className="seq-madlibs-prefix">À l'issue de cette séance, l'apprenant sera capable de :</span>
+                                  <div className="seq-madlibs-inputs">
+                                    <select
+                                      className={`seq-opo-select${validationErreurs[`sea_${sea.id}`] ? " seq-input-error" : ""}`}
+                                      value={sea.opo_bloom || ""}
+                                      onChange={e => { updateOpoSeance(seq.id, sea.id, "opo_bloom", e.target.value); clearValidationError(`sea_${sea.id}`); }}
+                                    >
+                                      <option value="">— Verbe d'action * —</option>
+                                      {VERBES_BLOOM_GROUPED.map(g => (
+                                        <optgroup key={g.niveau} label={g.niveau}>
+                                          {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
+                                        </optgroup>
+                                      ))}
+                                    </select>
+                                    <input
+                                      className={`seq-objectif-input${validationErreurs[`sea_${sea.id}`] ? " seq-input-error" : ""}`}
+                                      value={sea.opo_verbe || ""}
+                                      placeholder="… *"
+                                      onChange={e => { updateOpoSeance(seq.id, sea.id, "opo_verbe", e.target.value); clearValidationError(`sea_${sea.id}`); }}
+                                    />
+                                  </div>
                                 </div>
                               </div>
+                            )}
+                          </div>
 
-                              {toutFiches.length === 0 ? (
-                                <p className="seq-fiche-empty">Aucune activité assignée</p>
-                              ) : (
-                                toutFiches.map((item, ficheIdx) => {
+                          {!seaCollapsed && toutFiches.length > 0 && (
+                            <div className="seq-fiches">
+                              {toutFiches.map((item, ficheIdx) => {
                                   if (item.type === "texte") {
                                     const f = item.fiche;
                                     return (
@@ -758,11 +781,19 @@ export default function SequenceBuilder({
                                     </div>
                                   );
                                 })
-                              )}
+                              }
                               <button className="seq-add-btn seq-add-encart-btn" onClick={() => addEncart(seq.id, sea.id)}>
                                 + Encart
                               </button>
                             </div>
+                          )}
+                          {!seaCollapsed && toutFiches.length === 0 && (
+                             <div className="seq-fiches">
+                               <p className="seq-fiche-empty">Aucune activité assignée</p>
+                               <button className="seq-add-btn seq-add-encart-btn" onClick={() => addEncart(seq.id, sea.id)}>
+                                 + Encart
+                               </button>
+                             </div>
                           )}
                         </div>
                       );

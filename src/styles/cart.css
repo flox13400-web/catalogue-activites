@@ -565,32 +565,71 @@
   background: var(--bg);
 }
 
-.seq-sequence-body {
-  padding: 4px 6px 6px 16px;
+/* Constructeur - Arborescence (hors cadres) */
+.seq-sequence {
+  margin-bottom: 12px;
+}
+.seq-sequence-card {
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: var(--bg);
+  overflow: hidden;
+}
+.seq-sequence-props {
+  padding: 8px 10px 10px 16px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-left: 12px;
-  border-left: 1px solid var(--border-strong);
+  gap: 6px;
+}
+.seq-sequence-children {
+  margin-left: 20px;
+  padding-left: 16px;
+  border-left: 2px solid var(--border-strong);
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 /* Séance */
 .seq-seance {
   position: relative;
+}
+.seq-seance-card {
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: 6px;
   background: var(--bg);
+  overflow: hidden;
+  transition: border-left-color 200ms ease;
 }
 .seq-seance::before {
   content: '';
   position: absolute;
-  left: -17px;
-  top: 13px;
-  width: 14px;
-  height: 1px;
+  left: -16px;
+  top: 15px; /* aligné avec le milieu du header de la séance */
+  width: 16px;
+  height: 2px;
   background: var(--border-strong);
+  transition: background-color 200ms ease;
 }
+
+/* Alignement pédagogique */
+.seq-seance.align-vert::before { background: #10b981; }
+.seq-seance.align-vert .seq-seance-card { border-left: 4px solid #10b981; }
+
+.seq-seance.align-rouge::before { background: #ef4444; }
+.seq-seance.align-rouge .seq-seance-card { border-left: 4px solid #ef4444; }
+
+.seq-seance.align-noir::before { background: #111; }
+.seq-seance.align-noir .seq-seance-card { border-left: 4px solid #111; }
+
 .seq-seance-row { padding: 5px 6px; }
+.seq-seance-props {
+  padding: 4px 6px 6px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 .seq-seance-titre {
   flex: 1;
   font-size: 12px;
@@ -613,12 +652,13 @@
 
 /* Fiches */
 .seq-fiches {
-  padding: 2px 6px 6px 14px;
+  margin-left: 20px;
+  padding-left: 12px;
+  border-left: 2px solid var(--border);
+  padding-top: 6px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  margin-left: 8px;
-  border-left: 1px solid var(--border);
+  gap: 4px;
 }
 .seq-fiche {
   position: relative;
@@ -1015,13 +1055,19 @@
 
 /* --- PHASE 3 : STYLISATION DU CONSTRUCTEUR --- */
 .seq-programme-header { border: 1px solid #111; border-radius: 12px; background: #e8eaed; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; }
-.seq-sequence { border: 1px solid #111; border-radius: 12px; background: #fff; overflow: hidden; margin-bottom: 12px; }
+.seq-sequence { margin-bottom: 16px; }
+.seq-sequence-card { border: 1px solid #111; border-radius: 12px; background: #fff; overflow: hidden; }
 .seq-sequence-row { padding: 10px 14px; background: #f1f3f4; border-bottom: 1px solid #111; border-radius: 12px 12px 0 0; }
-.seq-sequence-body { padding: 8px 10px 10px 20px; display: flex; flex-direction: column; gap: 6px; margin-left: 16px; border-left: 2px solid #333; }
-.seq-seance { position: relative; border: 1px solid #111; border-radius: 12px; background: #fafafa; margin-bottom: 8px; overflow: hidden; }
-.seq-seance::before { content: ''; position: absolute; left: -21px; top: 16px; width: 18px; height: 2px; background: #333; }
+.seq-sequence-props { padding: 8px 10px 10px 20px; display: flex; flex-direction: column; gap: 6px; }
+.seq-sequence-children { margin-left: 26px; padding-left: 16px; border-left: 2px solid #111; padding-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+
+.seq-seance { position: relative; }
+.seq-seance-card { border: 1px solid #111; border-radius: 12px; background: #fafafa; overflow: hidden; }
+.seq-seance::before { content: ''; position: absolute; left: -16px; top: 19px; width: 16px; height: 2px; background: #111; }
 .seq-seance-row { padding: 8px 12px; background: #ffffff; border-bottom: 1px solid #111; border-radius: 12px 12px 0 0; }
-.seq-fiches { padding: 4px 8px 8px 18px; display: flex; flex-direction: column; gap: 4px; margin-left: 12px; border-left: 2px solid #999; }
+.seq-seance-props { padding: 6px 10px 8px 16px; display: flex; flex-direction: column; gap: 6px; }
+
+.seq-fiches { padding-left: 16px; margin-left: 24px; border-left: 2px solid #999; padding-top: 8px; display: flex; flex-direction: column; gap: 4px; }
 .seq-fiche {
   position: relative;
   display: flex;
