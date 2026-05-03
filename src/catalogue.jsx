@@ -341,6 +341,11 @@ export default function Catalogue() {
 
   return (
     <div className="app-layout">
+      <div className="landscape-warning">
+        <div className="landscape-warning-icon">📱🔄</div>
+        <h2 className="landscape-warning-title">Mode paysage non supporté</h2>
+        <p className="landscape-warning-text">Veuillez tourner votre appareil en mode portrait pour utiliser l'application.</p>
+      </div>
       <PrintView programme={programme} activites={activites} />
       <Header
         onNouvelleActivite={() => setShowChoixImport(true)}

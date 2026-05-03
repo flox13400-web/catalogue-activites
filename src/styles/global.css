@@ -799,3 +799,47 @@ body, .app {
     display: none !important;
   }
 }
+
+/* ── BLOCK LANDSCAPE MOBILE ── */
+.landscape-warning {
+  display: none;
+}
+
+@media screen and (max-width: 900px) and (orientation: landscape) {
+  .landscape-warning {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 9999;
+    padding: 32px;
+    text-align: center;
+    color: var(--text);
+  }
+  
+  .landscape-warning-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  
+  .landscape-warning-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  
+  .landscape-warning-text {
+    font-size: 14px;
+    color: var(--text-muted);
+    max-width: 400px;
+  }
+  
+  /* Masquer le reste du contenu en arrière-plan pour éviter tout comportement inattendu */
+  .app-layout > *:not(.landscape-warning) {
+    display: none !important;
+  }
+}
