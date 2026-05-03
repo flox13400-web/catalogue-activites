@@ -211,6 +211,8 @@ export default function Catalogue() {
     };
     setActivites(prev => prev.map(a => a.id === id ? activiteMiseAJour : a));
     setEditingActivite(null);
+    setShowAddModal(false);
+    setSelected(prev => (prev && prev.id === id ? activiteMiseAJour : prev));
   }
 
   function handleDeleteActivite(id) {
