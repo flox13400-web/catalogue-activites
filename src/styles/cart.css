@@ -814,7 +814,55 @@
   transition: background 120ms ease;
 }
 .seq-prerequis-warning-btn:hover { background: #ffe060; }
+/* DROPDOWN PROGRAMME (Export / Import .sqa) dans le footer */
+.seq-programme-menu-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 8px;
+}
+.seq-programme-btn {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+}
+.seq-programme-btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+.seq-programme-dropdown {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+  overflow: hidden;
+  z-index: 50;
+}
+.seq-programme-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  cursor: var(--cursor-hand);
+  text-align: left;
+  transition: background 120ms ease;
+}
+.seq-programme-dropdown-item:last-child { border-bottom: none; }
+.seq-programme-dropdown-item:hover { background: var(--accent-soft); color: var(--accent-deep); }
+
 /* JAUGE DURÉE */
+
 .seq-panel-header {
   flex-wrap: wrap;
   align-items: center;

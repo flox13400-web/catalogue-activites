@@ -348,10 +348,7 @@ export default function Catalogue() {
         <p className="landscape-warning-text">Veuillez tourner votre appareil en mode portrait pour utiliser l'application.</p>
       </div>
       <PrintView programme={programme} activites={activites} />
-      <Header
-        onExportSQA={handleExportSQA}
-        onImportSQA={handleImportSQA}
-      />
+      <Header />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}
@@ -436,6 +433,8 @@ export default function Catalogue() {
             toutesActivites={activites}
             mobileOpen={mobilePanelOpen === "cart"}
             onMobileClose={() => setMobilePanelOpen(null)}
+            onExportSQA={handleExportSQA}
+            onImportSQA={handleImportSQA}
           />
         </main>
       </div>

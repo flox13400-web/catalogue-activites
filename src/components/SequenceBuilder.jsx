@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { verifierAlignementPedagogique } from "../utils/alignmentChecker.js";
 import "../styles/cart.css";
 import bloomTaxonomyData from "../data/bloomTaxonomy.json";
@@ -38,7 +38,11 @@ export default function SequenceBuilder({
   toutesActivites,
   mobileOpen,
   onMobileClose,
+  onExportSQA,
+  onImportSQA,
 }) {
+  const fileInputRef = useRef(null);
+  const [isProgrammeMenuOpen, setIsProgrammeMenuOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(new Set());
   const [editingId, setEditingId] = useState(null);
   const [editingValue, setEditingValue] = useState("");
@@ -787,6 +791,34 @@ export default function SequenceBuilder({
             </button>
           </div>
         )}
+
+        {/* Dropdown Programme — Export / Import .sqa */}
+        <div className="seq-programme-menu-wrapper">
+          <button
+            className="btn btn-print seq-programme-btn"
+            onClick={() => setIsProgrammeMenuOpen(o => !o)}
+          >
+            Programme ▼
+          </button>
+          {isProgrammeMenuOpen && (
+            <div className="seq-programme-dropdown">
+              <button className="seq-programme-dropdown-item" onClick={() => { onExportSQA?.(); setIsProgrammeMenuOpen(false); }}>
+                📤 Exporter un programme
+              </button>
+              <button className="seq-programme-dropdown-item" onClick={() => { fileInputRef.current?.click(); setIsProgrammeMenuOpen(false); }}>
+                📥 Importer un programme
+              </button>
+            </div>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".sqa"
+            className="sqa-file-input-hidden"
+            onChange={e => { const f = e.target.files[0]; if (f) { onImportSQA?.(f); e.target.value = ""; } }}
+          />
+        </div>
+
         {totalFiches === 0 ? (
           <span className="panel-footnote">Créez des séquences, puis assignez des activités</span>
         ) : (
