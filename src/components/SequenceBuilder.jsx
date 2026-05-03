@@ -48,7 +48,7 @@ export default function SequenceBuilder({
   const [editingValue, setEditingValue] = useState("");
   const [validationErreurs, setValidationErreurs] = useState({});
   const [prerequisWarning, setPrerequisWarning] = useState(false);
-  const [tooltipIdx, setTooltipIdx] = useState(null);
+  const [tooltipData, setTooltipData] = useState(null);
 
   const totalFiches = programme.sequences.reduce(
     (acc, seq) => acc + seq.seances.reduce((a, sea) => a + sea.fiches.length, 0),
@@ -447,27 +447,33 @@ export default function SequenceBuilder({
                 {Math.round(Math.min((dureeTotal.max / (programme.duree_objectif * 60)) * 100, 100))}%
               </span>
             </div>
-            <div className="seq-jauge-track" onMouseLeave={() => setTooltipIdx(null)}>
+            <div className="seq-jauge-track" onMouseLeave={() => setTooltipData(null)}>
               <div className="seq-jauge-custom">
                 {jaugeSegments.map((seg, i) => (
                   <div
                     key={i}
                     className={`seq-jauge-seg seq-jauge-seg-${seg.key}`}
                     style={{width: `${seg.pct}%`, minWidth: seg.pct === 0 ? '3px' : undefined}}
-                    onMouseEnter={() => setTooltipIdx(i)}
+                    onMouseEnter={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      setTooltipData({
+                        x: rect.left + rect.width / 2,
+                        y: rect.top,
+                        seg,
+                      });
+                    }}
                   />
                 ))}
               </div>
-              {tooltipIdx !== null && jaugeSegments[tooltipIdx] && (() => {
-                const seg = jaugeSegments[tooltipIdx];
-                const left = Math.min(Math.max(seg.cumulPct + seg.pct / 2, 4), 96);
-                return (
-                  <div className="seq-jauge-tooltip" style={{left: `${left}%`}}>
-                    <span className="seq-jauge-tooltip-titre">{seg.label}</span>
-                    {seg.dureeLabel && <span className="seq-jauge-tooltip-duree">{seg.dureeLabel}</span>}
-                  </div>
-                );
-              })()}
+              {tooltipData && (
+                <div
+                  className="seq-jauge-tooltip"
+                  style={{ left: tooltipData.x, top: tooltipData.y }}
+                >
+                  <span className="seq-jauge-tooltip-titre">{tooltipData.seg.label}</span>
+                  {tooltipData.seg.dureeLabel && <span className="seq-jauge-tooltip-duree">{tooltipData.seg.dureeLabel}</span>}
+                </div>
+              )}
             </div>
           </div>
         )}

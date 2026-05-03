@@ -912,9 +912,8 @@
 .seq-jauge-seg-texte       { background: #e8a020; }
 
 .seq-jauge-tooltip {
-  position: absolute;
-  bottom: calc(100% + 7px);
-  transform: translateX(-50%);
+  position: fixed;
+  transform: translate(-50%, calc(-100% - 7px));
   background: #1a1a2e;
   color: #fff;
   border-radius: 5px;
@@ -926,7 +925,7 @@
   flex-direction: column;
   gap: 2px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-  z-index: 100;
+  z-index: 9999;
 }
 .seq-jauge-tooltip::after {
   content: '';
