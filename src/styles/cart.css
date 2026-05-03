@@ -1228,3 +1228,6 @@
 
 @media print { .seq-programme-header, .seq-sequence, .seq-seance, .seq-fiche { display: block !important; overflow: visible !important; height: auto !important; } }
 
+/* Fix clipping tooltip jauge : le panel-cart ne doit pas couper son en-tête */
+.builder-main { overflow: visible; }
+.builder-main .panel-body { overflow-y: auto; overflow-x: hidden; }

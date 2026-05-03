@@ -169,7 +169,37 @@ export default function Catalogue() {
     setShowImportModal(false);
   }
 
-  function pousserEnCorbeille(type, activite) {
+  /**
+   * Compare deux versions d'une activité et retourne les noms lisibles des champs modifiés.
+   * @param {Object} ancienne - Version précédente.
+   * @param {Object} nouvelle - Version mise à jour.
+   * @returns {string[]} Labels des champs ayant changé.
+   */
+  function calculerDiffActivite(ancienne, nouvelle) {
+    const CHAMPS = [
+      { cle: "titre",           label: "Titre" },
+      { cle: "duree",           label: "Durée" },
+      { cle: "methode",         label: "Méthode" },
+      { cle: "description",     label: "Description" },
+      { cle: "apprentissage_cle", label: "Apprentissage clé" },
+      { cle: "problematique",   label: "Problématique" },
+      { cle: "remediation",     label: "Rémédiation" },
+      { cle: "adaptation_psh",  label: "Adaptation PSH" },
+      { cle: "age_public",      label: "Public" },
+      { cle: "taille_groupe",   label: "Groupe" },
+      { cle: "themes",          label: "Thèmes" },
+      { cle: "materiels",       label: "Matériels" },
+      { cle: "modalite",        label: "Modalité" },
+      { cle: "eval_type",       label: "Type éval." },
+      { cle: "eval_criteres",   label: "Critères éval." },
+    ];
+    const norm = v => Array.isArray(v) ? JSON.stringify([...v].sort()) : (v ?? "");
+    return CHAMPS
+      .filter(({ cle }) => norm(ancienne[cle]) !== norm(nouvelle[cle]))
+      .map(({ label }) => label);
+  }
+
+  function pousserEnCorbeille(type, activite, details = null) {
     setCorbeille(prev => [
       ...prev,
       {
@@ -177,6 +207,7 @@ export default function Catalogue() {
         type,
         date: new Date().toISOString(),
         activite,
+        details,
       },
     ]);
   }
@@ -184,7 +215,6 @@ export default function Catalogue() {
   function handleUpdateActivite(formData) {
     const id = editingActivite.id;
     const originale = activites.find(a => a.id === id);
-    if (originale) pousserEnCorbeille("modification", originale);
     const activiteMiseAJour = {
       id,
       titre: formData.titre.trim(),
@@ -194,7 +224,6 @@ export default function Catalogue() {
       themes: formData.themes,
       materiels: formData.materiels,
       modalite: formData.modalite,
-
       description: formData.description.trim(),
       apprentissage_cle: formData.apprentissage_cle.trim(),
       problematique: formData.problematique.trim() || null,
@@ -207,6 +236,11 @@ export default function Catalogue() {
       eval_conditions: formData.eval_conditions || "",
       eval_criteres: formData.eval_criteres || "",
     };
+    // Calcul du diff avant mise à jour, pour la corbeille
+    if (originale) {
+      const details = calculerDiffActivite(originale, activiteMiseAJour);
+      pousserEnCorbeille("modification", originale, details);
+    }
     setActivites(prev => prev.map(a => a.id === id ? activiteMiseAJour : a));
     setEditingActivite(null);
     setShowAddModal(false);

@@ -744,6 +744,13 @@
   color: var(--text-muted);
   margin-top: 2px;
 }
+.corbeille-item-details {
+  font-size: 10px;
+  color: var(--text-faint);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.4;
+}
 .btn-corbeille-restore {
   font-family: var(--sans);
   font-size: 11px;

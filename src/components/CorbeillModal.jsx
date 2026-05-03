@@ -58,6 +58,11 @@ export default function CorbeillModal({ corbeille, onRestore, onDeleteEntry, onR
                     <div className="corbeille-item-meta">
                       {entry.type === "suppression" ? "Supprimée" : "Modifiée"} le {formatDateHeure(entry.date)}
                     </div>
+                    {entry.details?.length > 0 && (
+                      <div className="corbeille-item-details">
+                        Champs modifiés : {entry.details.join(", ")}
+                      </div>
+                    )}
                   </div>
                   <div className="corbeille-item-actions">
                     <button className="btn-corbeille-restore" onClick={() => onRestore(entry.id)}>
