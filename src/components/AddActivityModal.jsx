@@ -766,23 +766,20 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
               value={form.opo_activite}
               onChange={(e) => setField("opo_activite", e.target.value)} />
           </div>
+          {form.methode !== "evaluation" && (
+            <textarea className="form-textarea" placeholder="Ce que les participants retiennent"
+              rows={2} value={form.apprentissage_cle}
+              onChange={(e) => setField("apprentissage_cle", e.target.value)} />
+          )}
         </div>
 
         {form.methode !== "evaluation" && (
-          <>
-            <div className="form-group">
-              <label className="form-label">Description complète</label>
-              <textarea className="form-textarea" placeholder="Déroulé détaillé de l'activité"
-                rows={4} value={form.description}
-                onChange={(e) => setField("description", e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Apprentissage clé</label>
-              <textarea className="form-textarea" placeholder="Ce que les participants retiennent"
-                rows={2} value={form.apprentissage_cle}
-                onChange={(e) => setField("apprentissage_cle", e.target.value)} />
-            </div>
-          </>
+          <div className="form-group">
+            <label className="form-label">Description complète</label>
+            <textarea className="form-textarea" placeholder="Déroulé détaillé de l'activité"
+              rows={4} value={form.description}
+              onChange={(e) => setField("description", e.target.value)} />
+          </div>
         )}
 
         {form.methode === "evaluation" && (
