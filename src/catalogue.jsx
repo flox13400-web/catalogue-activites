@@ -135,7 +135,6 @@ export default function Catalogue() {
       problematique: formData.problematique.trim() || null,
       remediation: formData.remediation.trim() || null,
       type_fiche: formData.type_fiche || "Activite_Apprentissage",
-      verbe_action_bloom: formData.verbe_action_bloom || "",
       opo_activite: formData.opo_activite || "",
       eval_type: formData.eval_type || "",
       eval_modalite: formData.eval_modalite || "",
@@ -198,7 +197,6 @@ export default function Catalogue() {
       problematique: formData.problematique.trim() || null,
       remediation: formData.remediation.trim() || null,
       type_fiche: formData.type_fiche || "Activite_Apprentissage",
-      verbe_action_bloom: formData.verbe_action_bloom || "",
       opo_activite: formData.opo_activite || "",
       eval_type: formData.eval_type || "",
       eval_modalite: formData.eval_modalite || "",
@@ -316,7 +314,6 @@ export default function Catalogue() {
             fiches: [...sea.fiches, {
               id: ficheId,
               type_fiche: "Activite_Apprentissage",
-              verbe_action_bloom: "",
               parent_id: seaId,
               activite_id: assignTarget,
             }],

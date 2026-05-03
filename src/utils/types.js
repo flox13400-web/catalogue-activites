@@ -37,11 +37,9 @@
 
 /**
  * Fiche d'activité rattachée à une séance.
- * Le verbe_action_bloom doit correspondre à un verbe de bloomTaxonomy.json.
  *
  * @typedef {Object} Fiche
  * @property {string} id
  * @property {"Activite_Apprentissage"|"Activite_Evaluation"} type_fiche
- * @property {string} verbe_action_bloom
  * @property {string} parent_id - ID de la Seance parente
  */

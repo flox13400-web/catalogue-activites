@@ -5,14 +5,6 @@ import "../styles/modal.css";
 
 const AGES_DISPONIBLES = ["Primaire", "Collège", "Lycée", "Post-bac", "Adultes"];
 const DUREES_DISPONIBLES = ["0-15min", "15-30min", "30-45min", "45-60min", ">60min"];
-const VERBES_BLOOM_GROUPED = [
-  { niveau: "Mémoriser",  verbes: ["Définir", "Lister", "Nommer", "Rappeler", "Reconnaître", "Reproduire"] },
-  { niveau: "Comprendre", verbes: ["Expliquer", "Résumer", "Interpréter", "Classer", "Comparer", "Décrire"] },
-  { niveau: "Appliquer",  verbes: ["Utiliser", "Exécuter", "Résoudre", "Illustrer", "Calculer", "Mettre en œuvre"] },
-  { niveau: "Analyser",   verbes: ["Distinguer", "Organiser", "Décomposer", "Différencier", "Examiner", "Attribuer"] },
-  { niveau: "Évaluer",    verbes: ["Vérifier", "Critiquer", "Juger", "Argumenter", "Justifier", "Apprécier"] },
-  { niveau: "Créer",      verbes: ["Concevoir", "Construire", "Planifier", "Produire", "Générer", "Inventer"] },
-];
 const DUREES_OK = new Set(DUREES_DISPONIBLES);
 const TAILLES_GROUPE_DISPONIBLES = ["1", "2-6", "7-12", ">12"];
 const MODALITES_DISPONIBLES = ["Présentielle", "Distanciel", "Synchrone", "Asynchrone"];
@@ -565,7 +557,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         materiels: initialData.materiels || [],
         modalite: initialData.modalite || [],
         type_fiche: initialData.type_fiche || "Activite_Apprentissage",
-        verbe_action_bloom: initialData.verbe_action_bloom || "",
         opo_activite: initialData.opo_activite || "",
         description: initialData.description || "",
         apprentissage_cle: initialData.apprentissage_cle || "",
@@ -586,7 +577,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       materiels: [],
       modalite: [],
       type_fiche: "Activite_Apprentissage",
-      verbe_action_bloom: "",
       opo_activite: "",
       description: "",
       apprentissage_cle: "",
@@ -767,17 +757,6 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         <div className="form-madlibs">
           <span className="form-madlibs-label">À l'issue de cette activité, l'apprenant sera capable de :</span>
           <div className="form-madlibs-row">
-            <select className="form-bloom-select"
-              value={form.verbe_action_bloom}
-              onChange={(e) => setField("verbe_action_bloom", e.target.value)}
-            >
-              <option value="">— Verbe d'action —</option>
-              {VERBES_BLOOM_GROUPED.map(g => (
-                <optgroup key={g.niveau} label={g.niveau}>
-                  {g.verbes.map(v => <option key={v} value={v}>{v}</option>)}
-                </optgroup>
-              ))}
-            </select>
             <input className="form-input" type="text"
               placeholder="décrire l'action attendue..."
               value={form.opo_activite}

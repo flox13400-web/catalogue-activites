@@ -27,9 +27,6 @@
  * Règle Micro (Évaluation) :
  *   Chaque séance doit contenir au moins une fiche "Activite_Evaluation".
  *
- * Règle de Bruit (Action) :
- *   Chaque fiche doit posséder un verbe_action_bloom non nul.
- *
  * @param {ProgrammeArbre} programme
  * @returns {ResultatAlignement}
  */
@@ -46,12 +43,6 @@ export function verifierAlignementPedagogique(programme) {
         erreurs.push(`Évaluation manquante pour la séance : ${seance.titre}`);
       }
 
-      // Règle de Bruit — chaque fiche doit avoir un verbe Bloom
-      for (const fiche of fiches) {
-        if (!fiche.verbe_action_bloom) {
-          erreurs.push(`Verbe d'action manquant pour la fiche : ${fiche.titre ?? fiche.id}`);
-        }
-      }
     }
   }
 

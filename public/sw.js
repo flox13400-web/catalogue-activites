@@ -1,4 +1,4 @@
-const CACHE = 'sequencia-v3';
+const CACHE = 'sequencia-v4';
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
