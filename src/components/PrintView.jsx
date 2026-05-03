@@ -137,6 +137,13 @@ export default function PrintView({ programme, activites }) {
         )}
       </div>
 
+      {programme.prerequis?.trim() && (
+        <div className="print-programme-objectif">
+          <div className="print-hier-label">Prérequis</div>
+          <p className="print-hier-value">{programme.prerequis}</p>
+        </div>
+      )}
+
       {programme.sequences.map((seq, seqIdx) => {
         const seqAct = [];
         for (const sea of seq.seances ?? []) {

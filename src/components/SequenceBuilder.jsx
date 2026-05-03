@@ -20,6 +20,7 @@ export const PROGRAMME_INIT = {
   objectif_bloom: "",
   objectif_action: "",
   objectif_final: "",
+  prerequis: "",
   sequences: [],
 };
 
@@ -305,6 +306,16 @@ export default function SequenceBuilder({
               value={programme.objectif_final || ""}
               placeholder="Décrire les critères d'acquisition..."
               onChange={e => updateObjectifProgramme(e.target.value)}
+              rows={2}
+            />
+          </div>
+          <div className="seq-madlibs-simple">
+            <span className="seq-madlibs-prefix">Prérequis :</span>
+            <textarea
+              className="seq-objectif-input"
+              value={programme.prerequis || ""}
+              placeholder="Connaissances ou compétences requises avant la formation..."
+              onChange={e => updateProgrammeField("prerequis", e.target.value)}
               rows={2}
             />
           </div>
