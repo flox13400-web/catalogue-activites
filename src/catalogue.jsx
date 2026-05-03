@@ -353,7 +353,7 @@ export default function Catalogue() {
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}
       <div className="app-body">
-        <aside className={`app-filters ${isFilterOpen ? 'open' : 'closed'}`}>
+        <aside className={`app-filters ${(isFilterOpen || mobilePanelOpen === "filters") ? 'open' : 'closed'}`}>
           <button
             className="sidebar-toggle-btn filter-handle"
             onClick={() => setIsFilterOpen(o => !o)}

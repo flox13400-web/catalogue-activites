@@ -785,3 +785,10 @@ body, .app {
 .dropdown-item:hover {
   background: var(--bg-soft);
 }
+
+/* Fix mobile filter handle visibility */
+@media (max-width: 768px) {
+  .filter-handle {
+    display: none !important;
+  }
+}
