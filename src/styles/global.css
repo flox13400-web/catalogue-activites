@@ -298,13 +298,14 @@ body, .app {
   .app-filters,
   .filter-handle,
   .app-catalogue,
+  .app-main,
   .mobile-toolbar,
   .mobile-backdrop {
     display: none !important;
   }
 
   /* Annuler toutes les contraintes de grille et de défilement */
-  .app-layout, .app-body, .app-main {
+  .app-layout, .app-body {
     display: block !important;
     position: static !important;
     transform: none !important;
