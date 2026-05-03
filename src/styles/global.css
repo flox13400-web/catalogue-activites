@@ -480,6 +480,21 @@ body, .app {
   gap: 5px;
 }
 .btn-cat-corbeille:hover { background: #fef0f0; border-color: #e8b8b8; color: #c0392b; }
+.btn-cat-carnet {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.btn-cat-carnet:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+.btn-cat-nouveau {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.btn-cat-nouveau:hover { background: #fef0f0; border-color: #e8b8b8; color: #c0392b; }
 .cat-corbeille-badge {
   display: inline-flex;
   align-items: center;
@@ -689,6 +704,12 @@ body, .app {
   /* Cacher le toggle sidebar sur mobile (géré par la barre du bas) */
   .sidebar-toggle-btn { display: none; }
   .main-topbar { margin-bottom: 12px; }
+
+  /* Actionbar : Carnet et Nouveau déjà accessibles via toolbar ou rarement utilisés */
+  .btn-cat-carnet,
+  .btn-cat-nouveau { display: none; }
+  .catalogue-actionbar { overflow-x: auto; scrollbar-width: none; }
+  .catalogue-actionbar::-webkit-scrollbar { display: none; }
 
   /* Barre de navigation mobile */
   .mobile-toolbar {

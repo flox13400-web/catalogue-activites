@@ -159,6 +159,28 @@
   white-space: nowrap;
 }
 
+/* Badges de modalités dans la ligne méta */
+.card-modalites {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+.card-modalite-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: var(--bg-soft);
+  color: var(--text-muted);
+}
+.card-modalite-badge svg {
+  width: 13px;
+  height: 13px;
+}
+
 /* Tags */
 .card-tags {
   display: flex;

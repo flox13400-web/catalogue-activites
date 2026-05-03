@@ -14,6 +14,7 @@ import CorbeillModal from "./components/CorbeillModal";
 import { ActivityCard } from "./components/ActivityCard";
 import ActiveFilterBadges from "./components/ActiveFilterBadges";
 import AssignModal from "./components/AssignModal";
+import { CarnetNotes } from "./components/CarnetNotes";
 
 import "./styles/global.css";
 
@@ -30,6 +31,7 @@ export default function Catalogue() {
   const [assignTarget, setAssignTarget] = useState(null);
   /** @type {[FileSystemFileHandle|null, Function]} Handle mémorisé pour éviter la modale à chaque sauvegarde */
   const [fileHandle, setFileHandle] = useState(null);
+  const [showCarnet, setShowCarnet] = useState(false);
 
   const [activites, setActivites] = useState(() => {
     const unified = loadJSON(KEYS.activites, null);
@@ -327,6 +329,15 @@ export default function Catalogue() {
     exportToSQA(programme, activites);
   }
 
+  function handleNouveauCatalogue() {
+    if (!window.confirm("Créer un nouveau catalogue vide ?\nTout le contenu actuel (activités, programme, favoris) sera effacé.")) return;
+    setActivites([]);
+    setProgramme(PROGRAMME_INIT);
+    setCorbeille([]);
+    setFavoris(new Set());
+    setFileHandle(null);
+  }
+
   /**
    * Importe un fichier .sqa et déclenche DEUX mises à jour d'état immutables :
    * 1. Rechargement du programme dans SequenceBuilder (setProgramme).
@@ -426,6 +437,20 @@ export default function Catalogue() {
             >
               🗑 {corbeille.length > 0 && <span className="cat-corbeille-badge">{corbeille.length}</span>}
             </button>
+            <button
+              className="btn-cat btn-cat-carnet"
+              onClick={() => setShowCarnet(true)}
+              title="Carnet de notes"
+            >
+              📓 Carnet
+            </button>
+            <button
+              className="btn-cat btn-cat-nouveau"
+              onClick={handleNouveauCatalogue}
+              title="Nouveau catalogue vide"
+            >
+              Nouveau
+            </button>
           </div>
           <div className="main-topbar">
             <ActiveFilterBadges filtres={filtres} setFiltres={setFiltres} />
@@ -499,6 +524,12 @@ export default function Catalogue() {
           🗑 Corbeille
           <span className="mobile-toolbar-badge mobile-toolbar-badge-corbeille">{corbeille.length}</span>
         </button>
+        <button
+          className={`mobile-toolbar-btn${showCarnet ? " mobile-toolbar-btn-active" : ""}`}
+          onClick={() => setShowCarnet(v => !v)}
+        >
+          📓 Carnet
+        </button>
       </div>
 
       {selected && (
@@ -556,6 +587,8 @@ export default function Catalogue() {
           onClose={() => setShowCorbeille(false)}
         />
       )}
+
+      {showCarnet && <CarnetNotes onClose={() => setShowCarnet(false)} />}
     </div>
   );
 }

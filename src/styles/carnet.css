@@ -1,0 +1,477 @@
+/* ============================================
+   CARNET DE NOTES
+   ============================================ */
+
+.carnet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.carnet-modal {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.22), 0 4px 12px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 960px;
+  height: 82vh;
+  max-height: 860px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ---- En-tête ---- */
+.carnet-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.carnet-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.carnet-icon { font-size: 18px; line-height: 1; }
+.carnet-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* ---- Onglets ---- */
+.carnet-tabs {
+  display: flex;
+  gap: 2px;
+  margin: 0 auto;
+  background: var(--bg-soft);
+  border-radius: 8px;
+  padding: 3px;
+}
+.carnet-tab {
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: var(--cursor-hand);
+  transition: background 140ms, color 140ms;
+  white-space: nowrap;
+}
+.carnet-tab:hover { color: var(--text); }
+.carnet-tab--active {
+  background: #fff;
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.carnet-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-faint);
+  cursor: var(--cursor-hand);
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 140ms, background 140ms;
+  flex-shrink: 0;
+}
+.carnet-close:hover { color: var(--text); background: var(--bg-soft); }
+
+/* ---- Barre d'outils ---- */
+.carnet-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 5px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: var(--cursor-hand);
+  transition: background 110ms, border-color 110ms, color 110ms;
+  min-width: 28px;
+  height: 28px;
+  line-height: 1;
+}
+.tb-btn:hover {
+  background: var(--bg-soft);
+  border-color: var(--border);
+  color: var(--text);
+}
+.tb-h          { font-family: var(--serif); font-size: 11px; font-weight: 700; }
+.tb-bold       { font-weight: 800; font-size: 14px; }
+.tb-italic     { font-style: italic; font-weight: 600; }
+.tb-underline  { text-decoration: underline; font-weight: 600; }
+.tb-remove-fmt { opacity: 0.65; }
+.tb-remove-fmt:hover { opacity: 1; }
+
+.tb-sep {
+  display: inline-block;
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+
+/* Bouton couleur — souligné coloré */
+.tb-color-a {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--serif);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 3px;
+}
+
+/* Popovers couleur */
+.tb-color-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.tb-popover {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  display: flex;
+  gap: 5px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.14);
+  z-index: 20;
+}
+.tb-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  cursor: var(--cursor-hand);
+  flex-shrink: 0;
+  transition: transform 120ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tb-swatch:hover { transform: scale(1.2); }
+
+/* ---- Corps ---- */
+.carnet-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ---- Éditeur texte libre ---- */
+.carnet-editor {
+  min-height: 100%;
+  padding: 32px 52px;
+  outline: none;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text);
+  caret-color: var(--accent);
+}
+.carnet-editor:empty::before {
+  content: "Commencez à écrire...";
+  color: var(--text-faint);
+  pointer-events: none;
+  font-style: italic;
+}
+.carnet-editor h1 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 28px 0 14px;
+  color: var(--text);
+}
+.carnet-editor h2 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 22px 0 10px;
+  color: var(--text);
+}
+.carnet-editor h3 {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 16px 0 8px;
+  color: var(--text);
+}
+.carnet-editor h1:first-child,
+.carnet-editor h2:first-child,
+.carnet-editor h3:first-child { margin-top: 0; }
+.carnet-editor ul { padding-left: 22px; margin: 8px 0; }
+.carnet-editor li { margin-bottom: 4px; }
+.carnet-editor p,
+.carnet-editor div { min-height: 1.8em; }
+
+/* ---- Programme pédagogique ---- */
+.carnet-programme {
+  padding: 28px 44px;
+  min-height: 100%;
+}
+
+.prog-objectif-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+.prog-field-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-faint);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.prog-objectif-input {
+  flex: 1;
+  border: none;
+  border-bottom: 1.5px solid var(--border);
+  background: transparent;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-style: italic;
+  color: var(--text);
+  padding: 3px 0;
+  outline: none;
+  transition: border-color 150ms;
+}
+.prog-objectif-input:focus { border-bottom-color: var(--accent); }
+.prog-objectif-input::placeholder {
+  color: var(--text-faint);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-style: normal;
+}
+
+/* Étapes */
+.prog-etapes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+.prog-etape-block {
+  border-left: 3px solid var(--border);
+  padding-left: 16px;
+  transition: border-color 150ms;
+}
+.prog-etape-block:hover { border-left-color: var(--accent); }
+
+.prog-etape-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+}
+.prog-num {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-faint);
+  min-width: 22px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.prog-champs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+.prog-input {
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  font-size: 13px;
+  color: var(--text);
+  padding: 3px 0;
+  outline: none;
+  transition: border-color 150ms;
+  font-family: var(--sans);
+}
+.prog-input:focus { border-bottom-color: var(--accent); }
+.prog-input::placeholder { color: var(--text-faint); }
+.prog-input-duree { width: 90px; }
+.prog-input-desc  { flex: 1; min-width: 180px; }
+
+.prog-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.prog-note-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: var(--cursor-hand);
+  transition: background 120ms, border-color 120ms;
+  line-height: 1.4;
+}
+.prog-note-btn:hover,
+.prog-note-btn--on {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+.prog-del-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: var(--cursor-hand);
+  transition: background 120ms, border-color 120ms, color 120ms;
+  line-height: 1.4;
+}
+.prog-del-btn:hover { background: #fef0f0; border-color: #e8b8b8; color: #c0392b; }
+
+.prog-note-textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-soft);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text);
+  padding: 10px 14px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 150ms, background 150ms;
+  line-height: 1.6;
+}
+.prog-note-textarea:focus { border-color: var(--accent); background: #fff; }
+.prog-note-textarea::placeholder { color: var(--text-faint); font-style: italic; }
+
+.prog-add-btn {
+  margin-top: 14px;
+  width: 100%;
+  background: none;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 8px;
+  padding: 11px 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: var(--cursor-hand);
+  text-align: center;
+  transition: background 140ms, border-color 140ms, color 140ms;
+  font-family: var(--sans);
+}
+.prog-add-btn:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  border-style: solid;
+  color: var(--accent-deep);
+}
+
+/* ---- Mobile : bottom sheet ---- */
+@media (max-width: 768px) {
+  .carnet-backdrop {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .carnet-modal {
+    width: 100%;
+    max-width: none;
+    height: 92dvh;
+    max-height: none;
+    border-radius: 20px 20px 0 0;
+    animation: carnetSlideUp 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .carnet-header {
+    padding: 14px 16px 12px;
+  }
+  .carnet-tabs {
+    gap: 1px;
+    padding: 2px;
+  }
+  .carnet-tab {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  .carnet-toolbar {
+    padding: 4px 10px;
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .carnet-toolbar::-webkit-scrollbar { display: none; }
+  .tb-sep { margin: 0 3px; }
+  .carnet-editor {
+    padding: 20px 16px;
+    font-size: 15px;
+  }
+  .carnet-programme {
+    padding: 20px 16px;
+  }
+  .prog-champs {
+    gap: 6px;
+  }
+  .prog-objectif-row {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+  .prog-etape-line {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .prog-input-duree { width: 80px; }
+  .prog-input-desc  { min-width: 120px; }
+}
+
+@keyframes carnetSlideUp {
+  from { transform: translateY(60px); opacity: 0.7; }
+  to   { transform: translateY(0);    opacity: 1;   }
+}
