@@ -3,6 +3,20 @@ import "../styles/card.css";
 
 import { sumDureeActivites, formatDureeGlobale } from "../utils/duree";
 
+function QRCodeImage({ url, size = 80 }) {
+  const [src, setSrc] = React.useState(null);
+  React.useEffect(() => {
+    if (!url?.trim()) { setSrc(null); return; }
+    let cancelled = false;
+    import("qrcode").then(mod =>
+      mod.default.toDataURL(url, { margin: 1, width: size, errorCorrectionLevel: "M" })
+    ).then(dataUrl => { if (!cancelled) setSrc(dataUrl); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [url, size]);
+  if (!src) return null;
+  return <img src={src} width={size} height={size} alt="QR Code" style={{ display: "block" }} />;
+}
+
 function FicheActivite({ activite: a, num }) {
   const isEval = a.methode === "evaluation" || a.type_fiche === "Activite_Evaluation" || a.type_fiche === "Évaluation" || a.type_fiche === "Evaluation";
   return (
@@ -20,6 +34,12 @@ function FicheActivite({ activite: a, num }) {
           <span className="print-fiche-duree">{a.duree}</span>
         </div>
       </div>
+      {a.lien_qr?.trim() && (
+        <div className="print-fiche-qr">
+          <QRCodeImage url={a.lien_qr} size={76} />
+          <span className="print-fiche-qr-url">{a.lien_qr}</span>
+        </div>
+      )}
       {(a.materiels || []).length > 0 && (
         <div className="print-fiche-meta-grid">
           <div className="print-fiche-meta-item">

@@ -567,6 +567,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         problematique: initialData.problematique || "",
         remediation: initialData.remediation || "",
         adaptation_psh: initialData.adaptation_psh || "",
+        lien_qr: initialData.lien_qr || "",
       };
     }
     return {
@@ -587,6 +588,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       problematique: "",
       remediation: "",
       adaptation_psh: "",
+      lien_qr: "",
     };
   });
 
@@ -886,6 +888,17 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
             rows={2} value={form.adaptation_psh}
             onChange={(e) => setField("adaptation_psh", e.target.value)} />
           {erreurs.adaptation_psh && <div className="form-error">{erreurs.adaptation_psh}</div>}
+        </div>
+
+        <div className="form-group form-group-lien-qr">
+          <label className="form-label">Lien <span className="form-hint">(QR code dans le PDF)</span></label>
+          <input
+            className="form-input"
+            type="url"
+            placeholder="https://..."
+            value={form.lien_qr}
+            onChange={(e) => setField("lien_qr", e.target.value)}
+          />
         </div>
 
         <div className="modal-footer">
