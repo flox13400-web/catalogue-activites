@@ -7,6 +7,7 @@ import "../styles/card.css";
  * @returns {boolean} True si l'activité est une évaluation.
  */
 function isEvaluation(activite) {
+  if (activite.methode) return activite.methode === "evaluation";
   const t = activite.type_fiche || "";
   return t === "Activite_Evaluation" || t === "Évaluation" || t === "Evaluation";
 }

@@ -40,6 +40,6 @@
  *
  * @typedef {Object} Fiche
  * @property {string} id
- * @property {"Activite_Apprentissage"|"Activite_Evaluation"} type_fiche
+ * @property {"active"|"expositive"|"evaluation"} methode
  * @property {string} parent_id - ID de la Seance parente
  */

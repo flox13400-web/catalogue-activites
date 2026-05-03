@@ -556,7 +556,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         themes: initialData.themes || [],
         materiels: initialData.materiels || [],
         modalite: initialData.modalite || [],
-        type_fiche: initialData.type_fiche || "Activite_Apprentissage",
+        methode: initialData.methode || (initialData.type_fiche === "Activite_Evaluation" || initialData.type_fiche === "Évaluation" || initialData.type_fiche === "Evaluation" ? "evaluation" : "active"),
         opo_activite: initialData.opo_activite || "",
         description: initialData.description || "",
         apprentissage_cle: initialData.apprentissage_cle || "",
@@ -576,7 +576,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
       themes: [],
       materiels: [],
       modalite: [],
-      type_fiche: "Activite_Apprentissage",
+      methode: "active",
       opo_activite: "",
       description: "",
       apprentissage_cle: "",
@@ -741,15 +741,19 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         />
 
         <div className="form-group">
-          <label className="form-label">Type de fiche</label>
+          <label className="form-label">Méthode</label>
           <div className="form-toggle">
             <button type="button"
-              className={`form-toggle-btn${form.type_fiche === "Activite_Apprentissage" ? " form-toggle-btn-active" : ""}`}
-              onClick={() => setField("type_fiche", "Activite_Apprentissage")}
-            >Apprentissage</button>
+              className={`form-toggle-btn${form.methode === "active" ? " form-toggle-btn-active" : ""}`}
+              onClick={() => setField("methode", "active")}
+            >Active</button>
             <button type="button"
-              className={`form-toggle-btn${form.type_fiche === "Activite_Evaluation" ? " form-toggle-btn-active" : ""}`}
-              onClick={() => setField("type_fiche", "Activite_Evaluation")}
+              className={`form-toggle-btn${form.methode === "expositive" ? " form-toggle-btn-active" : ""}`}
+              onClick={() => setField("methode", "expositive")}
+            >Expositive</button>
+            <button type="button"
+              className={`form-toggle-btn${form.methode === "evaluation" ? " form-toggle-btn-active" : ""}`}
+              onClick={() => setField("methode", "evaluation")}
             >Évaluation</button>
           </div>
         </div>
@@ -764,7 +768,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
           </div>
         </div>
 
-        {form.type_fiche === "Activite_Apprentissage" && (
+        {form.methode !== "evaluation" && (
           <>
             <div className="form-group">
               <label className="form-label">Description complète</label>
@@ -781,7 +785,7 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
           </>
         )}
 
-        {form.type_fiche === "Activite_Evaluation" && (
+        {form.methode === "evaluation" && (
           <div className="form-eval-section">
             <div className="form-eval-section-title">Paramètres de l'évaluation</div>
             <div className="form-row">

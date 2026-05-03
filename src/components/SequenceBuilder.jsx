@@ -423,7 +423,7 @@ export default function SequenceBuilder({
                                 <p className="seq-fiche-empty">Aucune activité assignée</p>
                               ) : (
                                 ficheAvecActivite.map(({ fiche, activite }) => {
-                                  const isEval = activite.type_fiche === "Activite_Evaluation" || activite.type_fiche === "Évaluation" || activite.type_fiche === "Evaluation";
+                                  const isEval = activite.methode === "evaluation" || activite.type_fiche === "Activite_Evaluation" || activite.type_fiche === "Évaluation" || activite.type_fiche === "Evaluation";
                                   const modalites = activite.modalite || [];
                                   return (
                                     <div key={fiche.id} className={`seq-fiche ${isEval ? "seq-fiche-eval" : "seq-fiche-apprentissage"}`}>

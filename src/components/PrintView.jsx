@@ -4,7 +4,7 @@ import "../styles/card.css";
 import { sumDureeActivites, formatDureeGlobale } from "../utils/duree";
 
 function FicheActivite({ activite: a, num }) {
-  const isEval = a.type_fiche === "Activite_Evaluation" || a.type_fiche === "Évaluation" || a.type_fiche === "Evaluation";
+  const isEval = a.methode === "evaluation" || a.type_fiche === "Activite_Evaluation" || a.type_fiche === "Évaluation" || a.type_fiche === "Evaluation";
   return (
     <div className="print-fiche">
       <div className="print-fiche-header">

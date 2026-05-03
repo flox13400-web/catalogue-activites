@@ -38,7 +38,7 @@ export function verifierAlignementPedagogique(programme) {
       const fiches = seance.fiches ?? [];
 
       // Règle Micro — au moins une fiche d'évaluation par séance
-      const aEvaluation = fiches.some(f => f.type_fiche === "Activite_Evaluation");
+      const aEvaluation = fiches.some(f => f.methode === "evaluation" || f.type_fiche === "Activite_Evaluation");
       if (!aEvaluation) {
         erreurs.push(`Évaluation manquante pour la séance : ${seance.titre}`);
       }
