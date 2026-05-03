@@ -15,7 +15,7 @@ Le système repose sur la taxonomie de Bloom avec une structure "Mad Libs" oblig
 - Séance : `opo_bloom` (Verbe) + `opo_verbe` (Action libre).
 
 ## Typage des Fiches d'Activités (Clé `type_fiche`)
-1. Condition "Apprentissage" : Champs requis -> `description_courte`, `description_complete`, `apprentissage_cle`.
+1. Condition "Apprentissage" : Champs requis -> `description`, `apprentissage_cle`.
 2. Condition "Évaluation" : Champs requis -> `eval_type`, `eval_modalite`, `eval_conditions`, `eval_criteres`.
 
 # DIRECTIVES D'IMPLÉMENTATION

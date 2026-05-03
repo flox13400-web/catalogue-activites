@@ -7,7 +7,6 @@
       "11-15"
     ],
     "duree": "20min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -18,7 +17,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Chaque enfant reçoit un livre et lit à voix basse pendant 5 minutes.",
     "description": "Chaque enfant reçoit un livre et lit à voix basse pendant 5 minutes. Ils sont des \"petits cerveaux\" qui s'entraînent en absorbant du texte. Vivent physiquement la phase d'entraînement. Puis l'animateur pose une série de questions auxquelles chacun va répondre différemment (en fonction de la source qu'il aura lu).",
     "apprentissage_cle": "Une IA ne sait que ce qu'elle a \"lu\". Sa connaissance dépend de ce avec quoi on l'a nourrie."
   },
@@ -27,12 +25,15 @@
     "titre": "#Le bibliothécaire aveugle",
     "public": [
       "7-10",
-      "11-15", "16-20", "Adultes", "Post-bac"
+      "11-15",
+      "16-20",
+      "Adultes",
+      "Post-bac"
     ],
     "duree": "15min",
-    "duree_detail": null,
     "groupe": [
-      "Moyen", "Petit"
+      "Moyen",
+      "Petit"
     ],
     "preparation": "Légère",
     "themes": [
@@ -41,7 +42,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Un enfant joue le \"bibliothécaire\" qui n'a lu que 5 livres précis. Les autres lui posent des questions.",
     "description": "L'animateur joue le \"bibliothécaire\" qui a lu 5 livres précis. Les enfants lui posent des questions. S'il ne sait pas, il doit soit dire \"je ne sais pas\", soit inventer une réponse plausible et le cas échéant, les enfants doivent deviner s'il dit vrai ou non.",
     "apprentissage_cle": "Une IA ne sait pas tout, et quand elle ne sait pas, elle invente parfois sans le dire."
   },
@@ -54,7 +54,6 @@
       "Post-bac"
     ],
     "duree": "30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -66,7 +65,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Trois sous-groupes reçoivent trois corpus différents (presse people, manuels scientifiques, romans XIXe) et répondent…",
     "description": "Trois sous-groupes reçoivent trois corpus différents (presse people, manuels scientifiques, romans XIXe) et répondent aux mêmes 5 questions. Les visions du monde produites divergent radicalement.",
     "apprentissage_cle": "Deux IA entraînées sur des corpus différents produisent des visions du monde radicalement différentes."
   },
@@ -80,7 +78,6 @@
       "Adultes"
     ],
     "duree": "30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -92,7 +89,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Les apprenants, par groupe de 2 ou 3 personnes, réalisent des recherches à propos d'une thématique imposée en fonction d'un pays...",
     "description": "Les apprenants, par groupe de 2 ou 3 personnes, réalisent des recherches à propos d'une thématique imposée en fonction d'un pays pris au hasard (sur la langue, genres, temporalité, classes sociales...). Puis ils échangent chacun leur tour sur leurs trouvailles et constatent les différences.",
     "apprentissage_cle": "Les biais de l'IA ne sortent pas de nulle part : ils sont le reflet mathématique des biais de ceux qui ont produit les données."
   },
@@ -105,7 +101,6 @@
       "Post-bac"
     ],
     "duree": "45min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -117,7 +112,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Deux camps défendent des positions tirées au sort : \"l'IA comprend vraiment\" vs \"l'IA simule la compréhension\".",
     "description": "Deux camps défendent des positions tirées au sort : \"l'IA comprend vraiment\" vs \"l'IA simule la compréhension\". Introduction à la chambre chinoise de Searle.",
     "apprentissage_cle": "La question \"l'IA comprend-elle ?\" est une vraie question philosophique, débattue par les chercheurs eux-mêmes."
   },
@@ -128,7 +122,6 @@
       "Adultes"
     ],
     "duree": "45min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -139,7 +132,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "20 affirmations sur l'IA, moitié vraies, moitié fausses…",
     "description": "20 affirmations sur l'IA, moitié vraies, moitié fausses (\"L'IA apprend de nos conversations en temps réel\", \"L'IA va remplacer 50% des emplois\"). Vote à main levée avant révélation. Débriefing sur les sources des mythes et leurs conséquences opérationnelles.",
     "apprentissage_cle": "Beaucoup de croyances largement partagées sur l'IA sont fausses ou exagérées. Partir des faits est la première étape pour prendre des décisions rationnelles."
   },
@@ -150,7 +142,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -161,7 +152,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Brainstorming collectif sur les limites.",
     "description": "Brainstorming collectif sur les limites. L'animateur complète : accès aux données privées, données récentes, calculs précis, jugement éthique contextuel, confidentialité, cohérence long texte. Production : liste des limites à afficher sur son poste.",
     "apprentissage_cle": "Un collaborateur qui connaît les limites de l'IA est 10x plus productif qu'un qui les ignore."
   },
@@ -174,7 +164,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -186,7 +175,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Présentation du paysage : grands modèles (ChatGPT, Claude, Gemini, Mistral, Copilot, DeepSeek), solutions intégrées,…",
     "description": "Présentation du paysage : grands modèles (ChatGPT, Claude, Gemini, Mistral, Copilot, DeepSeek), solutions intégrées, open source, outils no-code d'agents. Chacun identifie les 2-3 outils les plus pertinents pour son contexte.",
     "apprentissage_cle": "L'IA n'est pas un seul outil mais un écosystème. Choisir les bons outils pour les bons usages est une compétence stratégique."
   },
@@ -197,7 +185,6 @@
       "Adultes"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -208,7 +195,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Grille de maturité en 5 niveaux (ignorant, curieux, testeur, usager régulier, expert) évaluée sur plusieurs dimensions.",
     "description": "Grille de maturité en 5 niveaux (ignorant, curieux, testeur, usager régulier, expert) évaluée sur plusieurs dimensions. Auto-positionnement. Discussion binômes sur les niveaux suivants à viser.",
     "apprentissage_cle": "Savoir où on en est, c'est pouvoir choisir où aller."
   },
@@ -221,7 +207,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -234,7 +219,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Décomposition de sa fonction en 15-20 tâches.",
     "description": "Décomposition de sa fonction en 15-20 tâches. Pour chacune : potentiel d'augmentation IA (de \"aucun\" à \"révolutionnaire\"). Identification des tâches-cibles pour transformation prioritaire. Carte de transformation du métier.",
     "apprentissage_cle": "Chaque métier se transforme différemment. L'analyse fine révèle où est le levier réel."
   },
@@ -245,7 +229,6 @@
       "Adultes"
     ],
     "duree": "2-4h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -256,7 +239,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Redesign d'un processus-clé (cycle de vente, onboarding client, reporting mensuel). Comparaison avant/après.",
     "description": "Redesign d'un processus-clé (cycle de vente, onboarding client, reporting mensuel). Comparaison avant/après. Workflow augmenté documenté, testable dès la semaine suivante.",
     "apprentissage_cle": "L'IA ne bénéficie pleinement que dans des processus repensés. La greffer sur l'ancien donne peu de valeur."
   },
@@ -267,7 +249,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -278,7 +259,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Outils no-code : Zapier + IA, Make, Power Automate, Custom GPTs, Claude Projects, agents no-code.",
     "description": "Outils no-code : Zapier + IA, Make, Power Automate, Custom GPTs, Claude Projects, agents no-code. Conception d'un workflow automatisé simple pour sa fonction. Prototype papier.",
     "apprentissage_cle": "L'automatisation avec IA est accessible sans coder. Les collaborateurs qui s'en emparent gagnent 10-20% de leur temps."
   },
@@ -289,7 +269,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -300,7 +279,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Déléguer une tâche complète à l'IA (pas juste une sous-étape).",
     "description": "Déléguer une tâche complète à l'IA (pas juste une sous-étape). Matrice de délégation : brief, critères de réussite, contrôle, validation finale. Binômes délégant / \"IA\". Résistances personnelles à déléguer.",
     "apprentissage_cle": "Déléguer à une IA ressemble à déléguer à un collaborateur : ça s'apprend."
   },
@@ -313,7 +291,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -326,7 +303,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Dans un monde de livrables IA standardisés, quelle est ma valeur propre ?",
     "description": "Dans un monde de livrables IA standardisés, quelle est ma valeur propre ? 3-5 éléments irréductibles (expertise pointue, jugement contextuel, relations de confiance, créativité signée). Version post-bac : manifeste stylistique professionnel disciplinaire.",
     "apprentissage_cle": "L'IA augmente la valeur de ce qui est uniquement humain. La voix singulière devient un capital rare."
   },
@@ -338,7 +314,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -350,7 +325,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Jeu de rôle en 3 temps : entretien par \"IA de screening\", par recruteur humain, comparaison.",
     "description": "Jeu de rôle en 3 temps : entretien par \"IA de screening\", par recruteur humain, comparaison. Usage IA dans le recrutement (screening CV, analyse vidéo). Formation pratique à aborder un entretien mené par IA.",
     "apprentissage_cle": "Les processus de recrutement utilisent massivement l'IA. Comprendre leurs logiques est essentiel pour se préparer."
   },
@@ -362,7 +336,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -374,7 +347,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Analyse critique de son propre CV et trace numérique comme le ferait une IA.",
     "description": "Analyse critique de son propre CV et trace numérique comme le ferait une IA. Reformulation pour être \"lu correctement\" sans trahir son identité. Où est la limite entre optimisation légitime et déformation de soi ?",
     "apprentissage_cle": "Notre identité professionnelle est de plus en plus médiée par les IA. Se présenter clairement sans céder à l'uniformisation est un exercice d'équilibre."
   },
@@ -386,7 +358,6 @@
       "Post-bac"
     ],
     "duree": "Projet",
-    "duree_detail": "1-2h (ados) / Projet (post-bac)",
     "groupe": [
       "Moyen"
     ],
@@ -398,7 +369,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Brainstorming : quels services/produits deviennent possibles ? Nouveaux métiers (prompt engineer, IA auditor).",
     "description": "Brainstorming : quels services/produits deviennent possibles ? Nouveaux métiers (prompt engineer, IA auditor). Pitch de 3 minutes sur une idée entrepreneuriale. Version post-bac : méthodologie de détection d'opportunités dans un secteur, prototype conceptuel.",
     "apprentissage_cle": "L'IA ouvre un cycle d'innovation comparable à internet. Les opportunités sont accessibles à qui les cherche avec méthode."
   },
@@ -410,7 +380,6 @@
       "Post-bac"
     ],
     "duree": "Projet",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -422,7 +391,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Projet d'écriture ou de création sur sujet libre.",
     "description": "Projet d'écriture ou de création sur sujet libre. Contrainte : utiliser l'IA comme assistant (brainstorming, reformulation, critique), mais produire une œuvre à voix propre identifiable. Évaluation par les pairs. Version post-bac : livrable professionnel de haut niveau avec journal de co-production détaillé.",
     "apprentissage_cle": "Utiliser l'IA sans perdre sa singularité est un art qui demande de la pratique. La qualité dépend autant du livrable que de la capacité à documenter la démarche."
   },
@@ -434,7 +402,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -446,7 +413,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Analyse prospective : compétences remplaçables par l'IA vs compétences complémentaires à l'IA.",
     "description": "Analyse prospective : compétences remplaçables par l'IA vs compétences complémentaires à l'IA. Portfolio personnel des compétences à développer en priorité. Version post-bac : plan de développement sur 3-5 ans.",
     "apprentissage_cle": "Le marché valorisera ce qui résiste à l'automatisation : jugement, créativité contextuelle, relation humaine, éthique."
   },
@@ -459,7 +425,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": "30-60min (adultes) / 1-2h (ados/post-bac)",
     "groupe": [
       "Moyen"
     ],
@@ -472,7 +437,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Version adultes : plan à 30 jours — 3 usages semaine 1, 2 formations, 1 projet, critères mesurables, engagement public…",
     "description": "Version adultes : plan à 30 jours — 3 usages semaine 1, 2 formations, 1 projet, critères mesurables, engagement public + binôme. Version 16-20 / post-bac : contrat professionnel personnel (5-10 pages en 5 parties : études, avenir pro, compétences, lignes rouges, critères de relecture annuelle).",
     "apprentissage_cle": "Sans plan d'action précis, une formation ne change rien. S'engager par écrit est le moyen le plus puissant d'orienter son développement."
   },
@@ -483,7 +447,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -494,7 +457,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Méthodologie : identification des communautés pertinentes (académiques, pro, associatives), veille efficace, présence…",
     "description": "Méthodologie : identification des communautés pertinentes (académiques, pro, associatives), veille efficace, présence publique (publications, prises de parole, open source), ressources partageables. Plan de développement réseau à 2 ans.",
     "apprentissage_cle": "Dans un champ en évolution rapide, le réseau bat l'expertise solitaire."
   },
@@ -506,7 +468,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -517,7 +478,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "On lit une seule phrase prise au hasard dans un livre. Débat sur ce qu'elle peut vouloir dire.",
     "description": "On lit une seule phrase prise au hasard dans un livre. Débat sur ce qu'elle peut vouloir dire. Puis lecture du paragraphe entier : la compréhension change radicalement. Version 11-15 : textes littéraires ambigus (ironie, métaphore).",
     "apprentissage_cle": "Une phrase isolée peut vouloir dire mille choses. Plus on donne de contexte à l'IA, mieux elle comprend."
   },
@@ -529,7 +489,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -540,7 +499,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Deux groupes reçoivent deux consignes : \"Dessine un animal\" vs \"Dessine un petit chat roux endormi sur un coussin bleu…",
     "description": "Deux groupes reçoivent deux consignes : \"Dessine un animal\" vs \"Dessine un petit chat roux endormi sur un coussin bleu près d'une fenêtre\". Comparaison des résultats.",
     "apprentissage_cle": "Un prompt vague produit des résultats imprévisibles. Plus je suis précis, plus j'obtiens ce que je veux."
   },
@@ -552,7 +510,6 @@
       "16-20"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -563,7 +520,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Concours en binômes : obtenir de l'animateur-IA une production précise.",
     "description": "Concours en binômes : obtenir de l'animateur-IA une production précise. L'animateur répond \"littéralement\" à chaque prompt, révélant les imprécisions. Gagnants : ceux qui aboutissent en le moins d'essais.",
     "apprentissage_cle": "Un bon prompt contient : rôle, contexte, tâche, format, contraintes. C'est une vraie compétence."
   },
@@ -575,7 +531,6 @@
       "16-20"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -586,7 +541,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "L'animateur présente une production (texte, dessin, poème).",
     "description": "L'animateur présente une production (texte, dessin, poème). Les participants doivent rédiger le prompt qui aurait pu la produire. Version 16-20 : 3 prompts différents pour la même production, comparaison de l'équifinalité.",
     "apprentissage_cle": "Plusieurs chemins mènent au même résultat. Mais plus le prompt est précis, moins la zone de hasard est grande."
   },
@@ -599,7 +553,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": "<30min (ados) / 1-2h (post-bac)",
     "groupe": [
       "Moyen"
     ],
@@ -611,7 +564,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "L'animateur glisse discrètement une instruction cachée à un enfant-IA. Les autres détectent le moment de bascule.",
     "description": "L'animateur glisse discrètement une instruction cachée à un enfant-IA. Les autres détectent le moment de bascule. Version post-bac : conception de scénarios d'attaque sur chatbot fictif, analyse des contre-mesures.",
     "apprentissage_cle": "Une IA peut être manipulée par des instructions cachées dans des textes qu'elle traite. Le prompt injection est un vrai enjeu de sécurité."
   },
@@ -623,7 +575,6 @@
       "Post-bac"
     ],
     "duree": "2-4h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -635,7 +586,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Atelier en 4 temps : analyse de prompts existants, production de prompts complexes sur cahier des charges, test croisé,…",
     "description": "Atelier en 4 temps : analyse de prompts existants, production de prompts complexes sur cahier des charges, test croisé, itération. Grille d'évaluation professionnelle (clarté, précision, contraintes, format, robustesse).",
     "apprentissage_cle": "Le prompt engineering est une ingénierie qui peut s'apprendre, se mesurer, se standardiser."
   },
@@ -646,7 +596,6 @@
       "16-20"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -657,7 +606,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Cas concrets : préparer un oral Parcoursup sans tricher, comprendre un chapitre non compris, préparer une dissertation,…",
     "description": "Cas concrets : préparer un oral Parcoursup sans tricher, comprendre un chapitre non compris, préparer une dissertation, s'entraîner à un examen. Où est la frontière aide / triche ?",
     "apprentissage_cle": "Un bon prompt scolaire cherche à apprendre, pas à contourner l'apprentissage."
   },
@@ -668,7 +616,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -679,7 +626,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Cas concrets : synthèse de littérature, reformulation d'hypothèses, génération de contre-exemples, critique…",
     "description": "Cas concrets : synthèse de littérature, reformulation d'hypothèses, génération de contre-exemples, critique méthodologique, exploration interdisciplinaire. Production : guide de prompts pour chercheur.",
     "apprentissage_cle": "L'IA peut être un puissant amplificateur de recherche à condition d'être utilisée avec méthode."
   },
@@ -691,7 +637,6 @@
       "Adultes"
     ],
     "duree": "2-4h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -703,7 +648,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Participants regroupés par fonction/discipline.",
     "description": "Participants regroupés par fonction/discipline. Chaque groupe construit une bibliothèque de 15 prompts pour les tâches-clés : prompt + cas d'usage + résultat attendu + précautions. Production collective : playbook par fonction.",
     "apprentissage_cle": "Chaque métier a ses propres patterns de prompts efficaces. Les construire collectivement accélère toute l'organisation."
   },
@@ -714,7 +658,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -725,7 +668,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Chaque participant identifie 10 tâches récurrentes de sa semaine.",
     "description": "Chaque participant identifie 10 tâches récurrentes de sa semaine. Pour chacune, rédaction d'un prompt-modèle réutilisable, testé et affiné en temps réel. Production : bibliothèque personnelle de 10 prompts utilisables dès le lendemain.",
     "apprentissage_cle": "Le gain de productivité vient des prompts réutilisés, pas improvisés."
   },
@@ -736,7 +678,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -747,7 +688,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Structure en 7 composants (rôle, contexte, tâche, contraintes, format, exemples, critères de succès) avec exemples…",
     "description": "Structure en 7 composants (rôle, contexte, tâche, contraintes, format, exemples, critères de succès) avec exemples métier. Atelier : production sur demande complexe (ex : synthèse pour comité de direction). Canevas de prompt professionnel.",
     "apprentissage_cle": "Le prompt n'est pas une question posée, c'est une commande passée."
   },
@@ -758,7 +698,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -769,7 +708,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Tâche complexe à résoudre en 20 minutes. Tenir un journal d'itération : prompt, résultat, critique, prompt amélioré.",
     "description": "Tâche complexe à résoudre en 20 minutes. Tenir un journal d'itération : prompt, résultat, critique, prompt amélioré. Restitution collective : cycles d'amélioration partagés.",
     "apprentissage_cle": "Les utilisateurs experts itèrent 3-5 fois ; les débutants abandonnent après 1."
   },
@@ -784,7 +722,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -797,7 +734,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Une personne pose une question. Une seule personne connaît la vraie réponse, les autres inventent.",
     "description": "Une personne pose une question. Une seule personne connaît la vraie réponse, les autres inventent. Le questionneur doit retrouver qui a dit la vérité. **Adaptations** : 7-10 : questions simples / 11-15 : questions sur leur orientation réelle / 16-20 : sujets pointus avec 2 min chrono / Post-bac : questions disciplinaires pointues / Adultes : questions pro (TVA, procédure légale, formule Excel). **Variantes** : indices de doute / sources à inventer / thème connu vs inconnu / à l'aveugle (écrit seul).",
     "apprentissage_cle": "Une réponse qui sonne vraie n'est pas forcément vraie. Plus le sujet est technique, plus il est difficile de détecter l'hallucination."
   },
@@ -809,7 +745,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -820,7 +755,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "15 affirmations : 5 vraies, 5 fausses, 5 plausibles mais fausses. Vote puis vérification en sources fiables.",
     "description": "15 affirmations : 5 vraies, 5 fausses, 5 plausibles mais fausses. Vote puis vérification en sources fiables.",
     "apprentissage_cle": "Beaucoup de \"vérités\" qu'on tient pour acquises sont en fait fausses. Il faut vérifier, même ce qui semble évident."
   },
@@ -831,7 +765,6 @@
       "7-10"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -842,7 +775,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "L'animateur joue un \"Super Robot\" qui répond aux questions sur les dinosaures.",
     "description": "L'animateur joue un \"Super Robot\" qui répond aux questions sur les dinosaures. Il donne 2 vraies réponses puis invente la 3e avec aplomb (\"Le T-Rex adorait manger des fraises sauvages\"). Les enfants vérifient dans un livre documentaire.",
     "apprentissage_cle": "Quand une affirmation est étonnante, on vérifie dans une vraie source. La confiance n'est pas une preuve."
   },
@@ -855,7 +787,6 @@
       "16-20"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -866,7 +797,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Un participant joue un \"grand expert\" sur un sujet qu'il ne connaît pas.",
     "description": "Un participant joue un \"grand expert\" sur un sujet qu'il ne connaît pas. Il répond avec assurance, vocabulaire technique, chiffres précis, références inventées. Les autres repèrent ce qui leur semble suspect.",
     "apprentissage_cle": "Le ton confiant et le vocabulaire technique ne sont jamais des preuves de véracité."
   },
@@ -879,7 +809,6 @@
       "16-20"
     ],
     "duree": "30-60min",
-    "duree_detail": "<30min (petits) / 30-60min (ados+)",
     "groupe": [
       "Moyen"
     ],
@@ -890,7 +819,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "L'animateur raconte une histoire avec 3-4 contradictions volontaires. Les participants repèrent.",
     "description": "L'animateur raconte une histoire avec 3-4 contradictions volontaires. Les participants repèrent. Version 11-15 : contradictions à longue portée sur texte de 2 pages. Version 16-20 : texte de 5 pages avec failles précises, audit structuré en binômes.",
     "apprentissage_cle": "Plus une production d'IA est longue, plus elle risque d'être incohérente avec elle-même."
   },
@@ -902,7 +830,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -913,7 +840,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Un participant joue une IA complaisante qui abonde toujours dans le sens de l'utilisateur (même sur l'absurde).",
     "description": "Un participant joue une IA complaisante qui abonde toujours dans le sens de l'utilisateur (même sur l'absurde). Puis on rejoue avec la consigne \"réponds honnêtement, même si ça ne fait pas plaisir\".",
     "apprentissage_cle": "Une IA complaisante peut nous conforter dans des opinions fausses ou dangereuses."
   },
@@ -927,7 +853,6 @@
       "Post-bac"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -939,7 +864,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Une affirmation surprenante + plusieurs sources de qualité variable. Classement par fiabilité.",
     "description": "Une affirmation surprenante + plusieurs sources de qualité variable. Classement par fiabilité. **Adaptations** : 7-10 : 4 sources (blog, ami, article scientifique, pub) / 11-15 : sources de réseaux sociaux + conflit fiabilité/accessibilité / 16-20 : affirmation polémique + 8 sources dont IA / Post-bac : construction d'une doctrine personnelle de la source.",
     "apprentissage_cle": "Il y a un conflit entre facilité d'accès et fiabilité des sources."
   },
@@ -953,7 +877,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": "30-60min (ados) / 1-2h (sup+)",
     "groupe": [
       "Moyen"
     ],
@@ -966,7 +889,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "L'animateur joue plusieurs IA avec biais différents sur la même question. Réponses divergentes.",
     "description": "L'animateur joue plusieurs IA avec biais différents sur la même question. Réponses divergentes. Analyse des convergences, divergences, angles morts. Production d'une synthèse critique supérieure aux réponses individuelles.",
     "apprentissage_cle": "Croiser sans intelligence ne fait qu'additionner les biais. Il faut une méthode d'analyse."
   },
@@ -978,7 +900,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -989,7 +910,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Questions pour faire émerger les stéréotypes : \"Dessine un scientifique\" → souvent un homme à lunettes, \"Imagine une…",
     "description": "Questions pour faire émerger les stéréotypes : \"Dessine un scientifique\" → souvent un homme à lunettes, \"Imagine une infirmière\" → souvent une femme. Discussion sur les images mentales spontanées.",
     "apprentissage_cle": "L'IA n'est pas neutre, elle reflète les stéréotypes des textes et images sur lesquels elle a été entraînée."
   },
@@ -1001,7 +921,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1012,7 +931,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "3 textes sur le même sujet (ex : les bonbons) avec intentions différentes : neutre, publicité, avertissement de…",
     "description": "3 textes sur le même sujet (ex : les bonbons) avec intentions différentes : neutre, publicité, avertissement de dentiste. Deviner qui a écrit quoi en repérant les mots qui trahissent l'intention.",
     "apprentissage_cle": "Selon comment on lui demande, une IA peut orienter ses réponses sans qu'on s'en rende compte."
   },
@@ -1025,7 +943,6 @@
       "16-20"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1036,7 +953,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Chaque participant écrit une opinion dont il est sûr. Tirage au sort.",
     "description": "Chaque participant écrit une opinion dont il est sûr. Tirage au sort. Le groupe cherche sincèrement les meilleurs arguments contre. Version 16-20 : 3 convictions, analyse de leur origine (algorithmes, médias, pairs).",
     "apprentissage_cle": "Nos convictions sont souvent le produit de notre environnement informationnel. Les interroger est une hygiène intellectuelle."
   },
@@ -1048,7 +964,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1059,7 +974,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Un participant fait une affirmation.",
     "description": "Un participant fait une affirmation. Les autres ne peuvent répondre que par \"Comment tu le sais ?\", \"Peux-tu le prouver ?\", \"Source ?\". Version 11-15 : exercice continu pendant 30 minutes sur tout sujet.",
     "apprentissage_cle": "La demande de justification doit devenir un réflexe automatique avec une IA."
   },
@@ -1073,7 +987,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1086,7 +999,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Textes courts mélangés (humains et IA).",
     "description": "Textes courts mélangés (humains et IA). Identifier lesquels et justifier par les indices : structure trop régulière, vocabulaire lisse, absence d'opinion tranchée, tournures récurrentes (\"il est important de noter que…\"). Version Post-bac : 50 textes de 6-8 modèles différents, profil stylistique de chacun.",
     "apprentissage_cle": "Les textes d'IA ont des marqueurs stylistiques reconnaissables. Les repérer est devenu une compétence sociale et professionnelle."
   },
@@ -1098,7 +1010,6 @@
       "16-20"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1109,7 +1020,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Deux versions du même contenu : une avec imperfections (répétitions, tournures maladroites) et une parfaitement lisse.",
     "description": "Deux versions du même contenu : une avec imperfections (répétitions, tournures maladroites) et une parfaitement lisse. Laquelle inspire plus confiance ? Dans un contexte humain, les imperfections rassurent.",
     "apprentissage_cle": "La perfection formelle n'est pas un gage de vérité. Parfois, elle signale une production artificielle."
   },
@@ -1122,7 +1032,6 @@
       "Post-bac"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1134,7 +1043,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "L'animateur affirme 20-30 faits en temps limité (vrais, faux, déformés). Accès CDI/bibliothèque.",
     "description": "L'animateur affirme 20-30 faits en temps limité (vrais, faux, déformés). Accès CDI/bibliothèque. Vérification en équipes. Points selon rapidité, justesse, qualité des sources. Débriefing sur les méthodes gagnantes.",
     "apprentissage_cle": "Le fact-checking professionnel exige des méthodes adaptées. Elles s'apprennent et se partagent."
   },
@@ -1147,7 +1055,6 @@
       "Adultes"
     ],
     "duree": "2-4h",
-    "duree_detail": "1-2h (ados/adultes) / 2-4h+ (post-bac)",
     "groupe": [
       "Petit"
     ],
@@ -1160,7 +1067,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Document long (5-10 pages pour adultes, 20-30 pour post-bac) généré par IA avec erreurs volontaires : fausses…",
     "description": "Document long (5-10 pages pour adultes, 20-30 pour post-bac) généré par IA avec erreurs volontaires : fausses citations, chiffres faux, raisonnements défaillants, références fictives. Audit structuré par équipes avec accès documentaire. Rapport d'audit avec recommandations.",
     "apprentissage_cle": "Dans un monde où les productions IA vont proliférer, le fact-checking devient une compétence transversale critique. Valider sans vérifier engage votre responsabilité."
   },
@@ -1174,7 +1080,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1187,7 +1092,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Productions IA réelles (descriptions de métiers, histoires, recommandations, fiches de poste, évaluations).",
     "description": "Productions IA réelles (descriptions de métiers, histoires, recommandations, fiches de poste, évaluations). Identifier les biais (genre, âge, culture, classe sociale). Impact sur les décisions RH, commerciales, stratégiques.",
     "apprentissage_cle": "Les biais des IA sont partout dans ses productions, mais invisibles tant qu'on ne les cherche pas."
   },
@@ -1200,7 +1104,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1212,7 +1115,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Questions sensibles (SMIC, immigration, jeunesse) avec réponses de plusieurs IA.",
     "description": "Questions sensibles (SMIC, immigration, jeunesse) avec réponses de plusieurs IA. Analyse des inflexions, tournures, points aveugles. Débat en plénière.",
     "apprentissage_cle": "Aucune IA n'est politiquement neutre. Ses biais reflètent les choix de ses concepteurs, les corpus d'entraînement et les garde-fous."
   },
@@ -1223,7 +1125,6 @@
       "Post-bac"
     ],
     "duree": "Projet",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1234,7 +1135,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Textes de philosophie des sciences (Popper, Kuhn, Feyerabend). Qu'est-ce qu'un fait à l'ère des IA ?",
     "description": "Textes de philosophie des sciences (Popper, Kuhn, Feyerabend). Qu'est-ce qu'un fait à l'ère des IA ? Comment valider une connaissance produite par IA ? Prise de position épistémologique argumentée de 5 pages.",
     "apprentissage_cle": "L'IA pose un problème épistémologique inédit : distinguer le savoir validé du bruit statistiquement cohérent."
   },
@@ -1246,7 +1146,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1258,7 +1157,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "20-30 textes mélangés (humains, IA, hybrides). Tri avec confidence score. Comptabilisation des taux de reconnaissance.",
     "description": "20-30 textes mélangés (humains, IA, hybrides). Tri avec confidence score. Comptabilisation des taux de reconnaissance. Comment classer les textes hybrides humain-IA ?",
     "apprentissage_cle": "Notre intuition à reconnaître \"l'IA vs l'humain\" est moins fiable qu'on ne le croit. La frontière devient floue dans les productions pro de qualité."
   },
@@ -1269,7 +1167,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1280,7 +1177,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Corpus de réponses IA sur sujets polémiques.",
     "description": "Corpus de réponses IA sur sujets polémiques. Identification des procédés : équilibrage systématique, énumérations ternaires, modalisations (\"il est important de noter que...\"), clôtures consensuelles, évitements éthiques.",
     "apprentissage_cle": "Les LLM ont une rhétorique apprise, optimisée pour l'acceptabilité. Cette rhétorique peut lisser des enjeux qui mériteraient des prises de position."
   },
@@ -1292,7 +1188,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1304,7 +1199,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Catégories : deepfakes, voice cloning, textes générés.",
     "description": "Catégories : deepfakes, voice cloning, textes générés. Méthodes de détection par modalité : stylométrie (texte), incohérences anatomiques/reflets (image), prosodie/respirations (audio). Collection d'exemples à classer.",
     "apprentissage_cle": "La détection des médias synthétiques est une course aux armements permanente. Il faut développer un réflexe de vigilance structurelle."
   },
@@ -1316,7 +1210,6 @@
       "Post-bac"
     ],
     "duree": "2-4h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1328,7 +1221,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Tables rondes simultanées : manipulation des élections, deepfakes politiques, positions politiques des IA, régulation.",
     "description": "Tables rondes simultanées : manipulation des élections, deepfakes politiques, positions politiques des IA, régulation. Production collective : déclaration citoyenne / article de tribune argumenté.",
     "apprentissage_cle": "L'IA est devenue un enjeu démocratique majeur. Les décisions structurantes se prennent maintenant."
   },
@@ -1339,7 +1231,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1350,7 +1241,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Corpus d'emails, propositions commerciales, rapports, CV, réponses AO (mix humain/IA). Tenter de distinguer.",
     "description": "Corpus d'emails, propositions commerciales, rapports, CV, réponses AO (mix humain/IA). Tenter de distinguer. Quand ça compte-t-il ? Quelles conséquences pour la relation client, fournisseur, collaborateur ?",
     "apprentissage_cle": "De plus en plus de documents pro sont générés par IA. Savoir le suspecter influence nos décisions et négociations."
   },
@@ -1361,7 +1251,6 @@
       "Adultes"
     ],
     "duree": "2-4h",
-    "duree_detail": "2-4h (réparti)",
     "groupe": [
       "Moyen"
     ],
@@ -1372,7 +1261,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Exercice en continu sur une demi-journée : chaque affirmation produite par l'IA doit être accompagnée de : d'où vient…",
     "description": "Exercice en continu sur une demi-journée : chaque affirmation produite par l'IA doit être accompagnée de : d'où vient l'info, comment la vérifier, quelle est la responsabilité en cas d'erreur.",
     "apprentissage_cle": "Le réflexe de vérification doit devenir automatique, comme le fait de sauvegarder un document."
   },
@@ -1383,7 +1271,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1394,7 +1281,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Grille de diagnostic en 6 dimensions : usages actuels, compétences, résistances, besoins, opportunités, risques.",
     "description": "Grille de diagnostic en 6 dimensions : usages actuels, compétences, résistances, besoins, opportunités, risques. Chaque manager établit le diagnostic de son équipe. Comparaison : quels écarts ? Quels leviers ? Diagnostic avec pistes d'action.",
     "apprentissage_cle": "Un manager qui agit sur un diagnostic fin déploie mieux qu'un manager uniformiste."
   },
@@ -1405,7 +1291,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1416,7 +1301,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Postures : sceptique, prescripteur, pionnier, facilitateur, régulateur.",
     "description": "Postures : sceptique, prescripteur, pionnier, facilitateur, régulateur. Jeu de rôle : un collaborateur avec demande IA (formation, refus, usage non autorisé, projet). Bonnes pratiques managériales.",
     "apprentissage_cle": "Le manager est le premier catalyseur ou le premier frein à la diffusion de l'IA."
   },
@@ -1427,7 +1311,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1438,7 +1321,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Matrice de priorisation : impact / effort / risque. Notation des cas d'usage de l'équipe.",
     "description": "Matrice de priorisation : impact / effort / risque. Notation des cas d'usage de l'équipe. Sélection des 3 projets prioritaires. Portefeuille de projets IA priorisé.",
     "apprentissage_cle": "Face à l'infinité des usages IA possibles, prioriser est la compétence managériale clé. Faire 3 projets bien vaut mieux que 10 mal."
   },
@@ -1449,7 +1331,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1460,7 +1341,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Dispositifs : formation, ateliers internes, communautés de pratique, champions IA, démonstrations, newsletters, projets…",
     "description": "Dispositifs : formation, ateliers internes, communautés de pratique, champions IA, démonstrations, newsletters, projets pilotes. Construction d'un plan d'acculturation sur 6 mois.",
     "apprentissage_cle": "L'acculturation n'est pas un événement mais un processus combinant plusieurs dispositifs."
   },
@@ -1471,7 +1351,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1482,7 +1361,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Typologie des résistances : peur de l'obsolescence, éthique, qualité, effort d'apprentissage, identité, idéologie.",
     "description": "Typologie des résistances : peur de l'obsolescence, éthique, qualité, effort d'apprentissage, identité, idéologie. Comment écouter, accompagner, refuser ? Jeux de rôle : conversations difficiles avec des résistants.",
     "apprentissage_cle": "Les résistances ne sont pas des obstacles à contourner mais des signaux à écouter. Beaucoup sont légitimes."
   },
@@ -1493,7 +1371,6 @@
       "Adultes"
     ],
     "duree": "2-4h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1504,7 +1381,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Décisions : outils, licences, formations, recrutements, R&D, partenariats. Grille d'aide à la décision.",
     "description": "Décisions : outils, licences, formations, recrutements, R&D, partenariats. Grille d'aide à la décision. Business case d'un déploiement IA avec chiffrage réaliste. Présentation à un \"comité d'investissement\" simulé.",
     "apprentissage_cle": "Les investissements IA requièrent une analyse spécifique : ROI réels mais difficiles à chiffrer, risques non linéaires."
   },
@@ -1515,7 +1391,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1526,7 +1401,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Pratiques : droits à l'erreur, budget temps dédié, restitution rapide, partage systématique.",
     "description": "Pratiques : droits à l'erreur, budget temps dédié, restitution rapide, partage systématique. Conception d'un rituel d'équipe (mensuel ou trimestriel) dédié à l'expérimentation IA.",
     "apprentissage_cle": "Les équipes qui progressent ne sont pas celles qui forment le plus, mais celles qui expérimentent le plus, dans un cadre protégeant l'erreur."
   },
@@ -1537,7 +1411,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1548,7 +1421,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Chaque manager/dirigeant rédige sa vision IA à 2-3 ans : ambitions, principes, lignes rouges, investissements,…",
     "description": "Chaque manager/dirigeant rédige sa vision IA à 2-3 ans : ambitions, principes, lignes rouges, investissements, trajectoire. Format : 1 page. Partage, confrontation, ajustement.",
     "apprentissage_cle": "Sans vision IA explicite, un dirigeant subit. Avec une vision, il oriente."
   },
@@ -1560,7 +1432,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1572,7 +1443,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Format \"communauté de pratique\" appliqué à l'IA : objectifs, rythme, animation, productions.",
     "description": "Format \"communauté de pratique\" appliqué à l'IA : objectifs, rythme, animation, productions. Constituer une communauté dans son organisation. Construction de la première rencontre. Charte et calendrier.",
     "apprentissage_cle": "La formation individuelle plafonne rapidement. La communauté fait progresser tout le monde en continu, sans dépendre des budgets."
   },
@@ -1583,7 +1453,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1594,7 +1463,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Sélection et formation des \"champions IA\" : rôle, légitimité, temps alloué, animation, reconnaissance.",
     "description": "Sélection et formation des \"champions IA\" : rôle, légitimité, temps alloué, animation, reconnaissance. Qui seraient les bons champions dans l'entreprise ? Charte des champions IA.",
     "apprentissage_cle": "Les champions sont le maillon manquant entre formation officielle et usage quotidien. Bien organisés, ils multiplient la diffusion par 3-5."
   },
@@ -1605,7 +1473,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1616,7 +1483,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Format régulier (mensuel/bimensuel) de partage IA : format, durée, animation, productions.",
     "description": "Format régulier (mensuel/bimensuel) de partage IA : format, durée, animation, productions. Test en direct : chacun partage un cas concret en 5 minutes. Débriefing sur ce qui fonctionne.",
     "apprentissage_cle": "Le partage structuré transforme l'expérience individuelle en ressource commune."
   },
@@ -1627,7 +1493,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1638,7 +1503,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Indicateurs pertinents pour l'adoption et l'impact de l'IA : usage (fréquence, typologie), qualité…",
     "description": "Indicateurs pertinents pour l'adoption et l'impact de l'IA : usage (fréquence, typologie), qualité (satisfaction, erreurs), impact (gains mesurés, projets), risques (incidents, non-conformités). Tableau de bord IA adapté.",
     "apprentissage_cle": "Ce qui n'est pas mesuré n'est pas piloté."
   },
@@ -1649,7 +1513,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1660,7 +1523,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Juniors digitaux accompagnent les seniors sur l'usage ; seniors accompagnent les juniors sur le jugement métier et les…",
     "description": "Juniors digitaux accompagnent les seniors sur l'usage ; seniors accompagnent les juniors sur le jugement métier et les risques. Constitution de binômes pilotes. Charte de mentorat croisé.",
     "apprentissage_cle": "Le mentorat croisé transforme les écarts générationnels en ressources mutuelles."
   },
@@ -1671,7 +1533,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1682,7 +1543,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Méthodologie : sources de qualité, rythme, formats, évaluation personnelle.",
     "description": "Méthodologie : sources de qualité, rythme, formats, évaluation personnelle. Plan personnel d'apprentissage continu à 12 mois. L'IA évolue trop vite pour qu'une formation ponctuelle suffise.",
     "apprentissage_cle": "La compétence du futur est celle d'apprendre en continu."
   },
@@ -1693,7 +1553,6 @@
       "Post-bac"
     ],
     "duree": "Projet",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1704,7 +1563,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Contribution écrite à l'écosystème : abstract/plan d'article de recherche, étude empirique disciplinaire, veille…",
     "description": "Contribution écrite à l'écosystème : abstract/plan d'article de recherche, étude empirique disciplinaire, veille organisée publiable, contribution open source pédagogique (fiche, module, tutoriel, dataset, benchmark), tribune professionnelle, engagement dans un collectif existant.",
     "apprentissage_cle": "Contribuer à la connaissance collective sur l'IA est à la fois un acte citoyen, un levier de visibilité professionnelle, et une manière concrète de faire évoluer les pratiques."
   },
@@ -1716,7 +1574,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1727,7 +1584,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "À partir d'un contexte donné, les enfants ordonnent des mots/images pour créer une suite logique.",
     "description": "À partir d'un contexte donné, les enfants ordonnent des mots/images pour créer une suite logique. Le même jeu peut produire des ordres différents selon le contexte. Version 11-15 : estimation de probabilités chiffrées.",
     "apprentissage_cle": "L'IA prédit la suite la plus probable en fonction de ce qui précède. Le contexte change la prédiction."
   },
@@ -1739,7 +1595,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1750,7 +1605,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "L'animateur écrit le début d'une phrase. Chaque participant propose le mot suivant avec justification.",
     "description": "L'animateur écrit le début d'une phrase. Chaque participant propose le mot suivant avec justification. Version 11-15 : on note toutes les options à chaque étape et on trace l'arbre complet (3^10 = 59 049 possibilités).",
     "apprentissage_cle": "L'IA construit ses phrases mot par mot. L'espace des réponses possibles est astronomique."
   },
@@ -1762,7 +1616,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1773,7 +1626,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Variante du téléphone arabe : chaque participant ne peut transmettre que 5 mots maximum.",
     "description": "Variante du téléphone arabe : chaque participant ne peut transmettre que 5 mots maximum. Comparaison du message original et final. Version 11-15 : traduction successive en langues étrangères.",
     "apprentissage_cle": "L'IA doit \"compresser\" l'information. Chaque passage par une couche induit des pertes."
   },
@@ -1784,7 +1636,6 @@
       "7-10"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1795,7 +1646,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Une file de 4-5 enfants : chacun reçoit une phrase, chuchote 3 suggestions avec probabilités au suivant qui choisit et…",
     "description": "Une file de 4-5 enfants : chacun reçoit une phrase, chuchote 3 suggestions avec probabilités au suivant qui choisit et enrichit. Architecture en couches incarnée.",
     "apprentissage_cle": "À chaque étape, plusieurs choix sont possibles. L'IA choisit toujours selon des probabilités."
   },
@@ -1807,7 +1657,6 @@
       "11-15"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1818,7 +1667,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "L'animateur donne 3 exemples (chat→chats, maison→maisons, oiseau→oiseaux). Les enfants déduisent la règle.",
     "description": "L'animateur donne 3 exemples (chat→chats, maison→maisons, oiseau→oiseaux). Les enfants déduisent la règle. Puis exception piégeuse (cheval→chevaux). Version 11-15 : multiples contre-exemples successifs.",
     "apprentissage_cle": "L'IA apprend par exemples. Si elle n'en a pas vu assez, elle généralise à faux."
   },
@@ -1830,7 +1678,6 @@
       "11-15"
     ],
     "duree": "30-60min",
-    "duree_detail": "<30min (petits) / 30-60min (ados)",
     "groupe": [
       "Moyen"
     ],
@@ -1841,7 +1688,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Même question ouverte avec 3 réponses successives : sage / moyenne / folle.",
     "description": "Même question ouverte avec 3 réponses successives : sage / moyenne / folle. Version 11-15 : 4 niveaux explicites (0, 0.3, 0.7, 1.5) sur tâche d'écriture. Quand voudrais-je chaque niveau ?",
     "apprentissage_cle": "La \"créativité\" d'une IA est un paramètre réglable. Pour un devoir scientifique : basse. Pour brainstormer : haute."
   },
@@ -1854,7 +1700,6 @@
       "16-20"
     ],
     "duree": "<30min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1865,7 +1710,6 @@
     "contexte": [
       "Scolaire"
     ],
-    "description_courte": "Un enfant joue le \"perroquet\". Les autres lisent des extraits pendant 5 minutes.",
     "description": "Un enfant joue le \"perroquet\". Les autres lisent des extraits pendant 5 minutes. Le perroquet répond aux questions en piochant uniquement dans ce qu'il a entendu. Version 11-15 : questions qui nécessitent de combiner deux domaines. Version 16-20 : défi créatif avec contrainte inédite, comparaison avec production IA.",
     "apprentissage_cle": "L'IA recombine ce qu'elle a vu, parfois brillamment, parfois absurdement. Elle excelle en recombinaison, échoue sur la vraie originalité."
   },
@@ -1878,7 +1722,6 @@
       "Post-bac"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1890,7 +1733,6 @@
       "Scolaire",
       "Études sup."
     ],
-    "description_courte": "Problème logique. Deux conditions : réponse instantanée vs verbalisation étape par étape.",
     "description": "Problème logique. Deux conditions : réponse instantanée vs verbalisation étape par étape. Comparaison des taux de réussite. Version post-bac : ajout du tree-of-thought (exploration de plusieurs pistes).",
     "apprentissage_cle": "Forcer l'IA (et nous-mêmes) à raisonner étape par étape améliore la qualité. D'où l'efficacité du chain-of-thought prompting."
   },
@@ -1901,7 +1743,6 @@
       "Post-bac"
     ],
     "duree": "2-4h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1912,7 +1753,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Animation concrète du mécanisme d'attention. Chaque mot est un participant.",
     "description": "Animation concrète du mécanisme d'attention. Chaque mot est un participant. Pour chaque mot : \"avec quels autres dois-tu dialoguer ?\". On trace des flèches pondérées. Discussion : que se passe-t-il pour une phrase longue ou ambiguë ?",
     "apprentissage_cle": "Le mécanisme d'attention, au cœur des LLM modernes, permet à chaque mot de \"regarder\" simultanément tous les autres."
   },
@@ -1923,7 +1763,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1934,7 +1773,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Exploration des méthodes de décodage : greedy, beam search, top-k, top-p (nucleus), min-p, contrastive decoding.",
     "description": "Exploration des méthodes de décodage : greedy, beam search, top-k, top-p (nucleus), min-p, contrastive decoding. Simulation manuelle sur un même prompt. Pour quel usage, quelle méthode ?",
     "apprentissage_cle": "Le \"choix\" du mot suivant par un LLM est une décision technique paramétrable."
   },
@@ -1946,7 +1784,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -1958,7 +1795,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Simulation d'un système RAG. Un \"LLM humain\" doit répondre à des questions pointues.",
     "description": "Simulation d'un système RAG. Un \"LLM humain\" doit répondre à des questions pointues. Un \"retriever humain\" avec 30 fiches sélectionne les 3 plus pertinentes. Observation des succès et échecs (mauvaise fiche, contradictions, absence).",
     "apprentissage_cle": "Un LLM \"augmenté\" par RAG est aujourd'hui l'architecture la plus performante pour les usages pro. Mais la qualité dépend entièrement du retriever."
   },
@@ -1969,7 +1805,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -1980,7 +1815,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Papers clés (Kaplan, Chinchilla, \"Are Emergent Abilities a Mirage?\"). Débats : plafond des scaling laws ?",
     "description": "Papers clés (Kaplan, Chinchilla, \"Are Emergent Abilities a Mirage?\"). Débats : plafond des scaling laws ? Émergence réelle ou artefact ? Prochaines ruptures ? AGI proches ou mirage ? Prise de position argumentée.",
     "apprentissage_cle": "Les trajectoires de progrès des LLM sont débattues parmi les experts. Se forger une opinion argumentée oriente ses choix d'investissement."
   },
@@ -1991,7 +1825,6 @@
       "Post-bac"
     ],
     "duree": "2-4h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2002,7 +1835,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Présentation des reasoning models (o1, o3, DeepSeek R1, Claude extended thinking) et de la multimodalité…",
     "description": "Présentation des reasoning models (o1, o3, DeepSeek R1, Claude extended thinking) et de la multimodalité (GPT-4o, Claude vision, Gemini). Comparatifs sur même problème. Typologie des tâches par type de modèle optimal.",
     "apprentissage_cle": "Les reasoning models changent la donne pour les tâches complexes. La multimodalité transforme les possibles professionnels."
   },
@@ -2013,7 +1845,6 @@
       "Post-bac"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2024,7 +1855,6 @@
     "contexte": [
       "Études sup."
     ],
-    "description_courte": "Principaux benchmarks (MMLU, HellaSwag, HumanEval, GSM8K) et leurs limites.",
     "description": "Principaux benchmarks (MMLU, HellaSwag, HumanEval, GSM8K) et leurs limites. Contamination des données, \"teaching to the test\". Concevoir un benchmark personnalisé pour un cas d'usage disciplinaire.",
     "apprentissage_cle": "Savoir évaluer un modèle pour son usage propre est plus utile que suivre les classements généraux."
   },
@@ -2035,7 +1865,6 @@
       "Adultes"
     ],
     "duree": "2-4h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2046,7 +1875,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Chaque participant chronométrée une tâche régulière sans IA, puis tente de l'accomplir avec IA.",
     "description": "Chaque participant chronométrée une tâche régulière sans IA, puis tente de l'accomplir avec IA. Comparaison des gains en temps ET en qualité. Tableau personnel des gains documenté.",
     "apprentissage_cle": "Le gain de l'IA n'est pas toujours là où on l'attend. Mesurer plutôt que croire est une hygiène professionnelle."
   },
@@ -2057,7 +1885,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2068,7 +1895,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Matrice des usages : rédiger de zéro, améliorer un brouillon, reformuler, traduire, résumer, allonger, structurer.",
     "description": "Matrice des usages : rédiger de zéro, améliorer un brouillon, reformuler, traduire, résumer, allonger, structurer. Techniques et prompts-modèles pour chaque usage. Travail sur un vrai document en cours.",
     "apprentissage_cle": "L'IA est un collaborateur de rédaction puissant, mais le résultat final doit rester vôtre."
   },
@@ -2079,7 +1905,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2090,7 +1915,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Corpus de 5 rapports de 20 pages. Défi : synthèse comparative utile en 45 minutes.",
     "description": "Corpus de 5 rapports de 20 pages. Défi : synthèse comparative utile en 45 minutes. Techniques : résumé par document, comparaison structurée, extraction de données, identification de consensus/dissensus.",
     "apprentissage_cle": "L'IA excelle dans le traitement de volume. 2 jours → 2 heures, à condition de savoir orchestrer."
   },
@@ -2101,7 +1925,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2112,7 +1935,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Défi créatif métier : 30 angles de campagne, 20 objections, 15 scénarios de marché.",
     "description": "Défi créatif métier : 30 angles de campagne, 20 objections, 15 scénarios de marché. IA comme partenaire de divergence : température haute, changements de perspectives, mise en tension.",
     "apprentissage_cle": "Beaucoup utilisent l'IA comme un oracle (1 bonne réponse) alors qu'elle excelle en mode divergent (50 pistes)."
   },
@@ -2123,7 +1945,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2134,7 +1955,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Cas concrets : entretien annuel difficile, questions d'un comité de direction, argumentaire de négociation.",
     "description": "Cas concrets : entretien annuel difficile, questions d'un comité de direction, argumentaire de négociation. Workflows détaillés avec IA (contexte, rôles, simulation, synthèse, points de vigilance). Canevas de préparation réutilisables.",
     "apprentissage_cle": "L'IA transforme la préparation des interactions humaines à haute valeur."
   },
@@ -2145,7 +1965,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2156,7 +1975,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Niveaux de confidentialité selon les outils (grand public, entreprise, API, déploiement privé).",
     "description": "Niveaux de confidentialité selon les outils (grand public, entreprise, API, déploiement privé). Classification des données de l'entreprise et matrice \"quelles données avec quels outils ?\". Politique personnelle de confidentialité.",
     "apprentissage_cle": "Toutes les IA ne se valent pas en matière de confidentialité. Chaque donnée a son outil."
   },
@@ -2168,7 +1986,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2180,7 +1997,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Présentation pratique : RGPD et IA, AI Act européen (catégories de risque, obligations), secteurs réglementés…",
     "description": "Présentation pratique : RGPD et IA, AI Act européen (catégories de risque, obligations), secteurs réglementés (santé, finance, RH), droit du travail et IA. Checklist de conformité par fonction. Version Post-bac : approche comparée UE/US/Chine.",
     "apprentissage_cle": "Le cadre réglementaire se structure rapidement. La conformité est un avantage compétitif autant qu'une obligation."
   },
@@ -2191,7 +2007,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2202,7 +2017,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "15 prompts-exemples à évaluer (vert/orange/rouge) sur : confidentialité, RGPD, biais, PI, réputation.",
     "description": "15 prompts-exemples à évaluer (vert/orange/rouge) sur : confidentialité, RGPD, biais, PI, réputation. Discussion et production d'une charte des prompts responsables adaptée à l'entreprise.",
     "apprentissage_cle": "Savoir ce qu'on ne doit PAS demander à une IA est aussi important que savoir ce qu'on peut."
   },
@@ -2213,7 +2027,6 @@
       "Adultes"
     ],
     "duree": "30-60min",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2224,7 +2037,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Modalités d'usage : copier-coller (attention), upload, RAG intégré (Copilot, NotebookLM, Claude Projects), plateformes…",
     "description": "Modalités d'usage : copier-coller (attention), upload, RAG intégré (Copilot, NotebookLM, Claude Projects), plateformes privées. Pour plusieurs cas métier concrets, identifier la meilleure modalité selon les règles de confidentialité.",
     "apprentissage_cle": "Utiliser l'IA avec les données d'entreprise démultiplie la valeur — mais ouvre des risques spécifiques."
   },
@@ -2236,7 +2048,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2248,7 +2059,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Attaques : prompt injection directe/indirecte, jailbreaking, data exfiltration, model inversion, adversarial examples.",
     "description": "Attaques : prompt injection directe/indirecte, jailbreaking, data exfiltration, model inversion, adversarial examples. Atelier : conception d'attaques sur système fictif (instructions système, outils connectés, données). Évaluation des mitigations.",
     "apprentissage_cle": "Le red-teaming IA est un métier émergent. Comprendre les attaques est la condition pour concevoir des systèmes robustes."
   },
@@ -2259,7 +2069,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2270,7 +2079,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Élaboration collective d'une charte d'usage pour l'entreprise ou l'équipe.",
     "description": "Élaboration collective d'une charte d'usage pour l'entreprise ou l'équipe. Structure : principes, ce qu'on fait, ce qu'on ne fait pas, transparence, responsabilité, ressources. Débat et production v1.0.",
     "apprentissage_cle": "Une charte n'est pas un document administratif mais une conversation continue."
   },
@@ -2282,7 +2090,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Moyen"
     ],
@@ -2294,7 +2101,6 @@
       "Études sup.",
       "Entreprise"
     ],
-    "description_courte": "Productions IA et droit d'auteur, usage de données protégées en entrée, contamination IP, signature des productions.",
     "description": "Productions IA et droit d'auteur, usage de données protégées en entrée, contamination IP, signature des productions. Cas pratiques et règles IP adaptées. Version Post-bac : étude des procès en cours (NYT v. OpenAI, artistes v. Stability AI).",
     "apprentissage_cle": "La PI à l'ère IA est un terrain juridique encore instable. Anticiper limite fortement les risques."
   },
@@ -2305,7 +2111,6 @@
       "Adultes"
     ],
     "duree": "1-2h",
-    "duree_detail": null,
     "groupe": [
       "Petit"
     ],
@@ -2316,7 +2121,6 @@
     "contexte": [
       "Entreprise"
     ],
-    "description_courte": "Études de cas réels d'incidents : fuite de données, biais discriminatoire public, hallucination ayant causé un dommage,…",
     "description": "Études de cas réels d'incidents : fuite de données, biais discriminatoire public, hallucination ayant causé un dommage, usage non déclaré découvert. Qu'aurait-il fallu faire avant / pendant / après ? Protocole d'incident minimal.",
     "apprentissage_cle": "Les incidents IA vont se multiplier. Les entreprises qui s'y préparent limitent les dégâts."
   }

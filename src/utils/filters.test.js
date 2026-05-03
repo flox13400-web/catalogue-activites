@@ -54,7 +54,7 @@ describe("applyFilters — recherche texte", () => {
   });
 
   it("filtre par titre (mot isolé)", () => {
-    const res = applyFilters(ACT, { ...FILTRES_INIT, search: "Discussion" });
+    const res = applyFilters(ACT, { ...FILTRES_INIT, search: "débat" });
     expect(res).toHaveLength(1);
     expect(res[0].id).toBe("A02");
   });
