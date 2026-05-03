@@ -449,7 +449,7 @@ export function extraireTagsUniques(activites, cle) {
 
 // ── Sélecteur de mots-clés dynamique (creatable multi-select) ──
 
-function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle, onAjouter, erreur }) {
+function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle, onAjouter, erreur, required }) {
   const [saisie, setSaisie] = React.useState("");
   const [focus, setFocus] = React.useState(false);
 
@@ -489,7 +489,7 @@ function CreatableMultiSelect({ label, valeurs, suggestionsDisponibles, onToggle
 
   return (
     <div className="form-group">
-      <label className="form-label">{label}</label>
+      <label className="form-label">{label}{required && <span className="form-required">*</span>}</label>
 
       {valeurs.length > 0 && (
         <div className="form-themes-selected">
@@ -748,7 +748,8 @@ export function ActivityFormModal({ onClose, onSave, activites, initialData }) {
         />
 
         <CreatableMultiSelect
-          label={<>Matériels nécessaires <span className="form-required">*</span></>}
+          label="Matériels nécessaires"
+          required
           valeurs={form.materiels}
           suggestionsDisponibles={tousMaterialels}
           erreur={erreurs.materiels}
