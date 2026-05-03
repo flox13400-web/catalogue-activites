@@ -53,6 +53,20 @@
   background: #8a6bc8;
 }
 
+/* Fond teinté des cartes — aligné sur les fiches du constructeur */
+.card-apprentissage {
+  background: #f5efed;
+  border-left: 3px solid #D46A54;
+}
+.card-expositive {
+  background: #eaf3fa;
+  border-left: 3px solid #4A90C4;
+}
+.card-eval {
+  background: #f2eefa;
+  border-left: 3px solid #8a6bc8;
+}
+
 /* Barre supérieure */
 .card-top {
   display: flex;

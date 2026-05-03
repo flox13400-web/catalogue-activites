@@ -79,9 +79,10 @@ export default function SequenceBuilder({
         label = activite.titre;
         dureeLabel = activite.duree || "";
       }
-      if (minutes <= 0) continue;
-      const visible = Math.min(minutes, maxMin - cumul);
-      const pct = (visible / maxMin) * 100;
+      // Les encarts texte apparaissent même à 0 min (marqueur fin via min-width CSS)
+      if (minutes <= 0 && fiche.type !== "texte") continue;
+      const visible = minutes > 0 ? Math.min(minutes, maxMin - cumul) : 0;
+      const pct = minutes > 0 ? (visible / maxMin) * 100 : 0;
       const cumulPct = (cumul / maxMin) * 100;
       segs.push({ key, pct, cumulPct, label, dureeLabel });
       cumul += minutes;
@@ -448,7 +449,7 @@ export default function SequenceBuilder({
                   <div
                     key={i}
                     className={`seq-jauge-seg seq-jauge-seg-${seg.key}`}
-                    style={{width: `${seg.pct}%`}}
+                    style={{width: `${seg.pct}%`, minWidth: seg.pct === 0 ? '3px' : undefined}}
                     onMouseEnter={() => setTooltipIdx(i)}
                   />
                 ))}

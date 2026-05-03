@@ -15,7 +15,8 @@
       "Bash(npm install *)",
       "Bash(npm test *)",
       "Skill(update-config)",
-      "Skill(update-config:*)"
+      "Skill(update-config:*)",
+      "Bash(npx vitest *)"
     ]
   },
   "hooks": {
