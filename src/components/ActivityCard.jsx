@@ -73,7 +73,7 @@ export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggl
       <div className="card-meta">
         <div className="card-meta-item">
           <svg className="card-meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          <span className="card-meta-value">{activite.duree}</span>
+          <span className="card-meta-value card-meta-value-duree" title={activite.duree}>{activite.duree}</span>
         </div>
         {tailleGroupe.length > 0 && (
           <div className="card-meta-item">

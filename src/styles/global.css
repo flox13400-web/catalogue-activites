@@ -705,9 +705,10 @@ body, .app {
   .sidebar-toggle-btn { display: none; }
   .main-topbar { margin-bottom: 12px; }
 
-  /* Actionbar : Carnet et Nouveau déjà accessibles via toolbar ou rarement utilisés */
+  /* Actionbar : Carnet, Nouveau et Corbeille déjà accessibles via toolbar */
   .btn-cat-carnet,
-  .btn-cat-nouveau { display: none; }
+  .btn-cat-nouveau,
+  .btn-cat-corbeille { display: none; }
   .catalogue-actionbar { overflow-x: auto; scrollbar-width: none; }
   .catalogue-actionbar::-webkit-scrollbar { display: none; }
 

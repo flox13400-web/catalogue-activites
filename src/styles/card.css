@@ -6,6 +6,11 @@
 }
 @media (max-width: 768px) {
   .cards-grid { grid-template-columns: 1fr; gap: 14px; }
+  .card-meta-value-duree {
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 /* CARTE */
@@ -353,8 +358,10 @@
     background: #fff;
   }
 
+  * { box-shadow: none !important; }
+
   @page {
-    margin: 18mm 20mm 18mm 20mm;
+    margin: 10mm 15mm 10mm 15mm;
     size: A4;
   }
 
