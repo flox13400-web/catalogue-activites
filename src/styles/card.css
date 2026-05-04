@@ -384,11 +384,12 @@
   }
   .print-doc-title {
     font-family: Georgia, serif;
-    font-size: 20pt;
+    font-size: min(20pt, 7vw);
     font-weight: normal;
     font-style: italic;
     letter-spacing: -0.01em;
     margin-bottom: 4pt;
+    white-space: nowrap;
   }
   .print-doc-meta {
     font-size: 8.5pt;
@@ -463,8 +464,8 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 10pt;
-    margin-bottom: 5pt;
-    padding-bottom: 5pt;
+    margin-bottom: 0;
+    padding-bottom: 4pt;
     border-bottom: 1pt solid #e0ddd6;
   }
   .print-fiche-header-left {
@@ -566,9 +567,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8pt 16pt;
+    margin-top: 0;
     margin-bottom: 5pt;
     background: #faf8f4;
-    padding: 8pt 10pt;
+    padding: 6pt 10pt;
     border-radius: 3pt;
   }
   .print-fiche-meta-label {
@@ -726,8 +728,8 @@
     display: flex;
     align-items: baseline;
     gap: 8pt;
-    margin-bottom: 4pt;
-    padding-bottom: 5pt;
+    margin-bottom: 0;
+    padding-bottom: 2pt;
     border-bottom: 1.5pt solid #1a1a1a;
   }
   .print-sequence-eyebrow {
@@ -752,6 +754,7 @@
     padding: 7pt 10pt;
     border-radius: 3pt;
     margin-bottom: 6pt;
+    margin-top: 0;
   }
 
   /* Séance */
@@ -765,7 +768,7 @@
     display: flex;
     align-items: baseline;
     gap: 6pt;
-    margin-bottom: 3pt;
+    margin-bottom: 0;
     padding-bottom: 2pt;
     border-bottom: 0.5pt solid #ccc;
   }
@@ -786,6 +789,7 @@
     display: flex;
     align-items: center;
     gap: 6pt;
+    margin-top: 0;
     margin-bottom: 5pt;
   }
   .print-seance-opo-type {
