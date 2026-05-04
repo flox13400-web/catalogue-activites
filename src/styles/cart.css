@@ -1154,7 +1154,6 @@
   bottom: 0;
   width: 2px;
   background: #111;
-  z-index: -1;
 }
 .seq-sequence.seq-is-last::after {
   bottom: auto;
@@ -1186,7 +1185,6 @@
   bottom: 0;
   width: 2px;
   background: #111;
-  z-index: -1;
 }
 .seq-seance.seq-is-last::after {
   bottom: auto;
@@ -1225,7 +1223,6 @@
   bottom: 0;
   width: 2px;
   background: #999;
-  z-index: -1;
 }
 .seq-fiche.seq-is-last::after {
   bottom: auto;
