@@ -33,3 +33,5 @@ app/build/
 *.njsproj
 *.sln
 *.sw?
+coverage/
+

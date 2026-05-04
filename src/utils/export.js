@@ -115,7 +115,7 @@ export function exportMarkdown(activites, titre = "") {
   telecharger(lignes.join("\n"), "seance-ia.md", "text/markdown;charset=utf-8");
 }
 
-export function exportCSV(activites, _titre = "") {
+export function exportCSV(activites) {
   const entetes = ["id", "titre", "age_public", "duree", "taille_groupe", "themes", "materiels", "modalite", "description", "apprentissage_cle", "problematique", "remediation"];
   const echapper = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
 

@@ -11,8 +11,10 @@ export function loadJSON(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
     if (raw === null) return fallback;
+    if (raw === null) return fallback;
     return JSON.parse(raw) ?? fallback;
-  } catch {
+  } catch (e) {
+    console.error("Erreur lecture storage:", e);
     return fallback;
   }
 }
@@ -20,5 +22,7 @@ export function loadJSON(key, fallback) {
 export function saveJSON(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch {}
+  } catch (e) {
+    console.error("Erreur écriture storage:", e);
+  }
 }

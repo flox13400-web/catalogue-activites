@@ -27,16 +27,6 @@ function methodeGaugeKey(a) {
   return "active";
 }
 
-export const PROGRAMME_INIT = {
-  id: "prog-1",
-  titre: "Mon programme",
-  duree_objectif: 0,
-  objectif_bloom: "",
-  objectif_action: "",
-  objectif_final: "",
-  prerequis: "",
-  sequences: [],
-};
 
 const GRIP = (
   <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor">
