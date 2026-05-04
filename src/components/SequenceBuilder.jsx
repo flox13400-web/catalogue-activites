@@ -741,8 +741,8 @@ export default function SequenceBuilder({
                   ? <div key={`dz-seq-b-${seq.id}`}>{dz(`seq:before:${seq.id}`)}</div>
                   : null,
 
-                // La séquence elle-même (pas draggable — seule la poignée l'est)
-                <div key={seq.id} className={`seq-sequence ${seqAlignmentClass}${draggingId === seq.id ? ' dnd-dragging' : ''}`}>
+                // La séquence entière est draggable
+                <div key={seq.id} className={`seq-sequence ${seqAlignmentClass}${draggingId === seq.id ? ' dnd-dragging' : ''}${isLastSeq ? ' seq-is-last' : ''}`}>
                   <div 
                     className="seq-sequence-card"
                     draggable
@@ -838,7 +838,7 @@ export default function SequenceBuilder({
                               ? <div key={`dz-sea-b-${sea.id}`}>{dz(`sea:before:${seq.id}:${sea.id}`)}</div>
                               : null,
 
-                            <div key={sea.id} className={`seq-seance ${seaAlignmentClass}${draggingId === sea.id ? ' dnd-dragging' : ''}`}>
+                            <div key={sea.id} className={`seq-seance ${seaAlignmentClass}${draggingId === sea.id ? ' dnd-dragging' : ''}${isLastSea ? ' seq-is-last' : ''}`}>
                               <div 
                                 className="seq-seance-card"
                                 draggable
@@ -919,7 +919,7 @@ export default function SequenceBuilder({
                                           : null,
                                         <div 
                                           key={ficheId} 
-                                          className={`seq-fiche seq-fiche-encart${draggingId === ficheId ? ' dnd-dragging' : ''}`}
+                                          className={`seq-fiche seq-fiche-encart${draggingId === ficheId ? ' dnd-dragging' : ''}${isLastF ? ' seq-is-last' : ''}`}
                                           draggable
                                           onDragStart={e => dndStart(e, { type: 'fiche', id: ficheId, seqId: seq.id, seaId: sea.id })}
                                           onDragEnd={dndEnd}
@@ -978,7 +978,7 @@ export default function SequenceBuilder({
                                         : null,
                                       <div 
                                         key={ficheId} 
-                                        className={`seq-fiche ${methodeClass(activite)}${draggingId === ficheId ? ' dnd-dragging' : ''}`}
+                                        className={`seq-fiche ${methodeClass(activite)}${draggingId === ficheId ? ' dnd-dragging' : ''}${isLastF ? ' seq-is-last' : ''}`}
                                         draggable
                                         onDragStart={e => dndStart(e, { type: 'fiche', id: ficheId, seqId: seq.id, seaId: sea.id })}
                                         onDragEnd={dndEnd}
