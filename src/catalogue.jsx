@@ -454,7 +454,7 @@ export default function Catalogue() {
         <p className="landscape-warning-text">Veuillez tourner votre appareil en mode portrait pour utiliser l'application.</p>
       </div>
       <PrintView programme={programme} activites={activites} printMode={printMode} />
-      <Header />
+      <Header programme={programme} activites={activites} />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}

@@ -1,0 +1,52 @@
+.qualiopi-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.qualiopi-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  background: #c0392b;
+  color: #fff;
+  cursor: default;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, background 0.2s ease;
+  position: relative;
+}
+
+.qualiopi-badge:hover {
+  transform: scale(1.12);
+  z-index: 1;
+}
+
+.qualiopi-badge--conforme {
+  background: #27ae60;
+}
+
+.qualiopi-badge__num {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.qualiopi-badge__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+}
+
+.qualiopi-badge__icon svg {
+  width: 13px;
+  height: 13px;
+}
