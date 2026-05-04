@@ -20,35 +20,47 @@ const MODALITE_ICONS = {
   "Asynchrone":   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>,
 };
 
-export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggleFavori, onAssigner }) {
+export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggleFavori, onAssigner, selectionMode = false, isSelected = false, onToggleSelect }) {
   const agePublic = activite.age_public || activite.public || [];
   const tailleGroupe = activite.taille_groupe || activite.groupe || [];
   const modalites = activite.modalite || [];
 
+  function handleClick() {
+    if (selectionMode) onToggleSelect?.(activite.id);
+    else onClick(activite);
+  }
+
   return (
     <article
-      className={`card ${estEpingle ? "card-epingle" : ""} ${cardMethodeClass(activite)}`}
-      onClick={() => onClick(activite)}
+      className={`card ${estEpingle ? "card-epingle" : ""} ${cardMethodeClass(activite)}${selectionMode ? " card-selection-mode" : ""}${isSelected ? " card-selected" : ""}`}
+      onClick={handleClick}
     >
       <div className="card-type-indicator"></div>
+      {selectionMode && (
+        <div className="card-select-overlay">
+          <span className="card-select-check">{isSelected ? "✓" : ""}</span>
+        </div>
+      )}
       <div className="card-top">
         {estEpingle && <span className="card-epingle-badge" title="Dans le constructeur">📌</span>}
-        <div className="card-top-actions">
-          <button
-            className="btn-assigner"
-            onClick={(e) => { e.stopPropagation(); onAssigner(activite.id); }}
-            title="Assigner à une séance"
-          >
-            +
-          </button>
-          <button
-            className={`btn-favori${estFavori ? " btn-favori-active" : ""}`}
-            onClick={(e) => { e.stopPropagation(); onToggleFavori(activite.id); }}
-            title={estFavori ? "Retirer des favoris" : "Ajouter aux favoris"}
-          >
-            {estFavori ? "♥" : "♡"}
-          </button>
-        </div>
+        {!selectionMode && (
+          <div className="card-top-actions">
+            <button
+              className="btn-assigner"
+              onClick={(e) => { e.stopPropagation(); onAssigner(activite.id); }}
+              title="Assigner à une séance"
+            >
+              +
+            </button>
+            <button
+              className={`btn-favori${estFavori ? " btn-favori-active" : ""}`}
+              onClick={(e) => { e.stopPropagation(); onToggleFavori(activite.id); }}
+              title={estFavori ? "Retirer des favoris" : "Ajouter aux favoris"}
+            >
+              {estFavori ? "♥" : "♡"}
+            </button>
+          </div>
+        )}
       </div>
       <h3 className="card-title">{activite.titre}</h3>
       <div className="card-meta">

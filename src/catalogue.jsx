@@ -35,6 +35,8 @@ export default function Catalogue() {
   const [showCarnet, setShowCarnet] = useState(false);
   /** @type {["standard"|"qualiopi", Function]} Mode d'impression sélectionné — passé en prop à PrintView */
   const [printMode, setPrintMode] = useState("standard");
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
 
   const [activites, setActivites] = useState(() => {
     const unified = loadJSON(KEYS.activites, null);
@@ -375,6 +377,50 @@ export default function Catalogue() {
     setPrintMode("standard");
   }
 
+  function toggleSelectionMode() {
+    setSelectionMode(v => !v);
+    setSelectedIds(new Set());
+  }
+
+  function toggleSelectId(id) {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function handleBatchFavori() {
+    const allFavoris = [...selectedIds].every(id => favoris.has(id));
+    setFavoris(prev => {
+      const next = new Set(prev);
+      if (allFavoris) selectedIds.forEach(id => next.delete(id));
+      else selectedIds.forEach(id => next.add(id));
+      return next;
+    });
+  }
+
+  function handleBatchDelete() {
+    const count = selectedIds.size;
+    if (!window.confirm(`Supprimer ${count} activité${count > 1 ? "s" : ""} ? Elles iront dans la corbeille.`)) return;
+    selectedIds.forEach(id => {
+      const a = activites.find(x => x.id === id);
+      if (a) pousserEnCorbeille("suppression", a);
+    });
+    setActivites(prev => prev.filter(a => !selectedIds.has(a.id)));
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq => ({
+        ...seq,
+        seances: seq.seances.map(sea => ({
+          ...sea,
+          fiches: sea.fiches.filter(f => !selectedIds.has(f.activite_id)),
+        })),
+      })),
+    }));
+    setSelectedIds(new Set());
+  }
+
   function handleAssign(seaId) {
     if (!assignTarget) return;
     const ficheId = `fiche-${Date.now()}`;
@@ -466,6 +512,13 @@ export default function Catalogue() {
             >
               Nouveau
             </button>
+            <button
+              className={`btn-cat btn-cat-selection${selectionMode ? " btn-cat-selection-active" : ""}`}
+              onClick={toggleSelectionMode}
+              title={selectionMode ? "Quitter la sélection multiple" : "Sélection multiple"}
+            >
+              {selectionMode ? `☑ ${selectedIds.size > 0 ? selectedIds.size : ""}` : "☐"}
+            </button>
           </div>
           <div className="main-topbar">
             <ActiveFilterBadges filtres={filtres} setFiltres={setFiltres} />
@@ -492,8 +545,29 @@ export default function Catalogue() {
                     estFavori={favoris.has(a.id)}
                     onToggleFavori={toggleFavori}
                     onAssigner={setAssignTarget}
+                    selectionMode={selectionMode}
+                    isSelected={selectedIds.has(a.id)}
+                    onToggleSelect={toggleSelectId}
                   />
                 ))}
+              </div>
+            )}
+            {selectionMode && selectedIds.size > 0 && (
+              <div className="cat-multiaction-bar">
+                <span className="cat-multiaction-count">
+                  {selectedIds.size} activité{selectedIds.size > 1 ? "s" : ""} sélectionnée{selectedIds.size > 1 ? "s" : ""}
+                </span>
+                <div className="cat-multiaction-actions">
+                  <button className="cat-multiaction-btn" onClick={handleBatchFavori} title="Basculer favoris">
+                    {[...selectedIds].every(id => favoris.has(id)) ? "♥ Retirer favoris" : "♡ Ajouter favoris"}
+                  </button>
+                  <button className="cat-multiaction-btn cat-multiaction-btn-danger" onClick={handleBatchDelete} title="Supprimer la sélection">
+                    🗑 Supprimer
+                  </button>
+                  <button className="cat-multiaction-btn cat-multiaction-btn-clear" onClick={() => setSelectedIds(new Set())} title="Tout désélectionner">
+                    ✕ Désélectionner
+                  </button>
+                </div>
               </div>
             )}
             <footer className="app-footer">

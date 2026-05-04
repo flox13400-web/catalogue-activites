@@ -812,27 +812,26 @@ export default function SequenceBuilder({
                                   );
                                 })
                               }
+                            </div>
+                          )}
+                          {!seaCollapsed && (
+                            <div className="seq-seance-add-area">
+                              {toutFiches.length === 0 && (
+                                <p className="seq-fiche-empty">Aucune activité assignée</p>
+                              )}
                               <button className="seq-add-btn seq-add-encart-btn" onClick={() => addEncart(seq.id, sea.id)}>
                                 + Encart
                               </button>
                             </div>
                           )}
-                          {!seaCollapsed && toutFiches.length === 0 && (
-                             <div className="seq-fiches">
-                               <p className="seq-fiche-empty">Aucune activité assignée</p>
-                               <button className="seq-add-btn seq-add-encart-btn" onClick={() => addEncart(seq.id, sea.id)}>
-                                 + Encart
-                               </button>
-                             </div>
-                          )}
                         </div>
                       );
                     })}
 
-                    <button className="seq-add-btn" onClick={() => addSeance(seq.id)}>
-                      + Séance
-                    </button>
                   </div>
+                  <button className="seq-add-btn seq-add-seance-after" onClick={() => addSeance(seq.id)}>
+                    + Séance
+                  </button>
                 )}
               </div>
             );

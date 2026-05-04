@@ -906,6 +906,17 @@
   margin-top: 6px;
   margin-left: 28px;
 }
+/* Zone bouton + Encart hors du conteneur bordé (trait s'arrête au dernier fiche) */
+.seq-seance-add-area {
+  margin-left: 40px; /* = seq-fiches margin-left(24) + padding-left(16) */
+  padding-top: 4px;
+  padding-bottom: 2px;
+}
+/* Bouton + Séance hors du conteneur bordé (trait s'arrête à la dernière séance) */
+.seq-add-seance-after {
+  margin-left: 42px; /* = seq-sequence-children margin-left(26) + padding-left(16) */
+  margin-top: 6px;
+}
 
 /* DROPDOWN IMPRESSION (standard / Qualiopi) — réutilise la structure du dropdown Programme */
 .seq-print-menu-wrapper {
