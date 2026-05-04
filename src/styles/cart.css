@@ -1315,10 +1315,10 @@
   border: none;
   color: var(--text-faint);
   cursor: var(--cursor-hand);
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1;
-  padding: 1px 3px;
-  border-radius: 2px;
+  padding: 4px 6px;
+  border-radius: 3px;
   transition: color 120ms ease, background 120ms ease;
 }
 .seq-move-btn:hover:not(:disabled) {
@@ -1426,16 +1426,17 @@
 
 /* Zone de dépôt : bande entre les éléments, visible seulement pendant le drag */
 .seq-dz {
-  height: 8px;
+  height: 24px;
   border-radius: 4px;
-  margin: 2px 0;
-  transition: background 120ms ease, height 120ms ease;
+  margin: -10px 0;
+  position: relative;
+  z-index: 10;
+  transition: background 120ms ease;
   flex-shrink: 0;
 }
 .seq-dz--hover {
-  height: 14px;
   background: var(--accent);
-  opacity: 0.7;
+  opacity: 0.4;
   border-radius: 4px;
 }
 
