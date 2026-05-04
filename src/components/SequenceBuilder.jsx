@@ -46,9 +46,12 @@ export default function SequenceBuilder({
   onMobileClose,
   onExportSQA,
   onImportSQA,
+  onLancerImpression,
 }) {
   const fileInputRef = useRef(null);
   const [isProgrammeMenuOpen, setIsProgrammeMenuOpen] = useState(false);
+  const [isPrintMenuOpen, setIsPrintMenuOpen] = useState(false);
+  const [pendingPrintMode, setPendingPrintMode] = useState(null);
   const [collapsed, setCollapsed] = useState(new Set());
   const [editingId, setEditingId] = useState(null);
   const [editingValue, setEditingValue] = useState("");
@@ -379,7 +382,7 @@ export default function SequenceBuilder({
 
   // ── Export avec validation pédagogique ───────────────────────
 
-  function handleExport() {
+  function handleExport(mode = "standard") {
     const errsForm = validerPourExport();
     if (Object.keys(errsForm).length > 0) {
       setValidationErreurs(errsForm);
@@ -388,24 +391,31 @@ export default function SequenceBuilder({
     }
     setValidationErreurs({});
     if (!programme.prerequis?.trim()) {
+      setPendingPrintMode(mode);
       setPrerequisWarning(true);
       return;
     }
-    lancerImpression();
+    lancerImpression(mode);
   }
 
-  function lancerImpression() {
+  function declencherImpression(mode) {
+    if (typeof onLancerImpression === "function") onLancerImpression(mode);
+    else window.print();
+  }
+
+  function lancerImpression(mode = pendingPrintMode || "standard") {
     setPrerequisWarning(false);
+    setPendingPrintMode(null);
     const { valide, erreurs } = verifierAlignementPedagogique(programme);
     if (valide) {
-      window.print();
+      declencherImpression(mode);
       return;
     }
     const message =
       "L'alignement pédagogique présente des failles :\n" +
       erreurs.map(e => `- ${e}`).join("\n") +
       "\n\nVoulez-vous imprimer quand même ?";
-    if (window.confirm(message)) window.print();
+    if (window.confirm(message)) declencherImpression(mode);
   }
 
   // ── Titre éditable ────────────────────────────────────────────
@@ -624,6 +634,12 @@ export default function SequenceBuilder({
                   )}
                 </div>
 
+                {!seqCollapsed && seq.seances.length === 0 && (
+                  <button className="seq-add-btn seq-add-seance-btn-empty" onClick={() => addSeance(seq.id)}>
+                    + Séance
+                  </button>
+                )}
+
                 {!seqCollapsed && seq.seances.length > 0 && (
                   <div className="seq-sequence-children">
                     {seq.seances.map((sea, seaIdx) => {
@@ -838,7 +854,7 @@ export default function SequenceBuilder({
         {prerequisWarning && (
           <div className="seq-prerequis-warning">
             <span>⚠ Le champ Prérequis est vide — le document sera moins complet.</span>
-            <button className="seq-prerequis-warning-btn" onClick={lancerImpression}>
+            <button className="seq-prerequis-warning-btn" onClick={() => lancerImpression(pendingPrintMode || "standard")}>
               Imprimer quand même
             </button>
           </div>
@@ -874,9 +890,30 @@ export default function SequenceBuilder({
         {totalFiches === 0 ? (
           <span className="panel-footnote">Créez des séquences, puis assignez des activités</span>
         ) : (
-          <button className="btn btn-print" onClick={handleExport}>
-            &#128438; Imprimer / PDF
-          </button>
+          <div className="seq-print-menu-wrapper">
+            <button
+              className="btn btn-print seq-print-btn"
+              onClick={() => setIsPrintMenuOpen(o => !o)}
+            >
+              &#128438; Imprimer / PDF ▼
+            </button>
+            {isPrintMenuOpen && (
+              <div className="seq-print-dropdown">
+                <button
+                  className="seq-print-dropdown-item"
+                  onClick={() => { setIsPrintMenuOpen(false); handleExport("standard"); }}
+                >
+                  📄 Imprimer le programme
+                </button>
+                <button
+                  className="seq-print-dropdown-item seq-print-dropdown-item-qualiopi"
+                  onClick={() => { setIsPrintMenuOpen(false); handleExport("qualiopi"); }}
+                >
+                  ✓ Générer la grille d'audit Qualiopi
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </main>

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
+import { flushSync } from "react-dom";
 
 import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
@@ -32,6 +33,8 @@ export default function Catalogue() {
   /** @type {[FileSystemFileHandle|null, Function]} Handle mémorisé pour éviter la modale à chaque sauvegarde */
   const [fileHandle, setFileHandle] = useState(null);
   const [showCarnet, setShowCarnet] = useState(false);
+  /** @type {["standard"|"qualiopi", Function]} Mode d'impression sélectionné — passé en prop à PrintView */
+  const [printMode, setPrintMode] = useState("standard");
 
   const [activites, setActivites] = useState(() => {
     const unified = loadJSON(KEYS.activites, null);
@@ -360,6 +363,18 @@ export default function Catalogue() {
       });
   }
 
+  /**
+   * Bascule le mode d'impression et déclenche window.print() après commit du DOM.
+   * flushSync garantit que PrintView a rendu le bon layout (standard ou Qualiopi)
+   * avant l'ouverture de la boîte de dialogue d'impression.
+   * @param {"standard"|"qualiopi"} mode
+   */
+  function handleLancerImpression(mode) {
+    flushSync(() => setPrintMode(mode));
+    window.print();
+    setPrintMode("standard");
+  }
+
   function handleAssign(seaId) {
     if (!assignTarget) return;
     const ficheId = `fiche-${Date.now()}`;
@@ -392,7 +407,7 @@ export default function Catalogue() {
         <h2 className="landscape-warning-title">Mode paysage non supporté</h2>
         <p className="landscape-warning-text">Veuillez tourner votre appareil en mode portrait pour utiliser l'application.</p>
       </div>
-      <PrintView programme={programme} activites={activites} />
+      <PrintView programme={programme} activites={activites} printMode={printMode} />
       <Header />
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
@@ -494,6 +509,7 @@ export default function Catalogue() {
             onMobileClose={() => setMobilePanelOpen(null)}
             onExportSQA={handleExportSQA}
             onImportSQA={handleImportSQA}
+            onLancerImpression={handleLancerImpression}
           />
         </main>
       </div>

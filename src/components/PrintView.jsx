@@ -2,6 +2,7 @@ import React from "react";
 import "../styles/card.css";
 
 import { sumDureeItems, formatDureeGlobale, parseDureeActivite } from "../utils/duree";
+import PrintViewQualiopi from "./PrintViewQualiopi";
 
 function QRCodeImage({ url, size = 64 }) {
   const [src, setSrc] = React.useState(null);
@@ -146,8 +147,12 @@ function FicheActivite({ activite: a, num }) {
   );
 }
 
-export default function PrintView({ programme, activites }) {
+export default function PrintView({ programme, activites, printMode = "standard" }) {
   if (!programme || (programme.sequences ?? []).length === 0) return null;
+
+  if (printMode === "qualiopi") {
+    return <PrintViewQualiopi programme={programme} activites={activites} />;
+  }
 
   const date = new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
 
