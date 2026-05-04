@@ -23,7 +23,30 @@
 
 .qualiopi-badge:hover {
   transform: scale(1.12);
-  z-index: 1;
+  z-index: 10;
+}
+
+.qualiopi-badge::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 30, 0.92);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 11px;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 100;
+}
+
+.qualiopi-badge:hover::after {
+  opacity: 1;
 }
 
 .qualiopi-badge--conforme {

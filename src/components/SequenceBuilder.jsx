@@ -58,6 +58,9 @@ export default function SequenceBuilder({
   const [validationErreurs, setValidationErreurs] = useState({});
   const [prerequisWarning, setPrerequisWarning] = useState(false);
   const [tooltipData, setTooltipData] = useState(null);
+  const dragRef = useRef(null);
+  const [draggingId, setDraggingId] = useState(null);
+  const [dragOverId, setDragOverId] = useState(null);
 
   const totalFiches = programme.sequences.reduce(
     (acc, seq) => acc + seq.seances.reduce((a, sea) => a + sea.fiches.length, 0),
@@ -338,6 +341,100 @@ export default function SequenceBuilder({
     });
   }
 
+  // ── Réordonnancement drag & drop ─────────────────────────────
+
+  function reorderSequences(fromId, toId, pos) {
+    setProgramme(prev => {
+      const seqs = [...prev.sequences];
+      const fi = seqs.findIndex(s => s.id === fromId);
+      if (fi < 0) return prev;
+      const [item] = seqs.splice(fi, 1);
+      const ti = seqs.findIndex(s => s.id === toId);
+      if (ti < 0) return prev;
+      seqs.splice(pos === 'before' ? ti : ti + 1, 0, item);
+      return { ...prev, sequences: seqs };
+    });
+  }
+
+  function reorderSeances(seqId, fromId, toId, pos) {
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq => {
+        if (seq.id !== seqId) return seq;
+        const seas = [...seq.seances];
+        const fi = seas.findIndex(s => s.id === fromId);
+        if (fi < 0) return seq;
+        const [item] = seas.splice(fi, 1);
+        const ti = seas.findIndex(s => s.id === toId);
+        if (ti < 0) return seq;
+        seas.splice(pos === 'before' ? ti : ti + 1, 0, item);
+        return { ...seq, seances: seas };
+      }),
+    }));
+  }
+
+  function reorderFiches(seqId, seaId, fromId, toId, pos) {
+    setProgramme(prev => ({
+      ...prev,
+      sequences: prev.sequences.map(seq =>
+        seq.id !== seqId ? seq : {
+          ...seq,
+          seances: seq.seances.map(sea => {
+            if (sea.id !== seaId) return sea;
+            const fiches = [...sea.fiches];
+            const fi = fiches.findIndex(f => f.id === fromId);
+            if (fi < 0) return sea;
+            const [item] = fiches.splice(fi, 1);
+            const ti = fiches.findIndex(f => f.id === toId);
+            if (ti < 0) return sea;
+            fiches.splice(pos === 'before' ? ti : ti + 1, 0, item);
+            return { ...sea, fiches };
+          }),
+        }
+      ),
+    }));
+  }
+
+  function dndStart(e, info) {
+    if (e.target.closest('input,textarea,select,button')) { e.preventDefault(); return; }
+    dragRef.current = info;
+    setDraggingId(info.id);
+    e.dataTransfer.effectAllowed = 'move';
+    e.stopPropagation();
+  }
+
+  function dndOver(e, id, type) {
+    if (dragRef.current?.type !== type) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pos = e.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+    if (dragOverId?.id !== id || dragOverId?.pos !== pos) setDragOverId({ id, pos });
+  }
+
+  function dndLeave(e) {
+    if (!e.currentTarget.contains(e.relatedTarget)) setDragOverId(null);
+  }
+
+  function dndDrop(e, info) {
+    e.preventDefault();
+    e.stopPropagation();
+    const from = dragRef.current;
+    const pos = dragOverId?.pos || 'after';
+    if (from && from.id !== info.id) {
+      if (from.type === 'sequence') reorderSequences(from.id, info.id, pos);
+      else if (from.type === 'seance') reorderSeances(info.seqId, from.id, info.id, pos);
+      else if (from.type === 'fiche') reorderFiches(info.seqId, info.seaId, from.id, info.id, pos);
+    }
+    dndEnd();
+  }
+
+  function dndEnd() {
+    dragRef.current = null;
+    setDraggingId(null);
+    setDragOverId(null);
+  }
+
   // ── Objectifs pédagogiques ────────────────────────────────────
 
   function updateObjectifProgramme(value) {
@@ -581,9 +678,21 @@ export default function SequenceBuilder({
               }
 
               return (
-                <div key={seq.id} className={`seq-sequence ${seqAlignmentClass}`}>
+                <div
+                  key={seq.id}
+                  className={`seq-sequence ${seqAlignmentClass}${draggingId === seq.id ? ' dnd-dragging' : ''}${dragOverId?.id === seq.id ? ` dnd-${dragOverId.pos}` : ''}`}
+                  draggable
+                  onDragStart={e => dndStart(e, { type: 'sequence', id: seq.id })}
+                  onDragOver={e => dndOver(e, seq.id, 'sequence')}
+                  onDragLeave={dndLeave}
+                  onDrop={e => dndDrop(e, { type: 'sequence', id: seq.id })}
+                  onDragEnd={dndEnd}
+                >
                   <div className="seq-sequence-card">
                   <div className="seq-row seq-sequence-row">
+                    <span className="seq-drag-handle" title="Glisser pour réorganiser">
+                      <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="3" cy="2" r="1.5"/><circle cx="7" cy="2" r="1.5"/><circle cx="3" cy="7" r="1.5"/><circle cx="7" cy="7" r="1.5"/><circle cx="3" cy="12" r="1.5"/><circle cx="7" cy="12" r="1.5"/></svg>
+                    </span>
                     <button className="seq-collapse-btn" onClick={() => toggleCollapse(seq.id)}>
                       {seqCollapsed ? "▶" : "▼"}
                     </button>
@@ -660,9 +769,21 @@ export default function SequenceBuilder({
                       }
 
                       return (
-                        <div key={sea.id} className={`seq-seance ${seaAlignmentClass}`}>
+                        <div
+                          key={sea.id}
+                          className={`seq-seance ${seaAlignmentClass}${draggingId === sea.id ? ' dnd-dragging' : ''}${dragOverId?.id === sea.id ? ` dnd-${dragOverId.pos}` : ''}`}
+                          draggable
+                          onDragStart={e => dndStart(e, { type: 'seance', id: sea.id, seqId: seq.id })}
+                          onDragOver={e => dndOver(e, sea.id, 'seance')}
+                          onDragLeave={dndLeave}
+                          onDrop={e => dndDrop(e, { type: 'seance', id: sea.id, seqId: seq.id })}
+                          onDragEnd={dndEnd}
+                        >
                           <div className="seq-seance-card">
                             <div className="seq-row seq-seance-row">
+                              <span className="seq-drag-handle" title="Glisser pour réorganiser">
+                                <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="3" cy="2" r="1.5"/><circle cx="7" cy="2" r="1.5"/><circle cx="3" cy="7" r="1.5"/><circle cx="7" cy="7" r="1.5"/><circle cx="3" cy="12" r="1.5"/><circle cx="7" cy="12" r="1.5"/></svg>
+                              </span>
                               <button className="seq-collapse-btn seq-collapse-btn-sm" onClick={() => toggleCollapse(sea.id)}>
                                 {seaCollapsed ? "▶" : "▼"}
                               </button>
@@ -722,7 +843,16 @@ export default function SequenceBuilder({
                                   if (item.type === "texte") {
                                     const f = item.fiche;
                                     return (
-                                      <div key={item.key} className="seq-fiche seq-fiche-encart">
+                                      <div
+                                        key={item.key}
+                                        className={`seq-fiche seq-fiche-encart${draggingId === f.id ? ' dnd-dragging' : ''}${dragOverId?.id === f.id ? ` dnd-${dragOverId.pos}` : ''}`}
+                                        draggable
+                                        onDragStart={e => dndStart(e, { type: 'fiche', id: f.id, seqId: seq.id, seaId: sea.id })}
+                                        onDragOver={e => dndOver(e, f.id, 'fiche')}
+                                        onDragLeave={dndLeave}
+                                        onDrop={e => dndDrop(e, { type: 'fiche', id: f.id, seqId: seq.id, seaId: sea.id })}
+                                        onDragEnd={dndEnd}
+                                      >
                                         <div className="seq-fiche-content">
                                           <input
                                             className="seq-encart-titre"
@@ -752,6 +882,9 @@ export default function SequenceBuilder({
                                           </div>
                                         </div>
                                         <div className="seq-fiche-actions">
+                                          <span className="seq-drag-handle seq-drag-handle-fiche" title="Glisser pour réorganiser">
+                                            <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="3" cy="2" r="1.5"/><circle cx="7" cy="2" r="1.5"/><circle cx="3" cy="7" r="1.5"/><circle cx="7" cy="7" r="1.5"/><circle cx="3" cy="12" r="1.5"/><circle cx="7" cy="12" r="1.5"/></svg>
+                                          </span>
                                           <div className="seq-move-btns">
                                             <button className="seq-move-btn" onClick={() => moveFiche(seq.id, sea.id, f.id, -1)} title="Monter" disabled={ficheIdx === 0 && seaIdx === 0}>↑</button>
                                             <button className="seq-move-btn" onClick={() => moveFiche(seq.id, sea.id, f.id, 1)} title="Descendre" disabled={ficheIdx === toutFiches.length - 1 && seaIdx === seq.seances.length - 1}>↓</button>
@@ -764,7 +897,16 @@ export default function SequenceBuilder({
                                   const { fiche, activite } = item;
                                   const modalites = activite.modalite || [];
                                   return (
-                                    <div key={item.key} className={`seq-fiche ${methodeClass(activite)}`}>
+                                    <div
+                                      key={item.key}
+                                      className={`seq-fiche ${methodeClass(activite)}${draggingId === fiche.id ? ' dnd-dragging' : ''}${dragOverId?.id === fiche.id ? ` dnd-${dragOverId.pos}` : ''}`}
+                                      draggable
+                                      onDragStart={e => dndStart(e, { type: 'fiche', id: fiche.id, seqId: seq.id, seaId: sea.id })}
+                                      onDragOver={e => dndOver(e, fiche.id, 'fiche')}
+                                      onDragLeave={dndLeave}
+                                      onDrop={e => dndDrop(e, { type: 'fiche', id: fiche.id, seqId: seq.id, seaId: sea.id })}
+                                      onDragEnd={dndEnd}
+                                    >
                                       <div className="seq-fiche-content">
                                         <span className="seq-fiche-titre">{activite.titre}</span>
                                         <div className="seq-fiche-meta-row">
@@ -799,6 +941,9 @@ export default function SequenceBuilder({
                                         </div>
                                       </div>
                                       <div className="seq-fiche-actions">
+                                        <span className="seq-drag-handle seq-drag-handle-fiche" title="Glisser pour réorganiser">
+                                          <svg width="10" height="14" viewBox="0 0 10 14" fill="currentColor"><circle cx="3" cy="2" r="1.5"/><circle cx="7" cy="2" r="1.5"/><circle cx="3" cy="7" r="1.5"/><circle cx="7" cy="7" r="1.5"/><circle cx="3" cy="12" r="1.5"/><circle cx="7" cy="12" r="1.5"/></svg>
+                                        </span>
                                         <div className="seq-move-btns">
                                           <button className="seq-move-btn" onClick={() => moveFiche(seq.id, sea.id, fiche.id, -1)} title="Monter" disabled={ficheIdx === 0 && seaIdx === 0}>↑</button>
                                           <button className="seq-move-btn" onClick={() => moveFiche(seq.id, sea.id, fiche.id, 1)} title="Descendre" disabled={ficheIdx === toutFiches.length - 1 && seaIdx === seq.seances.length - 1}>↓</button>

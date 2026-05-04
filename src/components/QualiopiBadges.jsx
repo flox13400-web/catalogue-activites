@@ -141,7 +141,7 @@ export default function QualiopiBadges({ programme, activites }) {
         <div
           key={key}
           className={`qualiopi-badge${conformite[key] ? " qualiopi-badge--conforme" : ""}`}
-          title={`Indicateur ${num} — ${label}${conformite[key] ? " ✓ Conforme" : " ✗ Non conforme"}`}
+          data-tooltip={`Indicateur ${num} — ${label}${conformite[key] ? " ✓ Conforme" : " ✗ Non conforme"}`}
         >
           <span className="qualiopi-badge__num">{num}</span>
           <span className="qualiopi-badge__icon">{icon}</span>
