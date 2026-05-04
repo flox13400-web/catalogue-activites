@@ -173,11 +173,15 @@ export default function PrintView({ programme, activites, printMode = "standard"
   );
   const dureeTotal = formatDureeGlobale(sumDureeItems(allFiches, activites));
 
+  const titreProgramme = programme.titre || "Mon programme";
+  const titreLength = titreProgramme.length;
+  const titreFontSize = titreLength > 45 ? Math.max(11, Math.floor(20 * (45 / titreLength))) : 20;
+
   return (
     <div className="print-view">
       <div className="print-doc-header">
         <div className="print-doc-eyebrow">SEQUENCIA</div>
-        <h1 className="print-doc-title">{programme.titre || "Mon programme"}</h1>
+        <h1 className="print-doc-title" style={{ fontSize: `${titreFontSize}pt`, whiteSpace: 'nowrap' }}>{titreProgramme}</h1>
         <div className="print-doc-meta">
           <span>Exporté le {date}</span>
           {dureeTotal && (

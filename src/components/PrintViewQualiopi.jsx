@@ -19,10 +19,14 @@ function bloomPhrase(bloom, action) {
 }
 
 function QualiopiHeader({ programme, dureeTotal, date }) {
+  const titreProgramme = programme.titre || "Mon programme";
+  const titreLength = titreProgramme.length;
+  const titreFontSize = titreLength > 45 ? Math.max(11, Math.floor(20 * (45 / titreLength))) : 20;
+
   return (
     <header className="qualiopi-doc-header">
       <div className="qualiopi-doc-eyebrow">SEQUENCIA · Grille de conformité pédagogique Qualiopi</div>
-      <h1 className="qualiopi-doc-title">{programme.titre || "Mon programme"}</h1>
+      <h1 className="qualiopi-doc-title" style={{ fontSize: `${titreFontSize}pt`, whiteSpace: 'nowrap' }}>{titreProgramme}</h1>
       <table className="qualiopi-meta-table">
         <tbody>
           <tr>
