@@ -7,9 +7,11 @@
 @media (max-width: 768px) {
   .cards-grid { grid-template-columns: 1fr; gap: 14px; }
   .card-meta-value-duree {
+    display: inline-block;
     max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
+    vertical-align: middle;
   }
 }
 

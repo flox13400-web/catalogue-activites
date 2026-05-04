@@ -1155,7 +1155,7 @@
   top: 25px;
   bottom: -40px;
   width: 6px;
-  background: var(--bg);
+  background: #f8f9fa;
   z-index: 1;
 }
 
@@ -1184,7 +1184,7 @@
   top: 22px;
   bottom: -40px;
   width: 6px;
-  background: var(--bg);
+  background: #f8f9fa;
   z-index: 1;
 }
 .seq-seance-row { padding: 8px 12px; background: #ffffff; border-bottom: 1px solid #111; border-radius: 12px 12px 0 0; }
@@ -1220,7 +1220,7 @@
   top: calc(50% + 2px);
   bottom: -30px;
   width: 6px;
-  background: var(--bg);
+  background: #f8f9fa;
   z-index: 1;
 }
 
@@ -1453,3 +1453,7 @@
 /* Fix clipping tooltip jauge : le panel-cart ne doit pas couper son en-tête */
 .builder-main { overflow: visible; }
 .builder-main .panel-body { overflow-y: auto; overflow-x: hidden; }
+
+@media (max-width: 768px) {
+  .cart-panel-corbeille-btn { display: none; }
+}
