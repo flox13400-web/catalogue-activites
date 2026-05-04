@@ -418,10 +418,11 @@ export default function SequenceBuilder({
 
   function dndDrop(e, info) {
     e.preventDefault();
-    e.stopPropagation();
     const from = dragRef.current;
+    if (!from || from.type !== info.type) return; // laisser l'événement remonter au bon conteneur
+    e.stopPropagation();
     const pos = dragOverId?.pos || 'after';
-    if (from && from.id !== info.id) {
+    if (from.id !== info.id) {
       if (from.type === 'sequence') reorderSequences(from.id, info.id, pos);
       else if (from.type === 'seance') reorderSeances(info.seqId, from.id, info.id, pos);
       else if (from.type === 'fiche') reorderFiches(info.seqId, info.seaId, from.id, info.id, pos);

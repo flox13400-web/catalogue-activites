@@ -1408,8 +1408,8 @@
 /* ── DRAG & DROP — Constructeur ─────────────────────────────── */
 .seq-drag-handle {
   cursor: grab;
-  color: var(--text-faint);
-  opacity: 0.45;
+  color: #444;
+  opacity: 0.6;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -1417,7 +1417,7 @@
   transition: opacity 120ms ease;
   user-select: none;
 }
-.seq-drag-handle:hover { opacity: 1; }
+.seq-drag-handle:hover { opacity: 1; color: #111; }
 .seq-drag-handle:active { cursor: grabbing; }
 .seq-drag-handle-fiche { padding: 0 2px; }
 
