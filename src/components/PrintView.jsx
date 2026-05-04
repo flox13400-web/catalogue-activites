@@ -43,12 +43,15 @@ function EncartTexte({ fiche, num }) {
           <span className="print-fiche-num">{num}</span>
           <h2 className="print-fiche-titre">{fiche.titre || "Encart"}</h2>
         </div>
-        {fiche.duree_min > 0 && (
-          <div className="print-fiche-header-right">
-            <span className="print-fiche-duree">{fiche.duree_min} min</span>
-          </div>
-        )}
       </div>
+      {fiche.duree_min > 0 && (
+        <div className="print-fiche-meta-grid">
+          <div className="print-fiche-meta-item">
+            <div className="print-fiche-meta-label">Temps</div>
+            <div className="print-fiche-meta-value">{fiche.duree_min} min</div>
+          </div>
+        </div>
+      )}
       {fiche.contenu?.trim() && (
         <p className="print-fiche-body">{fiche.contenu}</p>
       )}
@@ -65,23 +68,32 @@ function FicheActivite({ activite: a, num }) {
           <span className="print-fiche-num">{num}</span>
           <h2 className="print-fiche-titre">{a.titre}</h2>
         </div>
-        <div className="print-fiche-header-right">
-          {isEval && <span className="print-fiche-badge-eval">Évaluation</span>}
-          {(a.modalite || []).length > 0 && (
-            <span className="print-fiche-modalite">{(a.modalite || []).join(" · ")}</span>
-          )}
-          <span className="print-fiche-duree">{a.duree}</span>
-        </div>
       </div>
-      <LiensQR activite={a} />
-      {(a.materiels || []).length > 0 && (
-        <div className="print-fiche-meta-grid">
+      <div className="print-fiche-meta-grid">
+        {isEval && (
+          <div className="print-fiche-meta-item">
+            <div className="print-fiche-meta-label">Type</div>
+            <div className="print-fiche-meta-value">Évaluation</div>
+          </div>
+        )}
+        {(a.modalite || []).length > 0 && (
+          <div className="print-fiche-meta-item">
+            <div className="print-fiche-meta-label">Modalité</div>
+            <div className="print-fiche-meta-value">{(a.modalite || []).join(" · ")}</div>
+          </div>
+        )}
+        <div className="print-fiche-meta-item">
+          <div className="print-fiche-meta-label">Temps</div>
+          <div className="print-fiche-meta-value">{a.duree}</div>
+        </div>
+        {(a.materiels || []).length > 0 && (
           <div className="print-fiche-meta-item">
             <div className="print-fiche-meta-label">Matériels</div>
             <div className="print-fiche-meta-value">{(a.materiels || []).join(", ")}</div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+      <LiensQR activite={a} />
       {isEval ? (
         <>
           {a.eval_type && (

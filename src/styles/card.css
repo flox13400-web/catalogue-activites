@@ -360,7 +360,7 @@
     background: #fff;
   }
 
-  * { box-shadow: none !important; }
+  * { box-shadow: none !important; word-break: normal !important; overflow-wrap: normal !important; -webkit-hyphens: none !important; hyphens: none !important; }
 
   @page {
     margin: 10mm 15mm 10mm 15mm;
@@ -370,8 +370,8 @@
   .print-doc-header {
     text-align: center;
     border-bottom: 2px solid #1a1a1a;
-    padding-bottom: 14pt;
-    margin-bottom: 20pt;
+    padding-bottom: 8pt;
+    margin-bottom: 5pt;
   }
   .print-doc-eyebrow {
     font-size: 9pt;
@@ -384,11 +384,11 @@
   }
   .print-doc-title {
     font-family: Georgia, serif;
-    font-size: 26pt;
+    font-size: 20pt;
     font-weight: normal;
     font-style: italic;
     letter-spacing: -0.01em;
-    margin-bottom: 8pt;
+    margin-bottom: 4pt;
   }
   .print-doc-meta {
     font-size: 8.5pt;
@@ -407,7 +407,7 @@
     border: 1pt solid #ddd;
     border-radius: 4pt;
     padding: 12pt 16pt;
-    margin-bottom: 24pt;
+    margin-bottom: 6pt;
     page-break-inside: avoid;
   }
   .print-toc-title {
@@ -416,7 +416,7 @@
     letter-spacing: 0.16em;
     color: #888;
     font-family: Arial, sans-serif;
-    margin-bottom: 8pt;
+    margin-bottom: 4pt;
     font-weight: bold;
   }
   .print-toc-list {
@@ -455,16 +455,16 @@
     page-break-inside: avoid;
     border: 1pt solid #ccc;
     border-radius: 4pt;
-    padding: 14pt 16pt;
-    margin-bottom: 16pt;
+    padding: 10pt 16pt;
+    margin-bottom: 4pt;
   }
   .print-fiche-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 10pt;
-    margin-bottom: 10pt;
-    padding-bottom: 10pt;
+    margin-bottom: 5pt;
+    padding-bottom: 5pt;
     border-bottom: 1pt solid #e0ddd6;
   }
   .print-fiche-header-left {
@@ -563,10 +563,10 @@
     border-bottom-color: #e8c060;
   }
   .print-fiche-meta-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6pt 12pt;
-    margin-bottom: 10pt;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8pt 16pt;
+    margin-bottom: 5pt;
     background: #faf8f4;
     padding: 8pt 10pt;
     border-radius: 3pt;
@@ -585,7 +585,7 @@
     color: #222;
   }
   .print-fiche-section {
-    margin-bottom: 8pt;
+    margin-bottom: 4pt;
   }
   .print-fiche-section-label {
     font-size: 6.5pt;
@@ -606,7 +606,7 @@
     border-left: 3pt solid #D46A54;
     padding: 7pt 10pt;
     border-radius: 0 3pt 3pt 0;
-    margin-top: 8pt;
+    margin-top: 4pt;
   }
   .print-fiche-apprentissage-text {
     font-size: 9.5pt;
@@ -619,7 +619,7 @@
   .print-texte-libre {
     border-left: 3pt solid #D46A54;
     padding: 8pt 12pt;
-    margin-bottom: 14pt;
+    margin-bottom: 7pt;
     background: #F8F9FA;
     border-radius: 0 3pt 3pt 0;
     font-style: italic;
@@ -637,7 +637,7 @@
     align-items: center;
     gap: 8pt;
     padding: 10pt 0 14pt;
-    margin-bottom: 14pt;
+    margin-bottom: 7pt;
     border-bottom: 0.5pt solid #e0ddd6;
     page-break-inside: avoid;
   }
@@ -656,7 +656,7 @@
     background: #f0f4fb;
     border-left: 3pt solid #5b7ec8;
     padding: 10pt 14pt;
-    margin-bottom: 14pt;
+    margin-bottom: 7pt;
     border-radius: 0 3pt 3pt 0;
     page-break-inside: avoid;
   }
@@ -669,8 +669,8 @@
   }
 
   .print-doc-footer {
-    margin-top: 20pt;
-    padding-top: 8pt;
+    margin-top: 10pt;
+    padding-top: 4pt;
     border-top: 1pt solid #ddd;
     text-align: center;
     font-size: 7.5pt;
@@ -713,20 +713,20 @@
     background: #f7f5f0;
     border-left: 3pt solid #D46A54;
     padding: 8pt 12pt;
-    margin-bottom: 22pt;
+    margin-bottom: 11pt;
     border-radius: 0 3pt 3pt 0;
     page-break-inside: avoid;
   }
 
   /* Séquence */
   .print-sequence-section {
-    margin-bottom: 22pt;
+    margin-bottom: 11pt;
   }
   .print-sequence-header {
     display: flex;
     align-items: baseline;
     gap: 8pt;
-    margin-bottom: 8pt;
+    margin-bottom: 4pt;
     padding-bottom: 5pt;
     border-bottom: 1.5pt solid #1a1a1a;
   }
@@ -741,7 +741,7 @@
   }
   .print-sequence-titre {
     font-family: Georgia, serif;
-    font-size: 15pt;
+    font-size: 13pt;
     font-weight: normal;
     font-style: italic;
     flex: 1;
@@ -751,13 +751,13 @@
     background: #f7f5f0;
     padding: 7pt 10pt;
     border-radius: 3pt;
-    margin-bottom: 12pt;
+    margin-bottom: 6pt;
   }
 
   /* Séance */
   .print-seance-section {
     margin-left: 14pt;
-    margin-bottom: 18pt;
+    margin-bottom: 9pt;
     break-inside: avoid;
     page-break-inside: avoid;
   }
@@ -765,8 +765,8 @@
     display: flex;
     align-items: baseline;
     gap: 6pt;
-    margin-bottom: 5pt;
-    padding-bottom: 4pt;
+    margin-bottom: 3pt;
+    padding-bottom: 2pt;
     border-bottom: 0.5pt solid #ccc;
   }
   .print-seance-num {
@@ -786,7 +786,7 @@
     display: flex;
     align-items: center;
     gap: 6pt;
-    margin-bottom: 10pt;
+    margin-bottom: 5pt;
   }
   .print-seance-opo-type {
     font-size: 6.5pt;
@@ -846,7 +846,7 @@
     border-left: 3pt solid #8a6bc8;
     padding: 7pt 10pt;
     border-radius: 0 3pt 3pt 0;
-    margin-top: 8pt;
+    margin-top: 4pt;
     break-inside: avoid;
     page-break-inside: avoid;
   }
@@ -866,7 +866,7 @@
     border-top: 3pt solid #1a1a1a;
     border-bottom: 3pt solid #1a1a1a;
     padding: 12pt 0;
-    margin-bottom: 18pt;
+    margin-bottom: 9pt;
     break-inside: avoid;
     page-break-inside: avoid;
   }
@@ -957,7 +957,7 @@
 
   /* Séquence */
   .qualiopi-sequence {
-    margin-bottom: 18pt;
+    margin-bottom: 9pt;
     break-inside: auto;
   }
   .qualiopi-sequence-header {
@@ -992,7 +992,7 @@
     white-space: nowrap;
   }
   .qualiopi-sequence-objectif {
-    margin-bottom: 10pt;
+    margin-bottom: 5pt;
     border-top: none;
   }
 
@@ -1000,7 +1000,7 @@
   .qualiopi-seance {
     break-inside: avoid;
     page-break-inside: avoid;
-    margin-bottom: 12pt;
+    margin-bottom: 6pt;
   }
   .qualiopi-alignement-table {
     margin-bottom: 6pt;
@@ -1026,7 +1026,7 @@
   .qualiopi-fiche {
     break-inside: avoid;
     page-break-inside: avoid;
-    margin-bottom: 8pt;
+    margin-bottom: 4pt;
     border: 0.75pt solid #444;
   }
   .qualiopi-fiche-header {
