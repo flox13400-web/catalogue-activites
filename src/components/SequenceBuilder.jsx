@@ -805,9 +805,12 @@ export default function SequenceBuilder({
                   </div>
 
                   {!seqCollapsed && seq.seances.length === 0 && (
-                    <button className="seq-add-btn seq-add-seance-btn-empty" onClick={() => addSeance(seq.id)}>
-                      + Séance
-                    </button>
+                    <>
+                      {draggingType === 'seance' && dz(`sea:end:${seq.id}`)}
+                      <button className="seq-add-btn seq-add-seance-btn-empty" onClick={() => addSeance(seq.id)}>
+                        + Séance
+                      </button>
+                    </>
                   )}
 
                   {!seqCollapsed && seq.seances.length > 0 && (
