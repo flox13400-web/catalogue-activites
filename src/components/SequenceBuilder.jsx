@@ -641,6 +641,7 @@ export default function SequenceBuilder({
                 )}
 
                 {!seqCollapsed && seq.seances.length > 0 && (
+                  <>
                   <div className="seq-sequence-children">
                     {seq.seances.map((sea, seaIdx) => {
                       const seaCollapsed = collapsed.has(sea.id);
@@ -832,6 +833,7 @@ export default function SequenceBuilder({
                   <button className="seq-add-btn seq-add-seance-after" onClick={() => addSeance(seq.id)}>
                     + Séance
                   </button>
+                  </>
                 )}
               </div>
             );

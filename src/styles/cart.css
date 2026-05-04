@@ -1152,9 +1152,9 @@
   content: '';
   position: absolute;
   left: -20px;
-  top: 23px; /* Juste après la jonction */
-  bottom: -20px;
-  width: 4px;
+  top: 25px;
+  bottom: -40px;
+  width: 6px;
   background: var(--bg);
   z-index: 1;
 }
@@ -1181,9 +1181,9 @@
   content: '';
   position: absolute;
   left: -18px;
-  top: 20px;
-  bottom: -20px;
-  width: 4px;
+  top: 22px;
+  bottom: -40px;
+  width: 6px;
   background: var(--bg);
   z-index: 1;
 }
@@ -1216,10 +1216,10 @@
 .seq-fiche:last-of-type::after {
   content: '';
   position: absolute;
-  left: -21px;
+  left: -18px;
   top: calc(50% + 2px);
-  bottom: -10px;
-  width: 4px;
+  bottom: -30px;
+  width: 6px;
   background: var(--bg);
   z-index: 1;
 }

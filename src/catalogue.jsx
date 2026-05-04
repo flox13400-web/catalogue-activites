@@ -517,7 +517,7 @@ export default function Catalogue() {
               onClick={toggleSelectionMode}
               title={selectionMode ? "Quitter la sélection multiple" : "Sélection multiple"}
             >
-              {selectionMode ? `☑ ${selectedIds.size > 0 ? selectedIds.size : ""}` : "☐"}
+              {selectionMode ? `☑ ${selectedIds.size > 0 ? selectedIds.size : ""}` : "☐ Sélect."}
             </button>
           </div>
           <div className="main-topbar">
