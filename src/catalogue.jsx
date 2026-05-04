@@ -423,6 +423,11 @@ export default function Catalogue() {
 
   function handleAssign(seaId) {
     if (!assignTarget) return;
+    assignActiviteToSeance(assignTarget, seaId);
+    setAssignTarget(null);
+  }
+
+  function assignActiviteToSeance(activiteId, seaId) {
     const ficheId = `fiche-${Date.now()}`;
     setProgramme(prev => ({
       ...prev,
@@ -436,13 +441,12 @@ export default function Catalogue() {
               id: ficheId,
               methode: "active",
               parent_id: seaId,
-              activite_id: assignTarget,
+              activite_id: activiteId,
             }],
           };
         }),
       })),
     }));
-    setAssignTarget(null);
   }
 
 
@@ -584,6 +588,7 @@ export default function Catalogue() {
             onExportSQA={handleExportSQA}
             onImportSQA={handleImportSQA}
             onLancerImpression={handleLancerImpression}
+            onDropActivite={assignActiviteToSeance}
           />
         </main>
       </div>

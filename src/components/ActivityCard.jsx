@@ -30,10 +30,17 @@ export function ActivityCard({ activite, onClick, estEpingle, estFavori, onToggl
     else onClick(activite);
   }
 
+  function handleDragStart(e) {
+    e.dataTransfer.setData('text/plain', activite.id);
+    e.dataTransfer.effectAllowed = 'copy';
+  }
+
   return (
     <article
       className={`card ${estEpingle ? "card-epingle" : ""} ${cardMethodeClass(activite)}${selectionMode ? " card-selection-mode" : ""}${isSelected ? " card-selected" : ""}`}
       onClick={handleClick}
+      draggable={!!onAssigner && !selectionMode}
+      onDragStart={onAssigner && !selectionMode ? handleDragStart : undefined}
     >
       <div className="card-type-indicator"></div>
       {selectionMode && (

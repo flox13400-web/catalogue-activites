@@ -55,6 +55,7 @@ export default function SequenceBuilder({
   onExportSQA,
   onImportSQA,
   onLancerImpression,
+  onDropActivite,
 }) {
   const fileInputRef = useRef(null);
   const [isProgrammeMenuOpen, setIsProgrammeMenuOpen] = useState(false);
@@ -72,6 +73,7 @@ export default function SequenceBuilder({
   const [draggingId, setDraggingId] = useState(null);
   const [draggingType, setDraggingType] = useState(null);
   const [dragOverZone, setDragOverZone] = useState(null);
+  const [extDragOver, setExtDragOver] = useState(null);
 
   const totalFiches = programme.sequences.reduce(
     (acc, seq) => acc + seq.seances.reduce((a, sea) => a + sea.fiches.length, 0),
@@ -977,7 +979,23 @@ export default function SequenceBuilder({
                                 </div>
                               )}
                               {!seaCollapsed && (
-                                <div className="seq-seance-add-area">
+                                <div
+                                  className={`seq-seance-add-area${extDragOver === sea.id ? ' seq-seance--activite-hover' : ''}`}
+                                  onDragOver={e => {
+                                    if (dragRef.current) return;
+                                    e.preventDefault();
+                                    setExtDragOver(sea.id);
+                                  }}
+                                  onDragLeave={() => setExtDragOver(id => id === sea.id ? null : id)}
+                                  onDrop={e => {
+                                    if (dragRef.current) return;
+                                    e.preventDefault();
+                                    const activiteId = e.dataTransfer.getData('text/plain');
+                                    if (activiteId) onDropActivite?.(activiteId, sea.id);
+                                    setExtDragOver(null);
+                                  }}
+                                >
+                                  {toutFiches.length === 0 && draggingType === 'fiche' && dz(`fiche:end:${seq.id}:${sea.id}`)}
                                   {toutFiches.length === 0 && (
                                     <p className="seq-fiche-empty">Aucune activité assignée</p>
                                   )}
