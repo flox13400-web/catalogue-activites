@@ -1421,17 +1421,23 @@
 .seq-drag-handle:active { cursor: grabbing; }
 .seq-drag-handle-fiche { padding: 0 2px; }
 
+/* Élément en cours de glissement */
 .dnd-dragging { opacity: 0.35 !important; }
 
-/* Indicateur de position — séquences et séances (sur la card enfant) */
-.seq-sequence.dnd-before > .seq-sequence-card { border-top: 3px solid var(--accent) !important; }
-.seq-sequence.dnd-after  > .seq-sequence-card { border-bottom: 3px solid var(--accent) !important; }
-.seq-seance.dnd-before   > .seq-seance-card   { border-top: 3px solid var(--accent) !important; }
-.seq-seance.dnd-after    > .seq-seance-card   { border-bottom: 3px solid var(--accent) !important; }
-
-/* Indicateur de position — fiches */
-.seq-fiche.dnd-before { border-top: 2px solid var(--accent) !important; }
-.seq-fiche.dnd-after  { border-bottom: 2px solid var(--accent) !important; }
+/* Zone de dépôt : bande entre les éléments, visible seulement pendant le drag */
+.seq-dz {
+  height: 8px;
+  border-radius: 4px;
+  margin: 2px 0;
+  transition: background 120ms ease, height 120ms ease;
+  flex-shrink: 0;
+}
+.seq-dz--hover {
+  height: 14px;
+  background: var(--accent);
+  opacity: 0.7;
+  border-radius: 4px;
+}
 
 @media print { .seq-programme-header, .seq-sequence, .seq-seance, .seq-fiche { display: block !important; overflow: visible !important; height: auto !important; } }
 
