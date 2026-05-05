@@ -23,6 +23,7 @@ import "./styles/global.css";
 
 export default function Catalogue() {
   const [showHome, setShowHome] = useState(true);
+  const [appMode, setAppMode] = useState("catalogue");
   const [selected, setSelected] = useState(null);
   const [filtres, setFiltres] = useState(FILTRES_INIT);
   const [mobilePanelOpen, setMobilePanelOpen] = useState(null);
@@ -458,9 +459,10 @@ export default function Catalogue() {
       {showHome && (
         <HomeScreen
           activitesCount={activites.length}
-          onBrowse={() => setShowHome(false)}
-          onCreateActivity={() => { setShowHome(false); setShowChoixImport(true); }}
-          onImportSQA={(file) => { setShowHome(false); handleImportSQA(file); }}
+          onBrowse={() => { setAppMode("catalogue"); setShowHome(false); }}
+          onCreateActivity={() => { setAppMode("catalogue"); setShowHome(false); setShowAddModal(true); }}
+          onBuildSequence={() => { setAppMode("parcours"); setShowHome(false); }}
+          onImportSQA={(file) => { setAppMode("catalogue"); setShowHome(false); handleImportSQA(file); }}
         />
       )}
       <div className="landscape-warning">
@@ -473,7 +475,7 @@ export default function Catalogue() {
       {mobilePanelOpen && (
         <div className="mobile-backdrop" onClick={() => setMobilePanelOpen(null)} />
       )}
-      <div className="app-body">
+      <div className="app-body" data-mode={appMode}>
         <aside className={`app-filters ${(isFilterOpen || mobilePanelOpen === "filters") ? 'open' : 'closed'}`}>
           <button
             className="sidebar-toggle-btn filter-handle"
@@ -496,6 +498,25 @@ export default function Catalogue() {
         <section className="app-catalogue">
           {/* Barre d'actions du catalogue : Créer, Sauvegarder, Corbeille */}
           <div className="catalogue-actionbar">
+            <button className="btn-cat btn-cat-accueil" onClick={() => setShowHome(true)} title="Retour à l'accueil">
+              ← Accueil
+            </button>
+            <div className="btn-mode-group">
+              <button
+                className={`btn-cat btn-cat-mode${appMode === "catalogue" ? " btn-cat-mode-active" : ""}`}
+                onClick={() => setAppMode("catalogue")}
+                title="Vue catalogue"
+              >
+                🗂 Catalogue
+              </button>
+              <button
+                className={`btn-cat btn-cat-mode${appMode === "parcours" ? " btn-cat-mode-active" : ""}`}
+                onClick={() => setAppMode("parcours")}
+                title="Vue constructeur de parcours"
+              >
+                🗺 Parcours
+              </button>
+            </div>
             <button className="btn-cat btn-cat-creer" onClick={() => setShowChoixImport(true)}>
               Créer +
             </button>

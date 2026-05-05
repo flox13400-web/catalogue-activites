@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import LogoMark from "./LogoMark";
 import "../styles/home.css";
 
 /**
@@ -9,6 +10,7 @@ export default function HomeScreen({
   activitesCount,
   onBrowse,
   onCreateActivity,
+  onBuildSequence,
   onImportSQA,
 }) {
   const sqaInputRef = useRef(null);
@@ -31,7 +33,7 @@ export default function HomeScreen({
     <div className="home-screen">
       <header className="home-topbar">
         <div className="home-brand">
-          <div className="home-brand-icon">⚡</div>
+          <LogoMark style={{ width: 28, height: 28 }} />
           SEQUENCIA
         </div>
       </header>
@@ -103,7 +105,7 @@ export default function HomeScreen({
             </div>
 
             {/* Carte : concevoir un parcours */}
-            <div className="home-card home-card-amber" onClick={onBrowse}>
+            <div className="home-card home-card-amber" onClick={onBuildSequence}>
               <div className="home-card-icon home-card-icon-amber" style={{ fontSize: "1.3rem" }}>
                 🗺
               </div>
