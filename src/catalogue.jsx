@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { flushSync } from "react-dom";
+import HomeScreen from "./components/HomeScreen";
 
 import { FILTRES_INIT, applyFilters } from "./utils/filters";
 import { KEYS, loadJSON, saveJSON } from "./utils/storage";
@@ -21,6 +22,7 @@ import { CarnetNotes } from "./components/CarnetNotes";
 import "./styles/global.css";
 
 export default function Catalogue() {
+  const [showHome, setShowHome] = useState(true);
   const [selected, setSelected] = useState(null);
   const [filtres, setFiltres] = useState(FILTRES_INIT);
   const [mobilePanelOpen, setMobilePanelOpen] = useState(null);
@@ -453,6 +455,14 @@ export default function Catalogue() {
 
   return (
     <div className="app-layout">
+      {showHome && (
+        <HomeScreen
+          activitesCount={activites.length}
+          onBrowse={() => setShowHome(false)}
+          onCreateActivity={() => { setShowHome(false); setShowChoixImport(true); }}
+          onImportSQA={(file) => { setShowHome(false); handleImportSQA(file); }}
+        />
+      )}
       <div className="landscape-warning">
         <div className="landscape-warning-icon">📱🔄</div>
         <h2 className="landscape-warning-title">Mode paysage non supporté</h2>
